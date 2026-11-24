@@ -1,0 +1,14 @@
+{
+  "title": "frandomnoise",
+  "description": "Software defined radio notebook: DSP, RF calculators, frequency database, satellites and propagation.",
+  "domain": "frandomnoise.github.io",
+  "author": "Fran",
+  "language": "en",
+  "postsDir": "posts",
+  "siteDir": "site",
+  "outDir": "dist",
+  "staticDataDir": "data",
+  "externalLinks": [
+    { "label": "GNU Radio World", "href": "https://gnuradioworld.com/" }
+  ]
+}

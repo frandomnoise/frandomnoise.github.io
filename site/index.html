@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>frandomnoise</title>
+<meta name="description" content="Software defined radio notebook: DSP, RF calculators, frequency database, satellites and propagation.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1a14'/%3E%3Cpath d='M3 18 L7 12 L10 21 L13 8 L16 24 L19 11 L22 19 L25 14 L29 17' fill='none' stroke='%2334d06a' stroke-width='2.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+  // Apply the stored theme before first paint.
+  try { const t = localStorage.getItem('fn-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<style>
+/* ============================================================
+   Tokens
+   ============================================================ */
+:root {
+  --bg: #f4f3ec;
+  --grid: rgba(30, 70, 45, 0.07);
+  --panel: #fbfaf5;
+  --panel-2: #efeee6;
+  --ink: #1b221e;
+  --ink-2: #4c5a52;
+  --ink-3: #7b877f;
+  --rule: #d4d6cb;
+  --accent: #15803d;
+  --accent-ink: #ffffff;
+  --warn: #a16207;
+  --bad: #b91c1c;
+  --screen: #0f1a14;
+  --screen-ink: #7ee2a0;
+  --screen-grid: rgba(126, 226, 160, 0.12);
+  --logo-f: #14532d;
+  --logo-random: #16a34a;
+  --logo-noise: #65a30d;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 2px 8px rgba(20, 40, 30, 0.06);
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b100d;
+    --grid: rgba(126, 226, 160, 0.045);
+    --panel: #111814;
+    --panel-2: #17201b;
+    --ink: #dbe5de;
+    --ink-2: #9fb0a5;
+    --ink-3: #6b7c71;
+    --rule: #26332b;
+    --accent: #34d06a;
+    --accent-ink: #06210f;
+    --warn: #e0a83a;
+    --bad: #f87171;
+    --screen: #070c09;
+    --screen-ink: #7ee2a0;
+    --screen-grid: rgba(126, 226, 160, 0.10);
+    --logo-f: #86efac;
+    --logo-random: #34d06a;
+    --logo-noise: #a3e635;
+    --shadow: 0 1px 0 rgba(0,0,0,0.3), 0 2px 10px rgba(0,0,0,0.35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b100d;
+  --grid: rgba(126, 226, 160, 0.045);
+  --panel: #111814;
+  --panel-2: #17201b;
+  --ink: #dbe5de;
+  --ink-2: #9fb0a5;
+  --ink-3: #6b7c71;
+  --rule: #26332b;
+  --accent: #34d06a;
+  --accent-ink: #06210f;
+  --warn: #e0a83a;
+  --bad: #f87171;
+  --screen: #070c09;
+  --screen-ink: #7ee2a0;
+  --screen-grid: rgba(126, 226, 160, 0.10);
+  --logo-f: #86efac;
+  --logo-random: #34d06a;
+  --logo-noise: #a3e635;
+  --shadow: 0 1px 0 rgba(0,0,0,0.3), 0 2px 10px rgba(0,0,0,0.35);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+code, pre, kbd, .mono { font-family: var(--mono); }
+h1, h2, h3, h4 { line-height: 1.25; margin: 1.6em 0 0.5em; }
+h1 { font-size: 1.9rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+hr { border: 0; border-top: 1px dashed var(--rule); margin: 2rem 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+.muted { color: var(--ink-2); }
+.small { font-size: 0.85rem; }
+.label {
+  font: 600 0.7rem/1 var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   Header / logo / nav
+   ============================================================ */
+header.top {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--rule);
+}
+.top-row { display: flex; align-items: center; gap: 16px; min-height: 60px; }
+.logo {
+  font: 700 1.35rem/1 var(--mono);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.logo .l-f { color: var(--logo-f); }
+.logo .l-random { color: var(--logo-random); }
+.logo .l-noise { color: var(--logo-noise); }
+.logo-mark { display: inline-block; vertical-align: -3px; margin-right: 8px; }
+nav.main { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; flex: 1; }
+nav.main::-webkit-scrollbar { display: none; }
+nav.main a {
+  font: 500 0.85rem/1 var(--mono);
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 8px 8px;
+  border-radius: var(--radius);
+  white-space: nowrap;
+}
+nav.main a:hover { background: var(--panel-2); color: var(--ink); }
+nav.main a[aria-current="page"] { background: var(--accent); color: var(--accent-ink); }
+nav.main a.ext::after { content: " ↗"; }
+.theme-btn {
+  border: 1px solid var(--rule); background: var(--panel);
+  border-radius: var(--radius); padding: 6px 10px; cursor: pointer;
+  font: 500 0.8rem/1 var(--mono); color: var(--ink-2);
+}
+.theme-btn:hover { color: var(--ink); }
+@media (max-width: 760px) {
+  .top-row { flex-wrap: wrap; gap: 8px; padding: 10px 0 6px; }
+  nav.main { order: 3; flex-basis: 100%; }
+  .top-row .spacer { flex: 1; }
+}
+
+/* ============================================================
+   Panels (instrument look)
+   ============================================================ */
+main { padding: 28px 0 64px; min-height: 70vh; }
+.page-head { margin-bottom: 20px; }
+.page-head h1 { margin: 0.2em 0 0.2em; }
+.page-head p { margin: 0; color: var(--ink-2); max-width: 70ch; }
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+}
+.panel > h2:first-child, .panel > h3:first-child { margin-top: 0; }
+.panel-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  border-bottom: 1px dashed var(--rule); padding-bottom: 8px; margin-bottom: 12px;
+}
+.panel-head h2, .panel-head h3 { margin: 0; font-size: 1.05rem; }
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.notice {
+  border-left: 3px solid var(--warn);
+  background: var(--panel-2);
+  padding: 10px 14px; border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.9rem; color: var(--ink-2);
+}
+.screen {
+  background: var(--screen); color: var(--screen-ink);
+  border-radius: var(--radius); border: 1px solid var(--rule);
+  font-family: var(--mono);
+}
+
+/* Forms */
+.field { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; margin: 8px 0; }
+.field label { font-size: 0.88rem; color: var(--ink-2); grid-column: 1 / -1; }
+.field .unit { font: 0.8rem var(--mono); color: var(--ink-3); min-width: 3.5em; }
+input[type="number"], input[type="text"], input[type="search"], select, textarea {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+}
+input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.btn {
+  border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+  padding: 7px 14px; border-radius: var(--radius); cursor: pointer; font: 600 0.85rem/1 var(--mono);
+}
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Readouts */
+.readout {
+  margin-top: 12px; padding: 10px 12px;
+  display: grid; gap: 4px;
+}
+.readout .row { display: flex; justify-content: space-between; gap: 12px; }
+.readout .k { color: color-mix(in srgb, var(--screen-ink) 65%, transparent); font-size: 0.8rem; }
+.readout .v { font-size: 1rem; font-variant-numeric: tabular-nums; text-align: right; }
+.readout .warn { color: #f5c46b; font-size: 0.8rem; }
+.model {
+  font-size: 0.78rem; color: var(--ink-3); margin-top: 10px; line-height: 1.5;
+}
+.model b { color: var(--ink-2); font-weight: 600; }
+
+/* ============================================================
+   Blog
+   ============================================================ */
+.post-list { display: grid; gap: 12px; }
+.post-card { display: block; text-decoration: none; color: inherit; }
+.post-card:hover { border-color: var(--accent); }
+.post-card h2 { margin: 0.1em 0 0.3em; font-size: 1.2rem; color: var(--ink); }
+.post-card p { margin: 0; color: var(--ink-2); }
+.meta { font: 0.78rem var(--mono); color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; }
+.tag {
+  font: 0.72rem/1 var(--mono); padding: 4px 7px; border-radius: 3px;
+  border: 1px solid var(--rule); color: var(--ink-2); background: var(--panel-2); cursor: pointer;
+}
+.tag[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.draft-badge { color: var(--warn); }
+article.post { max-width: 72ch; }
+article.post .body { font-size: 1.02rem; }
+article.post .body p, article.post .body li { color: var(--ink); }
+article.post .body img { max-width: 100%; border-radius: var(--radius); border: 1px solid var(--rule); }
+article.post .body blockquote {
+  margin: 1em 0; padding: 0.2em 1em; border-left: 3px solid var(--accent); color: var(--ink-2); background: var(--panel-2);
+}
+article.post .body :not(pre) > code {
+  background: var(--panel-2); border: 1px solid var(--rule); padding: 0.05em 0.35em; border-radius: 3px; font-size: 0.88em;
+}
+article.post .body pre, article.post .body .math {
+  background: var(--screen); color: var(--screen-ink); padding: 14px 16px; border-radius: var(--radius);
+  overflow-x: auto; font-size: 0.86rem; line-height: 1.5; position: relative;
+}
+article.post .body pre code[data-lang]::before {
+  content: attr(data-lang); position: absolute; top: 6px; right: 10px;
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55;
+}
+article.post .body .math { white-space: pre-wrap; text-align: center; font-size: 0.95rem; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { border-bottom: 1px solid var(--rule); padding: 6px 8px; vertical-align: top; }
+th { font: 600 0.72rem var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); text-align: left; }
+
+/* ============================================================
+   Frequency DB
+   ============================================================ */
+.db-tools { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+@media (max-width: 640px) { .db-tools { grid-template-columns: 1fr; } }
+td.freq { font-family: var(--mono); white-space: nowrap; font-variant-numeric: tabular-nums; }
+tr.hit td { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+
+/* ============================================================
+   Satellites / canvas
+   ============================================================ */
+canvas.map { width: 100%; aspect-ratio: 2 / 1; display: block; }
+.sat-layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .sat-layout { grid-template-columns: 1fr; } }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font: 0.85rem var(--mono); }
+.kv dt { color: var(--ink-3); }
+.kv dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+
+footer.bottom { border-top: 1px solid var(--rule); padding: 20px 0 32px; font-size: 0.82rem; color: var(--ink-3); }
+footer.bottom .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-row">
+    <a class="logo" href="#blog" aria-label="frandomnoise home">
+      <svg class="logo-mark" width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M2 18 L7 12 L10 21 L13 7 L16 25 L19 11 L22 19 L25 14 L30 17" fill="none" stroke="var(--logo-random)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg><span class="l-f">f</span><span class="l-random">random</span><span class="l-noise">noise</span>
+    </a>
+    <nav class="main" aria-label="Sections">
+      <a href="#blog" data-route="blog">Blog</a>
+      <a href="#calculators" data-route="calculators">RF Calculators</a>
+      <a href="#freqdb" data-route="freqdb">Frequency DB</a>
+      <a href="#satellites" data-route="satellites">Satellites</a>
+      <a href="#propagation" data-route="propagation">Propagation</a>
+      <a href="#websdr" data-route="websdr">WebSDR</a>
+      <a href="https://gnuradioworld.com/" class="ext" target="_blank" rel="noopener">GNU Radio World</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle theme">◐ theme</button>
+  </div>
+</header>
+
+<main class="wrap" id="view" tabindex="-1"></main>
+
+<footer class="bottom">
+  <div class="wrap">
+    <span><span class="logo" style="font-size:0.9rem"><span class="l-f">f</span><span class="l-random">random</span><span class="l-noise">noise</span></span> · a software defined radio notebook</span>
+    <span class="mono">static · no trackers · everything runs in your browser</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+const $ = (sel, root = document) => root.querySelector(sel);
+const h = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const log10 = Math.log10;
+const C0 = 299792458;            // m/s
+const K_B = 1.380649e-23;        // J/K
+const DEG = Math.PI / 180;
+
+function store(key, value) {
+  try {
+    if (value === undefined) return JSON.parse(localStorage.getItem(key));
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) { return null; }
+}
+
+function fmt(x, digits = 2) {
+  if (!Number.isFinite(x)) return '—';
+  const a = Math.abs(x);
+  if (a !== 0 && (a >= 1e6 || a < 1e-3)) return x.toExponential(digits);
+  return x.toFixed(digits);
+}
+
+function fmtSI(x, unit, digits = 3) {
+  if (!Number.isFinite(x)) return '—';
+  const p = [['T', 1e12], ['G', 1e9], ['M', 1e6], ['k', 1e3], ['', 1], ['m', 1e-3], ['µ', 1e-6], ['n', 1e-9], ['p', 1e-12], ['f', 1e-15]];
+  const a = Math.abs(x);
+  for (const [s, v] of p) if (a >= v) return `${(x / v).toPrecision(digits)} ${s}${unit}`;
+  return `${x.toExponential(digits - 1)} ${unit}`;
+}
+
+async function fetchJSON(url) {
+  const r = await fetch(url, { cache: 'no-cache' });
+  if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+  return r.json();
+}
+
+/* ============================================================
+   Theme
+   ============================================================ */
+(function theme() {
+  const btn = $('#themeBtn');
+  const label = () => {
+    const t = document.documentElement.dataset.theme;
+    btn.textContent = t === 'dark' ? '☾ dark' : t === 'light' ? '☀ light' : '◐ auto';
+  };
+  btn.addEventListener('click', () => {
+    const order = [undefined, 'light', 'dark'];
+    const cur = document.documentElement.dataset.theme;
+    const next = order[(order.indexOf(cur) + 1) % order.length];
+    if (next) document.documentElement.dataset.theme = next;
+    else delete document.documentElement.dataset.theme;
+    try { next ? localStorage.setItem('fn-theme', next) : localStorage.removeItem('fn-theme'); } catch (e) {}
+    label();
+  });
+  label();
+})();
+
+/* ============================================================
+   Router (hash based)
+   ============================================================ */
+const routes = {};
+let cleanup = null;
+
+function route(name, render) { routes[name] = render; }
+
+async function navigate() {
+  const hash = decodeURIComponent(location.hash.slice(1)) || 'blog';
+  let name = hash, param = null;
+  if (hash.startsWith('post-')) { name = 'post'; param = hash.slice(5); }
+  const render = routes[name] || routes.notfound;
+  if (cleanup) { try { cleanup(); } catch (e) {} cleanup = null; }
+  document.querySelectorAll('nav.main a[data-route]').forEach(a => {
+    const active = a.dataset.route === (name === 'post' ? 'blog' : name);
+    active ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+  });
+  // Fresh <main> per route so listeners attached by a page die with it.
+  const old = $('#view');
+  const view = old.cloneNode(false);
+  old.replaceWith(view);
+  cleanup = (await render(view, param)) || null;
+  window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', navigate);
+
+route('notfound', view => {
+  view.innerHTML = `<div class="page-head"><span class="label">404</span><h1>No carrier</h1>
+    <p>Nothing on this frequency. Back to the <a href="#blog">blog</a>.</p></div>`;
+  document.title = 'Not found · frandomnoise';
+});
+
+/* ============================================================
+   Blog
+   ============================================================ */
+let postsCache = null;
+async function getPosts() {
+  if (!postsCache) postsCache = await fetchJSON('posts.json');
+  return postsCache;
+}
+
+route('blog', async view => {
+  document.title = 'frandomnoise · SDR notebook';
+  view.innerHTML = `<div class="page-head"><span class="label">Log book</span><h1>Blog</h1>
+    <p>Notes on software defined radio, signal processing and the RF spectrum.</p></div>
+    <div class="tags" id="tagbar" style="margin-bottom:16px"></div>
+    <div class="post-list" id="posts"><p class="muted">Loading…</p></div>`;
+  let posts;
+  try { posts = await getPosts(); }
+  catch (e) {
+    $('#posts').innerHTML = `<div class="notice">Could not load <code>posts.json</code>. Run <code>node scripts/build.mjs --serve</code> and open the built site.</div>`;
+    return;
+  }
+  const tags = [...new Set(posts.flatMap(p => p.tags))].sort();
+  let active = null;
+  const bar = $('#tagbar');
+  const draw = () => {
+    bar.innerHTML = tags.map(t => `<button class="tag" type="button" aria-pressed="${t === active}" data-tag="${h(t)}">#${h(t)}</button>`).join('');
+    const list = active ? posts.filter(p => p.tags.includes(active)) : posts;
+    $('#posts').innerHTML = list.length ? list.map(p => `
+      <a class="panel post-card" href="#post-${h(p.slug)}">
+        <div class="meta"><span>${h(p.date)}</span><span>${p.readingMinutes} min</span>${p.status === 'draft' ? '<span class="draft-badge">DRAFT</span>' : ''}</div>
+        <h2>${h(p.title)}</h2>
+        <p>${h(p.summary)}</p>
+        <div class="tags">${p.tags.map(t => `<span class="tag">#${h(t)}</span>`).join('')}</div>
+      </a>`).join('') : '<p class="muted">No posts yet.</p>';
+  };
+  bar.addEventListener('click', e => {
+    const b = e.target.closest('[data-tag]');
+    if (!b) return;
+    active = active === b.dataset.tag ? null : b.dataset.tag;
+    draw();
+  });
+  draw();
+});
+
+route('post', async (view, slug) => {
+  let posts;
+  try { posts = await getPosts(); } catch (e) { posts = []; }
+  const p = posts.find(x => x.slug === slug);
+  if (!p) return routes.notfound(view);
+  document.title = `${p.title} · frandomnoise`;
+  view.innerHTML = `<article class="post">
+    <a href="#blog" class="small mono">← blog</a>
+    <h1>${h(p.title)}</h1>
+    <div class="meta"><span>${h(p.date)}</span><span>${p.readingMinutes} min read</span>${p.status === 'draft' ? '<span class="draft-badge">DRAFT</span>' : ''}</div>
+    <div class="tags">${p.tags.map(t => `<span class="tag">#${h(t)}</span>`).join('')}</div>
+    <div class="body">${p.html}</div>
+  </article>`;
+});
+
+/* ============================================================
+   RF Calculators
+   Each calculator: inputs -> compute() -> rows [{k, v, warn?}]
+   ============================================================ */
+const calculators = [
+  {
+    id: 'fspl',
+    title: 'Free-space path loss',
+    inputs: [
+      { id: 'f', label: 'Frequency', unit: 'MHz', value: 145.8 },
+      { id: 'd', label: 'Distance', unit: 'km', value: 1000 },
+    ],
+    compute: ({ f, d }) => {
+      const L = 32.45 + 20 * log10(f) + 20 * log10(d);
+      const lambda = C0 / (f * 1e6);
+      return [
+        { k: 'L_bf', v: `${fmt(L)} dB` },
+        { k: 'λ', v: fmtSI(lambda, 'm') },
+      ];
+    },
+    model: '<b>ITU-R P.525-4</b>: L<sub>bf</sub> = 32.45 + 20·log f<sub>MHz</sub> + 20·log d<sub>km</sub> (isotropic antennas). Valid only in the far field and for an unobstructed path; no atmospheric, multipath or diffraction losses.',
+  },
+  {
+    id: 'noise',
+    title: 'Thermal noise floor & sensitivity',
+    inputs: [
+      { id: 'B', label: 'Noise bandwidth', unit: 'Hz', value: 12500 },
+      { id: 'NF', label: 'Noise figure', unit: 'dB', value: 6 },
+      { id: 'snr', label: 'Required SNR', unit: 'dB', value: 10 },
+      { id: 'T0', label: 'Reference temperature', unit: 'K', value: 290 },
+    ],
+    compute: ({ B, NF, snr, T0 }) => {
+      const kT = 10 * log10(K_B * T0 * 1e3);           // dBm/Hz
+      const N = kT + 10 * log10(B) + NF;
+      const Te = T0 * (10 ** (NF / 10) - 1);
+      return [
+        { k: 'kT₀', v: `${fmt(kT)} dBm/Hz` },
+        { k: 'Noise floor N', v: `${fmt(N)} dBm` },
+        { k: 'Sensitivity (N + SNR)', v: `${fmt(N + snr)} dBm` },
+        { k: 'T_e of receiver', v: `${fmt(Te, 1)} K` },
+      ];
+    },
+    model: '<b>Johnson–Nyquist</b>: N = 10·log(kT<sub>0</sub>B) + NF, with T<sub>0</sub> = 290 K (IEEE standard reference). Assumes the antenna noise temperature equals T<sub>0</sub>; at HF the external (galactic/man-made) noise usually dominates, see <b>ITU-R P.372</b>. B is the equivalent noise bandwidth, not the −3 dB bandwidth.',
+  },
+  {
+    id: 'friis-nf',
+    title: 'Cascaded noise figure',
+    inputs: [
+      { id: 'g1', label: 'Stage 1 gain', unit: 'dB', value: 20 },
+      { id: 'n1', label: 'Stage 1 NF', unit: 'dB', value: 0.8 },
+      { id: 'g2', label: 'Stage 2 gain', unit: 'dB', value: -3 },
+      { id: 'n2', label: 'Stage 2 NF', unit: 'dB', value: 3 },
+      { id: 'g3', label: 'Stage 3 gain', unit: 'dB', value: 30 },
+      { id: 'n3', label: 'Stage 3 NF', unit: 'dB', value: 6 },
+    ],
+    compute: ({ g1, n1, g2, n2, g3, n3 }) => {
+      const lin = x => 10 ** (x / 10);
+      const F = lin(n1) + (lin(n2) - 1) / lin(g1) + (lin(n3) - 1) / (lin(g1) * lin(g2));
+      return [
+        { k: 'NF total', v: `${fmt(10 * log10(F), 3)} dB` },
+        { k: 'Gain total', v: `${fmt(g1 + g2 + g3)} dB` },
+        { k: 'T_e total', v: `${fmt(290 * (F - 1), 1)} K` },
+      ];
+    },
+    model: '<b>Friis (1944)</b>: F = F<sub>1</sub> + (F<sub>2</sub>−1)/G<sub>1</sub> + (F<sub>3</sub>−1)/(G<sub>1</sub>G<sub>2</sub>). Available power gains, matched interfaces. For a passive lossy stage at 290 K, NF = loss.',
+  },
+  {
+    id: 'power',
+    title: 'Power & level conversion (50 Ω)',
+    inputs: [
+      { id: 'p', label: 'Power', unit: 'dBm', value: -73 },
+      { id: 'z', label: 'Impedance', unit: 'Ω', value: 50 },
+    ],
+    compute: ({ p, z }) => {
+      const W = 10 ** ((p - 30) / 10);
+      const V = Math.sqrt(W * z);
+      return [
+        { k: 'Power', v: fmtSI(W, 'W') },
+        { k: 'dBW', v: `${fmt(p - 30)} dBW` },
+        { k: 'V_rms', v: fmtSI(V, 'V') },
+        { k: 'dBµV', v: `${fmt(20 * log10(V * 1e6))} dBµV` },
+        { k: 'V_pp (sine)', v: fmtSI(V * 2 * Math.SQRT2, 'V') },
+      ];
+    },
+    model: 'P = V<sub>rms</sub>²/R. dBµV = dBm + 10·log(R·10<sup>9</sup>) → +107 dB at 50 Ω. (−73 dBm ≈ S9 on HF per IARU Region 1 Technical Recommendation R.1.)',
+  },
+  {
+    id: 'vswr',
+    title: 'Mismatch: VSWR / Γ / return loss',
+    inputs: [{ id: 's', label: 'VSWR', unit: ':1', value: 1.5 }],
+    compute: ({ s }) => {
+      if (s < 1) return [{ k: 'Error', v: 'VSWR ≥ 1', warn: true }];
+      const g = (s - 1) / (s + 1);
+      return [
+        { k: '|Γ|', v: fmt(g, 4) },
+        { k: 'Return loss', v: s === 1 ? '∞' : `${fmt(-20 * log10(g))} dB` },
+        { k: 'Mismatch loss', v: `${fmt(-10 * log10(1 - g * g), 3)} dB` },
+        { k: 'Reflected power', v: `${fmt(100 * g * g)} %` },
+      ];
+    },
+    model: '|Γ| = (S−1)/(S+1); RL = −20·log|Γ|; ML = −10·log(1−|Γ|²). Lossless line; line loss improves the VSWR seen at the transmitter.',
+  },
+  {
+    id: 'wave',
+    title: 'Wavelength & dipole length',
+    inputs: [
+      { id: 'f', label: 'Frequency', unit: 'MHz', value: 145 },
+      { id: 'vf', label: 'Velocity / shortening factor', unit: '', value: 0.95 },
+    ],
+    compute: ({ f, vf }) => {
+      const l = C0 / (f * 1e6);
+      return [
+        { k: 'λ (free space)', v: fmtSI(l, 'm') },
+        { k: 'λ/2 × k', v: fmtSI(l / 2 * vf, 'm') },
+        { k: 'λ/4 × k', v: fmtSI(l / 4 * vf, 'm') },
+      ];
+    },
+    model: 'λ = c/f. The end-effect shortening factor k ≈ 0.95–0.98 for wire dipoles depends on the length/diameter ratio; trim on the antenna. For coax stubs use the cable velocity factor instead.',
+  },
+  {
+    id: 'hata',
+    title: 'Okumura–Hata / COST-231 Hata',
+    inputs: [
+      { id: 'model', label: 'Model / environment', type: 'select', value: 'hata-urban-small', options: [
+        ['hata-urban-small', 'Hata, urban (small/medium city)'],
+        ['hata-urban-large', 'Hata, urban (large city)'],
+        ['hata-suburban', 'Hata, suburban'],
+        ['hata-open', 'Hata, open/rural'],
+        ['cost-medium', 'COST-231, medium city / suburban'],
+        ['cost-metro', 'COST-231, metropolitan centre'],
+      ] },
+      { id: 'f', label: 'Frequency', unit: 'MHz', value: 900 },
+      { id: 'hb', label: 'Base station height', unit: 'm', value: 30 },
+      { id: 'hm', label: 'Mobile height', unit: 'm', value: 1.5 },
+      { id: 'd', label: 'Distance', unit: 'km', value: 5 },
+    ],
+    compute: ({ model, f, hb, hm, d }) => {
+      const lf = log10(f), lhb = log10(hb), ld = log10(d);
+      const isCost = model.startsWith('cost');
+      const large = model === 'hata-urban-large' || model === 'cost-metro';
+      let a;
+      if (large) a = f <= 300 ? 8.29 * log10(1.54 * hm) ** 2 - 1.1 : 3.2 * log10(11.75 * hm) ** 2 - 4.97;
+      else a = (1.1 * lf - 0.7) * hm - (1.56 * lf - 0.8);
+      let L;
+      if (isCost) {
+        L = 46.3 + 33.9 * lf - 13.82 * lhb - a + (44.9 - 6.55 * lhb) * ld + (model === 'cost-metro' ? 3 : 0);
+      } else {
+        L = 69.55 + 26.16 * lf - 13.82 * lhb - a + (44.9 - 6.55 * lhb) * ld;
+        if (model === 'hata-suburban') L -= 2 * log10(f / 28) ** 2 + 5.4;
+        if (model === 'hata-open') L -= 4.78 * lf ** 2 - 18.33 * lf + 40.94;
+      }
+      const warns = [];
+      const [fmin, fmax] = isCost ? [1500, 2000] : [150, 1500];
+      if (f < fmin || f > fmax) warns.push(`f outside ${fmin}–${fmax} MHz`);
+      if (hb < 30 || hb > 200) warns.push('h_b outside 30–200 m');
+      if (hm < 1 || hm > 10) warns.push('h_m outside 1–10 m');
+      if (d < 1 || d > 20) warns.push('d outside 1–20 km');
+      const fs = 32.45 + 20 * lf + 20 * ld;
+      return [
+        { k: 'Median path loss', v: `${fmt(L)} dB` },
+        { k: 'Excess over free space', v: `${fmt(L - fs)} dB` },
+        ...warns.map(w => ({ k: 'Out of range', v: w, warn: true })),
+      ];
+    },
+    model: '<b>Hata (1980)</b>, empirical fit to Okumura: 150–1500 MHz, h<sub>b</sub> 30–200 m, h<sub>m</sub> 1–10 m, d 1–20 km. Large-city a(h<sub>m</sub>) uses the f ≤ 200 MHz form below 300 MHz here. <b>COST-231 Hata</b> (COST Action 231 final report, 1999): 1500–2000 MHz, same h/d ranges, C<sub>m</sub> = 0/3 dB. Median loss only, base antenna above surrounding rooftops; no terrain, no location variability.',
+  },
+  {
+    id: 'link',
+    title: 'Link budget (free space)',
+    inputs: [
+      { id: 'pt', label: 'TX power', unit: 'dBm', value: 37 },
+      { id: 'gt', label: 'TX antenna gain', unit: 'dBi', value: 2.15 },
+      { id: 'gr', label: 'RX antenna gain', unit: 'dBi', value: 2.15 },
+      { id: 'f', label: 'Frequency', unit: 'MHz', value: 435 },
+      { id: 'd', label: 'Distance', unit: 'km', value: 2000 },
+      { id: 'lo', label: 'Other losses', unit: 'dB', value: 3 },
+      { id: 'B', label: 'RX noise bandwidth', unit: 'Hz', value: 2500 },
+      { id: 'NF', label: 'RX noise figure', unit: 'dB', value: 2 },
+    ],
+    compute: ({ pt, gt, gr, f, d, lo, B, NF }) => {
+      const L = 32.45 + 20 * log10(f) + 20 * log10(d);
+      const pr = pt + gt + gr - L - lo;
+      const N = 10 * log10(K_B * 290 * 1e3) + 10 * log10(B) + NF;
+      return [
+        { k: 'EIRP', v: `${fmt(pt + gt)} dBm` },
+        { k: 'FSPL', v: `${fmt(L)} dB` },
+        { k: 'P_rx', v: `${fmt(pr)} dBm` },
+        { k: 'Noise floor', v: `${fmt(N)} dBm` },
+        { k: 'SNR', v: `${fmt(pr - N)} dB` },
+      ];
+    },
+    model: 'Friis transmission equation with ITU-R P.525 free-space loss and a T<sub>0</sub> = 290 K noise floor. Add polarisation mismatch, pointing and atmospheric losses into “other losses”.',
+  },
+  {
+    id: 'doppler',
+    title: 'Doppler shift',
+    inputs: [
+      { id: 'f', label: 'Carrier', unit: 'MHz', value: 437.8 },
+      { id: 'v', label: 'Range rate (− approaching)', unit: 'km/s', value: -7 },
+    ],
+    compute: ({ f, v }) => {
+      const df = -f * 1e6 * (v * 1e3) / C0;
+      return [
+        { k: 'Δf', v: `${fmt(df / 1e3, 3)} kHz` },
+        { k: 'Received', v: `${fmt(f + df / 1e6, 6)} MHz` },
+      ];
+    },
+    model: 'First-order (non-relativistic) Doppler: Δf = −f·ṙ/c. Error is O((v/c)²), negligible for LEO (≈5×10<sup>−10</sup>).',
+  },
+];
+
+route('calculators', view => {
+  document.title = 'RF Calculators · frandomnoise';
+  view.innerHTML = `<div class="page-head"><span class="label">Bench</span><h1>RF Calculators</h1>
+    <p>Each calculator states the model it implements and where it stops being valid.</p></div>
+    <div class="grid grid-2" id="calcs"></div>`;
+  const root = $('#calcs');
+  for (const c of calculators) {
+    const saved = store(`fn-calc-${c.id}`) || {};
+    const el = document.createElement('section');
+    el.className = 'panel';
+    el.innerHTML = `<div class="panel-head"><h2>${h(c.title)}</h2><span class="label">${h(c.id)}</span></div>
+      ${c.inputs.map(i => {
+        const val = saved[i.id] ?? i.value;
+        const ctl = i.type === 'select'
+          ? `<select id="${c.id}-${i.id}" data-k="${i.id}">${i.options.map(([v, t]) => `<option value="${v}"${v === val ? ' selected' : ''}>${h(t)}</option>`).join('')}</select>`
+          : `<input type="number" step="any" id="${c.id}-${i.id}" data-k="${i.id}" value="${val}">`;
+        return `<div class="field"><label for="${c.id}-${i.id}">${h(i.label)}</label>${ctl}<span class="unit">${h(i.unit || '')}</span></div>`;
+      }).join('')}
+      <div class="screen readout" aria-live="polite"></div>
+      <div class="model">${c.model}</div>`;
+    root.appendChild(el);
+    const out = $('.readout', el);
+    const run = () => {
+      const v = {};
+      el.querySelectorAll('[data-k]').forEach(x => { v[x.dataset.k] = x.tagName === 'SELECT' ? x.value : parseFloat(x.value); });
+      store(`fn-calc-${c.id}`, v);
+      const bad = Object.entries(v).some(([, x]) => typeof x === 'number' && !Number.isFinite(x));
+      const rows = bad ? [{ k: 'Input', v: 'enter all values', warn: true }] : c.compute(v);
+      out.innerHTML = rows.map(r => `<div class="row"><span class="k">${h(r.k)}</span><span class="${r.warn ? 'warn' : 'v'}">${h(r.v)}</span></div>`).join('');
+    };
+    el.addEventListener('input', run);
+    run();
+  }
+});
+
+/* ============================================================
+   Frequency DB — ITU Region 1 / Spain (CNAF)
+   Frequencies in MHz. Every entry must be checked against the
+   current ITU Radio Regulations Article 5 and the CNAF edition
+   before relying on it; `src` records what it was checked against.
+   ============================================================ */
+const FREQ_DB = [
+  { lo: 26.965, hi: 27.405, name: 'CB 27 MHz', service: 'Land mobile (licence-exempt)', notes: '40 channels, 10 kHz spacing (CEPT ECC/DEC/(11)03).', tags: ['voice', 'licence-exempt'] },
+  { lo: 7.0, hi: 7.2, name: '40 m amateur band', service: 'Amateur, Amateur-satellite', notes: 'Region 1 allocation 7000–7200 kHz.', tags: ['amateur', 'hf'] },
+  { lo: 14.0, hi: 14.35, name: '20 m amateur band', service: 'Amateur (14000–14250 kHz also Amateur-satellite)', notes: 'Worldwide allocation.', tags: ['amateur', 'hf'] },
+  { lo: 28.0, hi: 29.7, name: '10 m amateur band', service: 'Amateur, Amateur-satellite', notes: 'Worldwide allocation.', tags: ['amateur', 'hf'] },
+  { lo: 87.5, hi: 108.0, name: 'FM broadcast (Band II)', service: 'Broadcasting', notes: 'WFM, 75 kHz deviation, 50 µs de-emphasis in Europe. RDS on 57 kHz subcarrier.', tags: ['broadcast', 'vhf'] },
+  { lo: 108.0, hi: 117.975, name: 'ILS localizer / VOR', service: 'Aeronautical radionavigation', notes: 'ILS LOC 108.1–111.95 MHz (odd tenths), VOR elsewhere.', tags: ['aviation', 'vhf'] },
+  { lo: 117.975, hi: 137.0, name: 'VHF airband (voice)', service: 'Aeronautical mobile (R)', notes: 'AM-DSB voice, 8.33 kHz channel spacing in European airspace.', tags: ['aviation', 'vhf', 'voice'] },
+  { lo: 137.0, hi: 138.0, name: 'Weather satellite downlinks', service: 'Meteorological-satellite, Space operation', notes: 'Historical NOAA APT and Meteor-M LRPT channels; check which spacecraft are still active.', tags: ['satellite', 'weather', 'vhf'] },
+  { lo: 144.0, hi: 146.0, name: '2 m amateur band', service: 'Amateur, Amateur-satellite', notes: 'Region 1: 2 MHz wide. APRS 144.800 MHz; satellite sub-band 145.800–146.000 MHz.', tags: ['amateur', 'vhf'] },
+  { lo: 145.8, hi: 145.8, name: 'ISS voice / SSTV downlink', service: 'Amateur-satellite', notes: 'ARISS FM downlink 145.800 MHz.', tags: ['amateur', 'satellite', 'vhf'] },
+  { lo: 156.0, hi: 162.05, name: 'Maritime VHF', service: 'Maritime mobile', notes: 'Ch 16 (156.800 MHz) distress/calling; Ch 70 (156.525 MHz) DSC.', tags: ['maritime', 'vhf'] },
+  { lo: 161.975, hi: 161.975, name: 'AIS 1', service: 'Maritime mobile', notes: 'GMSK 9600 bit/s, SOTDMA (ITU-R M.1371).', tags: ['maritime', 'data', 'vhf'] },
+  { lo: 162.025, hi: 162.025, name: 'AIS 2', service: 'Maritime mobile', notes: 'GMSK 9600 bit/s, SOTDMA (ITU-R M.1371).', tags: ['maritime', 'data', 'vhf'] },
+  { lo: 174.0, hi: 240.0, name: 'DAB / DAB+ (Band III)', service: 'Broadcasting', notes: 'Blocks 5A–13F, 1.536 MHz COFDM ensembles.', tags: ['broadcast', 'vhf', 'digital'] },
+  { lo: 406.0, hi: 406.1, name: 'COSPAS-SARSAT beacons', service: 'Mobile-satellite (Earth-to-space)', notes: 'Distress beacons (EPIRB/ELT/PLB). Receive only, never transmit.', tags: ['satellite', 'distress', 'uhf'] },
+  { lo: 430.0, hi: 440.0, name: '70 cm amateur band', service: 'Amateur, Radiolocation (shared)', notes: 'Region 1. Amateur-satellite 435–438 MHz.', tags: ['amateur', 'uhf'] },
+  { lo: 433.05, hi: 434.79, name: 'ISM / SRD 433 MHz', service: 'ISM (RR 5.138), Short range devices', notes: 'Remote controls, sensors, rtl_433 territory. Overlaps 70 cm amateur.', tags: ['ism', 'srd', 'uhf'] },
+  { lo: 446.0, hi: 446.2, name: 'PMR446', service: 'Land mobile (licence-exempt)', notes: 'Analogue FM 12.5 kHz and digital dPMR/DMR channels.', tags: ['voice', 'licence-exempt', 'uhf'] },
+  { lo: 470.0, hi: 694.0, name: 'DVB-T / DVB-T2 (UHF TV)', service: 'Broadcasting', notes: 'Channels 21–48 after the second digital dividend (700 MHz band cleared).', tags: ['broadcast', 'uhf', 'digital'] },
+  { lo: 863.0, hi: 870.0, name: 'SRD 868 MHz', service: 'Short range devices', notes: 'LoRaWAN EU868, Sigfox, alarms. Duty-cycle limits per sub-band (ERC/REC 70-03).', tags: ['srd', 'iot', 'uhf'] },
+  { lo: 1030.0, hi: 1030.0, name: 'SSR / Mode S interrogation', service: 'Aeronautical radionavigation', notes: 'Ground-to-air interrogations.', tags: ['aviation', 'uhf'] },
+  { lo: 1090.0, hi: 1090.0, name: 'Mode S / ADS-B (1090ES)', service: 'Aeronautical radionavigation', notes: 'PPM 1 Mbit/s replies and extended squitter.', tags: ['aviation', 'data', 'uhf'] },
+  { lo: 1240.0, hi: 1300.0, name: '23 cm amateur band', service: 'Amateur (secondary)', notes: 'Shares with radionavigation-satellite (Galileo E6, GLONASS L2): avoid harmful interference.', tags: ['amateur', 'uhf'] },
+  { lo: 1400.0, hi: 1427.0, name: 'Radio astronomy (HI line)', service: 'Radio astronomy, EESS (passive), Space research (passive)', notes: 'RR 5.340: all emissions prohibited. Neutral hydrogen at 1420.405752 MHz.', tags: ['radio-astronomy', 'passive', 'uhf'] },
+  { lo: 1575.42, hi: 1575.42, name: 'GPS L1 / Galileo E1', service: 'Radionavigation-satellite', notes: 'GPS C/A 1.023 Mchip/s BPSK; Galileo E1 CBOC.', tags: ['gnss', 'satellite'] },
+  { lo: 2400.0, hi: 2483.5, name: 'ISM 2.4 GHz', service: 'ISM (RR 5.150), Amateur (secondary)', notes: 'Wi-Fi, Bluetooth, 802.15.4. QO-100 NB uplink 2400.050–2400.300 MHz.', tags: ['ism', 'shf'] },
+  { lo: 10489.5, hi: 10490.0, name: 'QO-100 narrowband downlink', service: 'Amateur-satellite', notes: 'Es\'hail-2 geostationary transponder at 25.9° E; visible from all of Spain.', tags: ['amateur', 'satellite', 'shf'] },
+].map(e => ({ ...e, src: 'pending review vs. RR Art. 5 / CNAF' }));
+
+function fmtMHz(x) {
+  if (x < 1) return `${(x * 1e3).toFixed(3).replace(/\.?0+$/, '')} kHz`;
+  if (x >= 1000) return `${(x / 1e3).toFixed(6).replace(/\.?0+$/, '')} GHz`;
+  return `${x.toFixed(4).replace(/\.?0+$/, '')} MHz`;
+}
+
+route('freqdb', view => {
+  document.title = 'Frequency DB · frandomnoise';
+  const tags = [...new Set(FREQ_DB.flatMap(e => e.tags))].sort();
+  view.innerHTML = `<div class="page-head"><span class="label">Spectrum</span><h1>Frequency DB</h1>
+    <p>Allocations and notable signals for ITU Region 1, with notes for Spain (CNAF).</p></div>
+    <div class="notice" style="margin-bottom:16px">Reference only. Always check the current <a href="https://www.itu.int/pub/R-REG-RR" target="_blank" rel="noopener">ITU Radio Regulations</a> and the <a href="https://avancedigital.mineco.gob.es/espectro/Paginas/cnaf.aspx" target="_blank" rel="noopener">CNAF</a> before you transmit.</div>
+    <div class="panel">
+      <div class="db-tools">
+        <input type="search" id="q" placeholder="Search: name, service, notes…" aria-label="Search">
+        <input type="number" step="any" id="fq" placeholder="Lookup MHz, e.g. 433.92" aria-label="Frequency lookup in MHz">
+        <select id="tg" aria-label="Filter by tag"><option value="">All tags</option>${tags.map(t => `<option>${h(t)}</option>`).join('')}</select>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Range</th><th>Name</th><th>Service</th><th>Notes</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+      <p class="small muted" id="count"></p>
+    </div>`;
+  const draw = () => {
+    const q = $('#q').value.trim().toLowerCase();
+    const f = parseFloat($('#fq').value);
+    const tg = $('#tg').value;
+    const tol = 0.0125; // treat spot frequencies as ±12.5 kHz wide for lookup
+    let list = FREQ_DB.filter(e =>
+      (!q || `${e.name} ${e.service} ${e.notes} ${e.tags.join(' ')}`.toLowerCase().includes(q)) &&
+      (!tg || e.tags.includes(tg)));
+    const hit = e => Number.isFinite(f) && f >= e.lo - (e.lo === e.hi ? tol : 0) && f <= e.hi + (e.lo === e.hi ? tol : 0);
+    if (Number.isFinite(f)) list = list.filter(hit);
+    list.sort((a, b) => a.lo - b.lo || a.hi - b.hi);
+    $('#rows').innerHTML = list.map(e => `<tr class="${hit(e) ? 'hit' : ''}">
+      <td class="freq">${e.lo === e.hi ? fmtMHz(e.lo) : `${fmtMHz(e.lo)} – ${fmtMHz(e.hi)}`}</td>
+      <td>${h(e.name)}</td><td>${h(e.service)}</td><td class="small">${h(e.notes)}</td></tr>`).join('')
+      || '<tr><td colspan="4" class="muted">No match.</td></tr>';
+    $('#count').textContent = `${list.length} of ${FREQ_DB.length} entries`;
+  };
+  view.addEventListener('input', draw);
+  draw();
+});
+
+/* ============================================================
+   Satellites — simplified propagator (two-body Kepler + J2 secular)
+   TODO(pending #2): replace with SGP4. Errors of this model grow to
+   tens of km per day for LEO (no drag, no short-period terms, and the
+   TLE mean elements are SGP4-specific "Kozai" means).
+   TLE text files are served statically from data/tle/<group>.txt by a
+   scheduled GitHub Action (pending #1); the browser never calls CelesTrak.
+   ============================================================ */
+const EARTH = { mu: 398600.4418, Re: 6378.137, J2: 1.08262668e-3 }; // km, km^3/s^2 (WGS-84 / EGM96)
+const TLE_GROUPS = [['stations', 'Space stations'], ['amateur', 'Amateur'], ['weather', 'Weather']];
+
+function parseTLE(text) {
+  const lines = text.split(/\r?\n/).map(l => l.trimEnd()).filter(Boolean);
+  const sats = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith('1 ') && lines[i + 1]?.startsWith('2 ')) {
+      const name = (i > 0 && !lines[i - 1].startsWith('2 ')) ? lines[i - 1].trim() : lines[i].slice(2, 7).trim();
+      try { sats.push(tleToElements(name, lines[i], lines[i + 1])); } catch (e) {}
+      i++;
+    }
+  }
+  return sats;
+}
+
+function tleToElements(name, l1, l2) {
+  const yy = parseInt(l1.slice(18, 20), 10);
+  const year = yy < 57 ? 2000 + yy : 1900 + yy;
+  const day = parseFloat(l1.slice(20, 32));
+  const epoch = Date.UTC(year, 0, 1) + (day - 1) * 86400e3;
+  const n = parseFloat(l2.slice(52, 63)) * 2 * Math.PI / 86400; // rad/s
+  const el = {
+    name, norad: l1.slice(2, 7).trim(), epoch,
+    i: parseFloat(l2.slice(8, 16)) * DEG,
+    raan: parseFloat(l2.slice(17, 25)) * DEG,
+    e: parseFloat('0.' + l2.slice(26, 33).trim()),
+    argp: parseFloat(l2.slice(34, 42)) * DEG,
+    M0: parseFloat(l2.slice(43, 51)) * DEG,
+    n,
+  };
+  if (![el.i, el.raan, el.e, el.argp, el.M0, el.n].every(Number.isFinite)) throw new Error('bad TLE');
+  el.a = Math.cbrt(EARTH.mu / (n * n));
+  const p = el.a * (1 - el.e ** 2);
+  const k = 1.5 * EARTH.J2 * (EARTH.Re / p) ** 2 * n;
+  const ci = Math.cos(el.i);
+  el.raanDot = -k * ci;
+  el.argpDot = 0.5 * k * (5 * ci * ci - 1);
+  el.MDot = n + 0.5 * k * Math.sqrt(1 - el.e ** 2) * (3 * ci * ci - 1);
+  return el;
+}
+
+function gmst(ms) {
+  const jd = ms / 86400e3 + 2440587.5;
+  const d = jd - 2451545.0;
+  return ((280.46061837 + 360.98564736629 * d) % 360 + 360) % 360 * DEG;
+}
+
+function propagate(el, ms) {
+  const t = (ms - el.epoch) / 1e3;
+  const M = el.M0 + el.MDot * t;
+  const raan = el.raan + el.raanDot * t;
+  const argp = el.argp + el.argpDot * t;
+  let E = M;
+  for (let k = 0; k < 12; k++) E -= (E - el.e * Math.sin(E) - M) / (1 - el.e * Math.cos(E));
+  const nu = 2 * Math.atan2(Math.sqrt(1 + el.e) * Math.sin(E / 2), Math.sqrt(1 - el.e) * Math.cos(E / 2));
+  const r = el.a * (1 - el.e * Math.cos(E));
+  const u = argp + nu;
+  const cO = Math.cos(raan), sO = Math.sin(raan), ci = Math.cos(el.i), si = Math.sin(el.i);
+  const cu = Math.cos(u), su = Math.sin(u);
+  const x = r * (cO * cu - sO * su * ci);
+  const y = r * (sO * cu + cO * su * ci);
+  const z = r * (su * si);
+  const g = gmst(ms);
+  const xe = Math.cos(g) * x + Math.sin(g) * y;
+  const ye = -Math.sin(g) * x + Math.cos(g) * y;
+  return {
+    ecef: [xe, ye, z],
+    lat: Math.atan2(z, Math.hypot(xe, ye)) / DEG,     // geocentric
+    lon: ((Math.atan2(ye, xe) / DEG + 540) % 360) - 180,
+    alt: r - EARTH.Re,                                  // above equatorial radius (spherical approx.)
+  };
+}
+
+function lookAngles(obs, satEcef) {
+  const φ = obs.lat * DEG, λ = obs.lon * DEG;
+  const R = EARTH.Re + obs.alt / 1e3;
+  const o = [R * Math.cos(φ) * Math.cos(λ), R * Math.cos(φ) * Math.sin(λ), R * Math.sin(φ)];
+  const d = satEcef.map((v, k) => v - o[k]);
+  const e = -Math.sin(λ) * d[0] + Math.cos(λ) * d[1];
+  const n = -Math.sin(φ) * Math.cos(λ) * d[0] - Math.sin(φ) * Math.sin(λ) * d[1] + Math.cos(φ) * d[2];
+  const u = Math.cos(φ) * Math.cos(λ) * d[0] + Math.cos(φ) * Math.sin(λ) * d[1] + Math.sin(φ) * d[2];
+  const range = Math.hypot(e, n, u);
+  return { az: (Math.atan2(e, n) / DEG + 360) % 360, el: Math.asin(u / range) / DEG, range };
+}
+
+route('satellites', async view => {
+  document.title = 'Satellites · frandomnoise';
+  const obs = store('fn-observer') || { lat: 40.4168, lon: -3.7038, alt: 650 };
+  view.innerHTML = `<div class="page-head"><span class="label">Orbit</span><h1>Satellites</h1>
+    <p>Ground tracks and look angles from TLE sets. Interim propagator: two-body Kepler with J2 secular rates (SGP4 coming).</p></div>
+    <div class="sat-layout">
+      <div class="panel">
+        <div class="panel-head"><h2>Ground track</h2><span class="label mono" id="clock"></span></div>
+        <canvas class="map screen" id="map" width="1440" height="720" aria-label="World map with satellite ground tracks"></canvas>
+        <p class="small muted" style="margin:8px 0 0">Equirectangular, geocentric latitude. Track: ±1 orbital period.</p>
+      </div>
+      <div class="grid" style="align-content:start">
+        <div class="panel">
+          <div class="field"><label for="grp">TLE group</label><select id="grp">${TLE_GROUPS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>
+          <div class="field"><label for="sat">Satellite</label><select id="sat"></select></div>
+          <p class="small muted" id="tleinfo"></p>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Now</h3><span class="label">live</span></div>
+          <dl class="kv" id="now"></dl>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Observer</h3><span class="label">WGS-84 approx.</span></div>
+          <div class="field"><label for="olat">Latitude</label><input type="number" step="any" id="olat" value="${obs.lat}"><span class="unit">°N</span></div>
+          <div class="field"><label for="olon">Longitude</label><input type="number" step="any" id="olon" value="${obs.lon}"><span class="unit">°E</span></div>
+          <div class="field"><label for="oalt">Altitude</label><input type="number" step="any" id="oalt" value="${obs.alt}"><span class="unit">m</span></div>
+        </div>
+        <details class="panel">
+          <summary class="small">Paste TLE manually</summary>
+          <textarea id="tlepaste" rows="5" placeholder="NAME&#10;1 ...&#10;2 ..." style="margin-top:8px"></textarea>
+          <button class="btn ghost" id="tleload" type="button" style="margin-top:8px">Load</button>
+        </details>
+      </div>
+    </div>`;
+
+  let sats = [], cur = null, timer = null;
+  const canvas = $('#map'), ctx = canvas.getContext('2d');
+  const cs = () => getComputedStyle(document.documentElement);
+
+  const fillSats = () => {
+    $('#sat').innerHTML = sats.map((s, k) => `<option value="${k}">${h(s.name)} (${s.norad})</option>`).join('');
+    cur = sats[0] || null;
+  };
+
+  async function loadGroup(g) {
+    $('#tleinfo').textContent = 'Loading…';
+    try {
+      const r = await fetch(`data/tle/${g}.txt`, { cache: 'no-cache' });
+      if (!r.ok) throw new Error(r.status);
+      sats = parseTLE(await r.text());
+      const newest = Math.max(...sats.map(s => s.epoch));
+      $('#tleinfo').textContent = `${sats.length} objects · newest epoch ${new Date(newest).toISOString().slice(0, 16).replace('T', ' ')} UTC`;
+    } catch (e) {
+      sats = [];
+      $('#tleinfo').textContent = `No data/tle/${g}.txt yet (the scheduled TLE Action is pending). Paste a TLE below.`;
+    }
+    fillSats();
+  }
+
+  function drawMap(now) {
+    const W = canvas.width, H = canvas.height, s = cs();
+    const ink = s.getPropertyValue('--screen-ink').trim(), grid = s.getPropertyValue('--screen-grid').trim();
+    ctx.fillStyle = s.getPropertyValue('--screen').trim();
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = grid; ctx.lineWidth = 1;
+    ctx.font = '18px ui-monospace, monospace'; ctx.fillStyle = grid;
+    for (let lon = -180; lon <= 180; lon += 30) { const x = (lon + 180) / 360 * W; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    for (let lat = -90; lat <= 90; lat += 30) { const y = (90 - lat) / 180 * H; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    const P = (lat, lon) => [(lon + 180) / 360 * W, (90 - lat) / 180 * H];
+    // observer
+    const [ox, oy] = P(obs.lat, obs.lon);
+    ctx.strokeStyle = '#f5c46b'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(ox - 10, oy); ctx.lineTo(ox + 10, oy); ctx.moveTo(ox, oy - 10); ctx.lineTo(ox, oy + 10); ctx.stroke();
+    if (!cur) return;
+    const T = 2 * Math.PI / cur.n * 1e3;
+    ctx.strokeStyle = ink; ctx.lineWidth = 2;
+    for (const [a, b, alpha] of [[-T, 0, 0.35], [0, T, 1]]) {
+      ctx.globalAlpha = alpha; ctx.beginPath();
+      let prev = null;
+      for (let t = a; t <= b; t += T / 240) {
+        const p = propagate(cur, now + t), [x, y] = P(p.lat, p.lon);
+        if (prev !== null && Math.abs(p.lon - prev) > 180) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        prev = p.lon;
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    const p = propagate(cur, now), [x, y] = P(p.lat, p.lon);
+    ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(x, y, 8, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillText(cur.name, Math.min(x + 14, W - 200), y - 12);
+  }
+
+  function tick() {
+    const now = Date.now();
+    $('#clock').textContent = new Date(now).toISOString().slice(11, 19) + ' UTC';
+    drawMap(now);
+    if (!cur) { $('#now').innerHTML = '<dt>—</dt><dd>no satellite</dd>'; return; }
+    const p = propagate(cur, now), la = lookAngles(obs, p.ecef);
+    const p2 = propagate(cur, now + 1000), la2 = lookAngles(obs, p2.ecef);
+    const age = (now - cur.epoch) / 86400e3;
+    $('#now').innerHTML = [
+      ['Lat', `${fmt(p.lat, 2)}°`], ['Lon', `${fmt(p.lon, 2)}°`], ['Alt', `${fmt(p.alt, 0)} km`],
+      ['Az', `${fmt(la.az, 1)}°`], ['El', `${fmt(la.el, 1)}°`], ['Range', `${fmt(la.range, 0)} km`],
+      ['Range rate', `${fmt(la2.range - la.range, 3)} km/s`],
+      ['TLE age', `${fmt(age, 1)} d`],
+    ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('') + (age > 7 ? '<dt class="draft-badge">⚠</dt><dd class="draft-badge">stale TLE</dd>' : '');
+  }
+
+  view.addEventListener('change', e => {
+    if (e.target.id === 'grp') loadGroup(e.target.value).then(tick);
+    if (e.target.id === 'sat') { cur = sats[+e.target.value] || null; tick(); }
+  });
+  view.addEventListener('input', e => {
+    if (!['olat', 'olon', 'oalt'].includes(e.target.id)) return;
+    const v = { lat: parseFloat($('#olat').value), lon: parseFloat($('#olon').value), alt: parseFloat($('#oalt').value) || 0 };
+    if (Number.isFinite(v.lat) && Number.isFinite(v.lon)) { Object.assign(obs, v); store('fn-observer', obs); }
+  });
+  $('#tleload').addEventListener('click', () => {
+    const extra = parseTLE($('#tlepaste').value);
+    if (extra.length) { sats = extra; fillSats(); $('#tleinfo').textContent = `${extra.length} pasted object(s)`; tick(); }
+  });
+
+  await loadGroup(TLE_GROUPS[0][0]);
+  tick();
+  timer = setInterval(tick, 1000);
+  return () => clearInterval(timer);
+});
+
+/* ============================================================
+   Propagation
+   Live indices come from data/propagation.json, written by a
+   scheduled GitHub Action (pending #4). Expected shape:
+   { "updated": ISO-8601, "kp": number, "sfi": number,
+     "ionosondes": [{ "station": str, "foF2": MHz, "hmF2": km, "time": ISO }] }
+   ============================================================ */
+route('propagation', async view => {
+  document.title = 'Propagation · frandomnoise';
+  view.innerHTML = `<div class="page-head"><span class="label">Ionosphere</span><h1>Propagation</h1>
+    <p>Solar and geomagnetic indices, ionosonde data and quick HF estimates.</p></div>
+    <div class="grid grid-2">
+      <div class="panel"><div class="panel-head"><h2>Current conditions</h2><span class="label" id="upd"></span></div><div id="live"></div></div>
+      <div class="panel" id="muf"><div class="panel-head"><h2>Single-hop MUF (secant law)</h2><span class="label">estimate</span></div>
+        <div class="field"><label for="m-fo">foF2</label><input type="number" step="any" id="m-fo" value="7"><span class="unit">MHz</span></div>
+        <div class="field"><label for="m-h">Reflection height h′</label><input type="number" step="any" id="m-h" value="300"><span class="unit">km</span></div>
+        <div class="field"><label for="m-d">Ground distance</label><input type="number" step="any" id="m-d" value="1500"><span class="unit">km</span></div>
+        <div class="screen readout" id="m-out"></div>
+        <div class="model">Spherical Earth, mirror reflection at the midpoint at height h′: sin φ = R·sin θ / AP, θ = D/2R; MUF = foF2·sec φ. Ignores Martyn’s correction, layer curvature, ray bending below the layer and the E-layer; optimistic for long paths. For planning use <b>ITU-R P.533</b> (or P.1240 basic MUF with M(3000)F2).</div>
+      </div>
+    </div>`;
+  const runMuf = () => {
+    const fo = parseFloat($('#m-fo').value), hh = parseFloat($('#m-h').value), D = parseFloat($('#m-d').value);
+    const R = EARTH.Re, th = D / (2 * R);
+    const AP = Math.sqrt(R * R + (R + hh) ** 2 - 2 * R * (R + hh) * Math.cos(th));
+    const phi = Math.asin(R * Math.sin(th) / AP);
+    // elevation angle at the ground terminal
+    const elev = Math.atan2((R + hh) * Math.cos(th) - R, (R + hh) * Math.sin(th)) / DEG;
+    const rows = [
+      { k: 'Incidence φ', v: `${fmt(phi / DEG, 1)}°` },
+      { k: 'Take-off elevation', v: `${fmt(elev, 1)}°` },
+      { k: 'MUF', v: `${fmt(fo / Math.cos(phi), 2)} MHz` },
+    ];
+    if (elev < 0) rows.push({ k: 'Geometry', v: 'below horizon: path needs more than one hop', warn: true });
+    $('#m-out').innerHTML = rows.map(r => `<div class="row"><span class="k">${h(r.k)}</span><span class="${r.warn ? 'warn' : 'v'}">${h(r.v)}</span></div>`).join('');
+  };
+  $('#muf').addEventListener('input', runMuf);
+  runMuf();
+
+  try {
+    const d = await fetchJSON('data/propagation.json');
+    $('#upd').textContent = d.updated ? new Date(d.updated).toISOString().slice(0, 16).replace('T', ' ') + ' UTC' : '';
+    $('#live').innerHTML = `<dl class="kv">
+      <dt>Solar flux (F10.7)</dt><dd>${fmt(d.sfi, 0)} sfu</dd>
+      <dt>Planetary Kp</dt><dd>${fmt(d.kp, 2)}</dd>
+      ${(d.ionosondes || []).map(s => `<dt>${h(s.station)} foF2</dt><dd>${fmt(s.foF2, 2)} MHz</dd>`).join('')}
+    </dl>`;
+  } catch (e) {
+    $('#live').innerHTML = `<div class="notice">No live data yet. A scheduled GitHub Action will publish <code>data/propagation.json</code> (foF2, Kp, solar flux).</div>`;
+  }
+});
+
+/* ============================================================
+   WebSDR — RTL2832U over WebUSB (pending #3)
+   Plan: WebUSB driver (RTL2832U + R820T2 tuner) -> Web Worker DSP
+   (FFT, WFM/NFM/AM/SSB) -> AudioWorklet output.
+   ============================================================ */
+const RTL_FILTERS = [
+  { vendorId: 0x0bda, productId: 0x2838 }, // RTL2838 (generic DVB-T dongles, RTL-SDR Blog)
+  { vendorId: 0x0bda, productId: 0x2832 },
+];
+
+route('websdr', view => {
+  document.title = 'WebSDR · frandomnoise';
+  const hasUSB = 'usb' in navigator;
+  view.innerHTML = `<div class="page-head"><span class="label">Receiver</span><h1>WebSDR</h1>
+    <p>An RTL-SDR receiver that runs entirely in your browser: WebUSB driver, DSP in a Web Worker, audio through an AudioWorklet.</p></div>
+    <div class="grid grid-2">
+      <div class="panel">
+        <div class="panel-head"><h2>Device</h2><span class="label">${hasUSB ? 'WebUSB available' : 'no WebUSB'}</span></div>
+        <p class="small muted">${hasUSB
+          ? 'Requires a Chromium-based browser over HTTPS. On Linux, unload or blacklist <code>dvb_usb_rtl28xxu</code>; on Windows, install the WinUSB driver (e.g. with Zadig).'
+          : 'This browser does not expose WebUSB. Use a recent Chrome, Edge or another Chromium-based browser on desktop or Android.'}</p>
+        <button class="btn" id="connect" type="button" ${hasUSB ? '' : 'disabled'}>Connect RTL-SDR</button>
+        <dl class="kv" id="dev" style="margin-top:12px"></dl>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Status</h2><span class="label">work in progress</span></div>
+        <ul class="small">
+          <li>RTL2832U + R820T2 WebUSB driver: <span class="draft-badge">pending</span></li>
+          <li>Web Worker DSP (FFT, WFM/NFM/AM/SSB): <span class="draft-badge">pending</span></li>
+          <li>AudioWorklet output: <span class="draft-badge">pending</span></li>
+        </ul>
+      </div>
+    </div>`;
+  if (!hasUSB) return;
+  $('#connect').addEventListener('click', async () => {
+    try {
+      const d = await navigator.usb.requestDevice({ filters: RTL_FILTERS });
+      $('#dev').innerHTML = [
+        ['Product', d.productName || '—'], ['Manufacturer', d.manufacturerName || '—'],
+        ['VID:PID', `${d.vendorId.toString(16).padStart(4, '0')}:${d.productId.toString(16).padStart(4, '0')}`],
+        ['Serial', d.serialNumber || '—'],
+      ].map(([k, v]) => `<dt>${k}</dt><dd>${h(v)}</dd>`).join('');
+    } catch (e) {
+      if (e.name !== 'NotFoundError') $('#dev').innerHTML = `<dt>Error</dt><dd>${h(e.message)}</dd>`;
+    }
+  });
+});
+
+navigate();
+</script>
+</body>
+</html>

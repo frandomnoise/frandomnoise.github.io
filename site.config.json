@@ -9,6 +9,50 @@
   "outDir": "dist",
   "staticDataDir": "data",
   "externalLinks": [
-    { "label": "GNU Radio World", "href": "https://gnuradioworld.com/" }
+    {
+      "label": "GNU Radio World",
+      "href": "https://gnuradioworld.com/"
+    }
+  ],
+  "tleGroups": [
+    {
+      "id": "stations",
+      "label": "Space stations",
+      "celestrak": "stations"
+    },
+    {
+      "id": "amateur",
+      "label": "Amateur",
+      "celestrak": "amateur"
+    },
+    {
+      "id": "weather",
+      "label": "Weather",
+      "celestrak": "weather"
+    },
+    {
+      "id": "cubesats",
+      "label": "CubeSats",
+      "celestrak": "cubesat",
+      "norad": [
+        60550,
+        60534,
+        60552,
+        60537,
+        100944,
+        100888,
+        100945,
+        100952,
+        100926
+      ]
+    },
+    {
+      "id": "custom",
+      "label": "Selected",
+      "norad": [
+        64551,
+        69938
+      ]
+    }
   ]
 }

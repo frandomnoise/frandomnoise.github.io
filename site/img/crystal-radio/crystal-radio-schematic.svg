@@ -1,0 +1,70 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 880 480' role='img'>
+  <title>Crystal radio receiver: tapped coil, band switch, variable capacitor, detector and piezo earpiece</title>
+  <rect width='100%' height='100%' fill='#fdfdf8'/>
+  <polyline points='70,150 70,110' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <path d='M54,88 L70,110 L86,88' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='70,110 70,86' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='70,150 70,344.2857142857143 300,344.2857142857143' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <circle cx='300' cy='344.2857142857143' r='4' fill='#1b221e'/>
+  <text x='80' y='336.2857142857143' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='start' font-weight='normal'>tap A (antenna)</text>
+  <text x='92' y='108' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#15803d' text-anchor='start' font-weight='normal'>long wire</text>
+  <text x='92' y='124' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#15803d' text-anchor='start' font-weight='normal'>15-30 m</text>
+  <text x='48' y='450' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='12' fill='#15803d' text-anchor='middle' font-weight='normal'>earth</text>
+  <path d='M300,70 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427 a10.714285714285714,10.714285714285714 0 0 1 0,21.428571428571427' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <text x='330' y='214.0' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='15' fill='#1b221e' text-anchor='start' font-weight='bold'>L1</text>
+  <text x='330' y='232.0' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='start' font-weight='normal'>~140 t</text>
+  <text x='330' y='248.0' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='start' font-weight='normal'>~590 µH</text>
+  <polyline points='300,370 300,400' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='300,70 300,50 430,50 430,120 462,120' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <circle cx='466' cy='120' r='4.5' fill='#fdfdf8' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='300,220.0 462,220.0' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <circle cx='300' cy='220.0' r='4' fill='#1b221e'/>
+  <circle cx='466' cy='220.0' r='4.5' fill='#fdfdf8' stroke='#1b221e' stroke-width='2'/>
+  <text x='288' y='212.0' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='end' font-weight='normal'>tap B</text>
+  <text x='288' y='230.0' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='end' font-weight='normal'>60/68/78 t</text>
+  <text x='424' y='112' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='12' fill='#15803d' text-anchor='end' font-weight='normal'>LOW</text>
+  <text x='424' y='238.0' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='12' fill='#15803d' text-anchor='end' font-weight='normal'>HIGH</text>
+  <line x1='510' y1='170.0' x2='471' y2='122' stroke='#1b221e' stroke-width='2.5'/>
+  <circle cx='510' cy='170.0' r='4.5' fill='#fdfdf8' stroke='#1b221e' stroke-width='2'/>
+  <text x='504' y='196.0' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='15' fill='#1b221e' text-anchor='start' font-weight='bold'>S1</text>
+  <polyline points='514,170.0 590,170.0' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='590,170.0 590,255' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <line x1='573.0' y1='255.0' x2='607.0' y2='255.0' stroke='#1b221e' stroke-width='3'/>
+  <line x1='573.0' y1='265.0' x2='607.0' y2='265.0' stroke='#1b221e' stroke-width='3'/>
+  <line x1='566' y1='282' x2='614' y2='238' stroke='#1b221e' stroke-width='2'/>
+  <path d='M614,238 l-11,2 l7,8 z' fill='#1b221e'/>
+  <polyline points='590,265 590,400' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <text x='620' y='254' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='15' fill='#1b221e' text-anchor='start' font-weight='bold'>C1</text>
+  <text x='620' y='272' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='start' font-weight='normal'>20-140 pF</text>
+  <text x='620' y='288' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='12' fill='#15803d' text-anchor='start' font-weight='normal'>rotor to ground</text>
+  <circle cx='300' cy='284.2857142857143' r='4' fill='#1b221e'/>
+  <polyline points='300,284.2857142857143 230,284.2857142857143 230,392' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <path d='M230,392 a8,8 0 0 1 0,16' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='230,408 230,448 395,448' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <text x='222' y='276.2857142857143' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='end' font-weight='normal'>tap D</text>
+  <text x='222' y='294.2857142857143' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='end' font-weight='normal'>(detector)</text>
+  <path d='M395,435 L431,448 L395,461 Z' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <line x1='431' y1='434' x2='431' y2='462' stroke='#1b221e' stroke-width='3'/>
+  <text x='417' y='426' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='15' fill='#1b221e' text-anchor='middle' font-weight='bold'>D1</text>
+  <polyline points='431,448 760,448' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='700,448 700,406.0' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='700,442.0 700,400' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <line x1='684' y1='406.0' x2='716' y2='406.0' stroke='#1b221e' stroke-width='3'/>
+  <line x1='684' y1='442.0' x2='716' y2='442.0' stroke='#1b221e' stroke-width='3'/>
+  <rect x='689' y='413.0' width='22' height='22' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='760,400 760,408 769,410.6666666666667 751,416.0 769,421.3333333333333 751,426.6666666666667 769,432.0 751,437.3333333333333 760,440 760,448' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <circle cx='700' cy='448' r='4' fill='#1b221e'/>
+  <circle cx='700' cy='400' r='4' fill='#1b221e'/>
+  <text x='676' y='418' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='end' font-weight='normal'>piezo</text>
+  <text x='774' y='422' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='15' fill='#1b221e' text-anchor='start' font-weight='bold'>R1</text>
+  <text x='774' y='440' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='12' fill='#1b221e' text-anchor='start' font-weight='normal'>47-100 kΩ</text>
+  <text x='676' y='434' font-family='ui-monospace, Menlo, Consolas, monospace' font-size='13' fill='#1b221e' text-anchor='end' font-weight='normal'>earpiece</text>
+  <polyline points='70,400 760,400' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <circle cx='300' cy='400' r='4' fill='#1b221e'/>
+  <circle cx='590' cy='400' r='4' fill='#1b221e'/>
+  <polyline points='70,400 70,410' fill='none' stroke='#1b221e' stroke-width='2'/>
+  <line x1='57.0' y1='410' x2='83.0' y2='410' stroke='#1b221e' stroke-width='2'/>
+  <line x1='62.0' y1='416' x2='78.0' y2='416' stroke='#1b221e' stroke-width='2'/>
+  <line x1='67.0' y1='422' x2='73.0' y2='422' stroke='#1b221e' stroke-width='2'/>
+  <polyline points='70,150 70,150' fill='none' stroke='#1b221e' stroke-width='2'/>
+</svg>

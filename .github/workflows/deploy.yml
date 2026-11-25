@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Refresh TLEs and propagation data. CelesTrak updates GP data every few
+  # hours and asks clients not to poll more often than that.
+  schedule:
+    - cron: '17 */3 * * *'
 
 permissions:
   contents: read
@@ -22,6 +26,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Fetch TLE and propagation data
+        run: node scripts/fetch-data.mjs
       - run: node scripts/build.mjs
       - uses: actions/upload-pages-artifact@v3
         with:

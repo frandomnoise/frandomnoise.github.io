@@ -1,0 +1,16 @@
+{
+  "rr": { "title": "ITU Radio Regulations (2024), Article 5, Region 1", "url": "https://www.itu.int/pub/R-REG-RR" },
+  "cnaf": { "title": "CNAF, Orden TDF/732/2026 (BOE-A-2026-15661)", "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-15661" },
+  "erc7003": { "title": "CEPT ERC/REC 70-03, short range devices", "url": "https://docdb.cept.org/" },
+  "ecc": { "title": "CEPT ECC Decision", "url": "https://docdb.cept.org/" },
+  "itur": { "title": "ITU-R Recommendation", "url": "https://www.itu.int/pub/R-REC" },
+  "iaru1": { "title": "IARU Region 1 band plan", "url": "https://www.iaru-r1.org/" },
+  "icao": { "title": "ICAO Annex 10, Aeronautical Telecommunications" },
+  "3gpp": { "title": "3GPP TS 36.101 / TS 38.101-1, operating bands", "url": "https://www.3gpp.org/" },
+  "ariss": { "title": "ARISS", "url": "https://www.ariss.org/" },
+  "amsatdl": { "title": "AMSAT-DL, QO-100", "url": "https://amsat-dl.org/" },
+  "ptb": { "title": "PTB, DCF77", "url": "https://www.ptb.de/" },
+  "npl": { "title": "NPL, MSF time signal", "url": "https://www.npl.co.uk/" },
+  "lora": { "title": "LoRa Alliance RP002 Regional Parameters", "url": "https://lora-alliance.org/" },
+  "op": { "title": "Operator or project documentation" }
+}

@@ -13,11 +13,14 @@
 //   robots.txt
 //   sitemap.xml
 //   data/          copied from ./data if it exists (TLE, propagation JSON...)
+//   data/freqdb.json  compiled and validated from freqdb/*.json (see scripts/freqdb.mjs)
 
 import { readFile, writeFile, readdir, mkdir, rm, cp, stat } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { join, extname, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { texToMathML } from './tex2mathml.mjs';
+import { compileFreqDB } from './freqdb.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = new Set(process.argv.slice(2));
@@ -54,7 +57,8 @@ function unquote(s) {
 // ---------- minimal Markdown renderer ----------
 // Supports: ATX headings, paragraphs, fenced code (```lang), blockquotes,
 // ordered/unordered lists (single level), tables (GFM pipes), hr, images,
-// links, **bold**, *italic*, `code`, $$display math$$ (kept verbatim) and raw HTML blocks.
+// links, **bold**, *italic*, `code`, $inline$ and $$display$$ LaTeX math (converted to MathML
+// by tex2mathml.mjs) and raw HTML blocks. The word TODO is highlighted so placeholders stay visible.
 
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -63,8 +67,10 @@ function slugify(s) {
 }
 
 function inline(s) {
-  const codes = [];
+  const codes = [], maths = [];
   s = s.replace(/`([^`]+)`/g, (_, c) => `\u0000${codes.push(esc(c)) - 1}\u0000`);
+  // $...$ inline math: no space just inside the dollars, no digit right after the closing one.
+  s = s.replace(/\$([^\s$](?:[^$]*[^\s$])?)\$(?!\d)/g, (_, tex) => `\u0001${maths.push(texToMathML(tex)) - 1}\u0001`);
   s = esc(s);
   s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;([^&]*)&quot;)?\)/g,
     (_, alt, src, t) => `<img src="${src}" alt="${alt}"${t ? ` title="${t}"` : ''} loading="lazy">`);
@@ -74,7 +80,9 @@ function inline(s) {
   });
   s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   s = s.replace(/(^|[^*\w])\*([^*\s][^*]*)\*(?!\w)/g, '$1<em>$2</em>');
+  s = s.replace(/\bTODO\b/g, '<mark class="todo">TODO</mark>');
   s = s.replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${codes[i]}</code>`);
+  s = s.replace(/\u0001(\d+)\u0001/g, (_, i) => maths[i]);
   return s;
 }
 
@@ -108,7 +116,7 @@ function renderMarkdown(md) {
         buf.push(lines[i] ?? '');
       }
       i++;
-      out.push(`<div class="math">${esc(buf.join('\n').replace(/\$\$\s*$/, '').trim())}</div>`);
+      out.push(`<div class="math">${texToMathML(buf.join('\n').replace(/\$\$\s*$/, '').trim(), true)}</div>`);
       continue;
     }
     if ((m = /^(#{1,6})\s+(.*)$/.exec(line))) {
@@ -151,7 +159,9 @@ function renderMarkdown(md) {
     if (/^<\w/.test(line)) {
       const buf = [];
       while (i < lines.length && lines[i].trim()) buf.push(lines[i++]);
-      out.push(buf.join('\n'));
+      // Raw HTML passes through untouched, except that TODO placeholders are highlighted
+      // in text content (not inside tags or attributes).
+      out.push(buf.join('\n').replace(/>([^<]*)</g, (_, t) => `>${t.replace(/\bTODO\b/g, '<mark class="todo">TODO</mark>')}<`));
       continue;
     }
     const buf = [];
@@ -186,7 +196,7 @@ async function loadPosts(includeDrafts) {
       summary: meta.summary || '',
       status: meta.status,
       readingMinutes: Math.max(1, Math.round(words / 220)),
-      html: renderMarkdown(body),
+      html: (() => { try { return renderMarkdown(body); } catch (e) { throw new Error(`${f}: ${e.message}`); } })(),
     });
   }
   posts.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
@@ -207,6 +217,8 @@ function sitemap(posts) {
 async function build() {
   const includeDrafts = args.has('--drafts');
   const posts = await loadPosts(includeDrafts);
+  // Validate before touching dist/, so a data error never leaves a half-built site.
+  const freqdb = await compileFreqDB({ posts, tleGroups: config.tleGroups });
 
   await rm(OUT, { recursive: true, force: true });
   await mkdir(OUT, { recursive: true });
@@ -221,8 +233,11 @@ async function build() {
 
   const dataDir = join(ROOT, config.staticDataDir);
   if (await exists(dataDir)) await cp(dataDir, join(OUT, 'data'), { recursive: true });
+  await mkdir(join(OUT, 'data'), { recursive: true });
+  await writeFile(join(OUT, 'data', 'freqdb.json'), JSON.stringify(freqdb.data));
+  for (const w of freqdb.warnings) console.log(`WARN ${w}`);
 
-  console.log(`built ${posts.length} post(s)${includeDrafts ? ' (drafts included)' : ''} -> ${config.outDir}/`);
+  console.log(`built ${posts.length} post(s), ${freqdb.data.entries.length} freqdb entries${includeDrafts ? ' (drafts included)' : ''} -> ${config.outDir}/`);
 }
 
 function serve(port = 8080) {

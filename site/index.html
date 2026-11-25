@@ -31,6 +31,10 @@
   --screen: #0f1a14;
   --screen-ink: #7ee2a0;
   --screen-grid: rgba(126, 226, 160, 0.12);
+  --screen-land: rgba(126, 226, 160, 0.42);
+  --series-2: #2563eb;
+  --fo-lo: #d9620b;
+  --fo-hi: #fde68a;
   --logo-f: #14532d;
   --logo-random: #16a34a;
   --logo-noise: #65a30d;
@@ -56,6 +60,8 @@
     --screen: #070c09;
     --screen-ink: #7ee2a0;
     --screen-grid: rgba(126, 226, 160, 0.10);
+    --screen-land: rgba(126, 226, 160, 0.38);
+    --series-2: #60a5fa;
     --logo-f: #86efac;
     --logo-random: #34d06a;
     --logo-noise: #a3e635;
@@ -78,6 +84,8 @@
   --screen: #070c09;
   --screen-ink: #7ee2a0;
   --screen-grid: rgba(126, 226, 160, 0.10);
+  --screen-land: rgba(126, 226, 160, 0.38);
+  --series-2: #60a5fa;
   --logo-f: #86efac;
   --logo-random: #34d06a;
   --logo-noise: #a3e635;
@@ -257,7 +265,7 @@ article.post .body blockquote {
 article.post .body :not(pre) > code {
   background: var(--panel-2); border: 1px solid var(--rule); padding: 0.05em 0.35em; border-radius: 3px; font-size: 0.88em;
 }
-article.post .body pre, article.post .body .math {
+article.post .body pre {
   background: var(--screen); color: var(--screen-ink); padding: 14px 16px; border-radius: var(--radius);
   overflow-x: auto; font-size: 0.86rem; line-height: 1.5; position: relative;
 }
@@ -265,7 +273,28 @@ article.post .body pre code[data-lang]::before {
   content: attr(data-lang); position: absolute; top: 6px; right: 10px;
   font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55;
 }
-article.post .body .math { white-space: pre-wrap; text-align: center; font-size: 0.95rem; }
+article.post .body .math {
+  margin: 1.1em 0; padding: 12px 16px; overflow-x: auto;
+  background: var(--panel); border: 1px solid var(--rule); border-left: 3px solid var(--accent); border-radius: var(--radius);
+}
+article.post .body .math math { font-size: 1.2em; }
+article.post .body math { font-size: 1.05em; }
+article.post .body mark.todo {
+  background: color-mix(in srgb, var(--warn) 22%, transparent); color: var(--ink);
+  font: 600 0.8em var(--mono); padding: 0.05em 0.35em; border-radius: 3px;
+}
+article.post figure { margin: 1.6em 0; }
+article.post figure img, article.post figure svg { display: block; width: 100%; height: auto; }
+article.post figure.schematic img { background: #fdfdf8; padding: 12px; border: 1px solid var(--rule); border-radius: var(--radius); }
+article.post figcaption { font-size: 0.85rem; color: var(--ink-2); margin-top: 8px; }
+article.post figcaption b { color: var(--ink); }
+article.post .placeholder {
+  display: grid; place-items: center; text-align: center; aspect-ratio: 3 / 2; padding: 16px;
+  border: 2px dashed var(--rule); border-radius: var(--radius); background: var(--panel-2);
+  font: 0.85rem var(--mono); color: var(--ink-3);
+}
+article.post .placeholder.wide { aspect-ratio: 2 / 1; }
+article.post .body table { font-variant-numeric: tabular-nums; }
 .table-wrap { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
 th, td { border-bottom: 1px solid var(--rule); padding: 6px 8px; vertical-align: top; }
@@ -274,20 +303,162 @@ th { font: 600 0.72rem var(--mono); text-transform: uppercase; letter-spacing: 0
 /* ============================================================
    Frequency DB
    ============================================================ */
-.db-tools { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-@media (max-width: 640px) { .db-tools { grid-template-columns: 1fr; } }
+.db-tools { display: grid; grid-template-columns: 2fr 1.4fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+@media (max-width: 760px) { .db-tools { grid-template-columns: 1fr 1fr; } .db-tools > :first-child { grid-column: 1 / -1; } }
+@media (max-width: 480px) { .db-tools { grid-template-columns: 1fr; } }
 td.freq { font-family: var(--mono); white-space: nowrap; font-variant-numeric: tabular-nums; }
 tr.hit td { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+:root {
+  --cat-amateur: #15803d; --cat-broadcast: #b45309; --cat-aviation: #2563eb; --cat-maritime: #0e7490;
+  --cat-space: #7c3aed; --cat-science: #be185d; --cat-srd: #a16207; --cat-mobile: #64748b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --cat-amateur: #34d06a; --cat-broadcast: #f59e0b; --cat-aviation: #60a5fa; --cat-maritime: #22d3ee;
+    --cat-space: #a78bfa; --cat-science: #f472b6; --cat-srd: #facc15; --cat-mobile: #94a3b8;
+  }
+}
+:root[data-theme="dark"] {
+  --cat-amateur: #34d06a; --cat-broadcast: #f59e0b; --cat-aviation: #60a5fa; --cat-maritime: #22d3ee;
+  --cat-space: #a78bfa; --cat-science: #f472b6; --cat-srd: #facc15; --cat-mobile: #94a3b8;
+}
+.cat-amateur { --c: var(--cat-amateur); } .cat-broadcast { --c: var(--cat-broadcast); }
+.cat-aviation { --c: var(--cat-aviation); } .cat-maritime { --c: var(--cat-maritime); }
+.cat-space { --c: var(--cat-space); } .cat-science { --c: var(--cat-science); }
+.cat-srd { --c: var(--cat-srd); } .cat-mobile { --c: var(--cat-mobile); }
+.bp-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 10px; }
+.bp-tools .btn { padding: 5px 10px; }
+.bp-tools .spacer { flex: 1; }
+svg.bandplan {
+  display: block; width: 100%; touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab;
+  background: var(--panel-2); border: 1px solid var(--rule); border-radius: var(--radius);
+}
+svg.bandplan:active { cursor: grabbing; }
+.bandplan text { font: 11px var(--mono); fill: var(--ink); pointer-events: none; }
+.bandplan text.tick { fill: var(--ink-2); }
+.bandplan text.itu { fill: var(--ink-3); font-weight: 600; letter-spacing: 0.1em; }
+.bandplan .ituband { fill: transparent; }
+.bandplan .ituband.odd { fill: color-mix(in srgb, var(--ink) 4%, transparent); }
+.bandplan line.grid { stroke: var(--rule); stroke-width: 1; }
+.bandplan line.grid.major { stroke: color-mix(in srgb, var(--ink-3) 60%, transparent); }
+.bandplan .item { cursor: pointer; }
+.bandplan .item rect { fill: color-mix(in srgb, var(--c) 26%, var(--panel)); stroke: var(--c); stroke-width: 1; }
+.bandplan .item rect.hitbox { fill: transparent; stroke: none; }
+.bandplan .item line.spot { stroke: var(--c); stroke-width: 2.5; }
+.bandplan .item:hover rect:not(.hitbox) { fill: color-mix(in srgb, var(--c) 45%, var(--panel)); }
+.bandplan .item.dim { opacity: 0.3; }
+.bandplan .item.hit rect:not(.hitbox) { stroke-width: 2; }
+.bandplan .item.sel rect:not(.hitbox), .bandplan .item.sel line.spot { stroke: var(--ink); stroke-width: 2; }
+.bandplan line.marker { stroke: var(--accent); stroke-width: 2; }
+.bandplan line.muf { stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 5 3; }
+.bandplan text.muf-t { fill: var(--warn); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 10px; font: 0.75rem var(--mono); color: var(--ink-2); }
+.legend i, i.sw {
+  display: inline-block; width: 10px; height: 10px; margin-right: 5px; vertical-align: -1px; border-radius: 2px;
+  background: color-mix(in srgb, var(--c) 30%, var(--panel)); border: 1px solid var(--c);
+}
+table.fdb tr[data-id] { cursor: pointer; }
+table.fdb tr[data-id]:hover td { background: var(--panel-2); }
+table.fdb tr.sel td { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.kv.fdb-kv { grid-template-columns: minmax(7em, max-content) 1fr; gap: 0 16px; }
+.kv.fdb-kv dd { text-align: left; font-family: var(--sans); font-size: 0.88rem; }
+.kv.fdb-kv dt, .kv.fdb-kv dd { padding: 4px 0; border-bottom: 1px dashed var(--rule); }
+#crumb { margin: 0 0 10px; }
+.linkish { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; font: inherit; }
 
 /* ============================================================
    Satellites / canvas
    ============================================================ */
 canvas.map { width: 100%; aspect-ratio: 2 / 1; display: block; }
 .sat-layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start; }
+.sat-layout > *, .sat-layout .grid > * { min-width: 0; }
+.gloss-h { font-size: 0.95rem; margin: 16px 0 4px; }
+.info-line:empty { display: none; }
+.panel-head + .gloss-h { margin-top: 0; }
+table.gloss td:first-child { font-family: var(--mono); color: var(--ink); width: 24%; min-width: 9em; }
+table.gloss td:last-child { color: var(--ink-2); font-size: 0.86rem; }
 @media (max-width: 900px) { .sat-layout { grid-template-columns: 1fr; } }
 .kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font: 0.85rem var(--mono); }
 .kv dt { color: var(--ink-3); }
 .kv dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   Propagation: charts, map, scales
+   ============================================================ */
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.ch-wrap { position: relative; }
+.ch-grid { stroke: var(--rule); stroke-width: 1; }
+.ch-guide { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 4 4; }
+.ch-now { stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 2 3; }
+.ch-ax { font: 11px var(--mono); fill: var(--ink-3); }
+.ch-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.ch-line.s1 { stroke: var(--accent); }
+.ch-line.s2 { stroke: var(--series-2); }
+.ch-cross { stroke: var(--ink-3); stroke-width: 1; }
+.ch-tip {
+  position: absolute; top: 4px; min-width: 150px; pointer-events: none; z-index: 2;
+  background: var(--panel); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 6px 8px; font-size: 0.78rem; color: var(--ink-2);
+}
+.ch-tip b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.ch-tip i, .ch-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.ch-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.78rem; color: var(--ink-2); margin-bottom: 6px; }
+i.s1 { background: var(--accent); }
+i.s2 { background: var(--series-2); }
+.kp-lbl { font: 600 11px var(--mono); fill: var(--ink-2); }
+path.kp-quiet, i.kp-quiet { fill: var(--accent); background: var(--accent); }
+path.kp-storm, i.kp-storm { fill: var(--warn); background: var(--warn); }
+path.kp-fut { fill: color-mix(in srgb, var(--accent) 18%, transparent); stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 2; }
+path.kp-storm.kp-fut { fill: color-mix(in srgb, var(--warn) 18%, transparent); stroke: var(--warn); }
+i.kp-fut { background: color-mix(in srgb, var(--accent) 18%, transparent); border: 1.5px dashed var(--accent); }
+.scales { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.scale { border: 1px solid var(--rule); border-left: 4px solid var(--ink-3); border-radius: var(--radius); padding: 8px 12px; background: var(--panel-2); }
+.scale.ok { border-left-color: var(--accent); }
+.scale.warn { border-left-color: var(--warn); }
+.scale.bad { border-left-color: var(--bad); }
+.scale-top { display: flex; justify-content: space-between; align-items: baseline; }
+.scale-k { font: 700 1.5rem/1.1 var(--mono); color: var(--ink); }
+.scale-ic { font-size: 1rem; color: var(--ink-2); }
+.scale.warn .scale-ic { color: var(--warn); }
+.scale.bad .scale-ic { color: var(--bad); }
+.scale-n { font-size: 0.85rem; color: var(--ink); }
+.scale-t { font: 0.78rem var(--mono); color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
+.scale-f { font-size: 0.75rem; color: var(--ink-3); margin-top: 4px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.tile { padding: 8px 12px; border: 1px solid var(--rule); border-radius: var(--radius); }
+.tile-k { font-size: 0.78rem; color: var(--ink-2); }
+.tile-v { font: 600 1.45rem/1.3 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.tile-v small { font-size: 0.8rem; font-weight: 400; color: var(--ink-2); }
+.tile-s { font-size: 0.75rem; color: var(--ink-3); min-height: 1.1em; }
+.map-wrap { position: relative; }
+.map-wrap canvas { display: block; width: 100%; aspect-ratio: 1400 / 900; }
+.map-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-st circle { stroke: #0b100d; stroke-width: 3; }
+.map-st.sel circle { stroke: #ffffff; stroke-width: 5; }
+.map-lbl { font: 700 26px var(--mono); fill: #f4f7f4; paint-order: stroke; stroke: #0b100d; stroke-width: 6px; }
+.map-tag { font: 700 22px var(--mono); fill: #ffffff; paint-order: stroke; stroke: #0b100d; stroke-width: 6px; }
+.map-obs path { stroke: #ffffff; stroke-width: 5; fill: none; }
+.map-path { fill: none; stroke: #ffffff; stroke-width: 3; stroke-dasharray: 12 8; opacity: 0.9; }
+.map-refl { fill: #0b100d; stroke: #ffffff; stroke-width: 3; }
+.map-dest path { fill: #ffffff; stroke: #0b100d; stroke-width: 3; }
+.map-key { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; margin-top: 8px; color: var(--ink-2); }
+.key-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; vertical-align: -2px; }
+.key-ramp { display: inline-block; width: 90px; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--fo-lo), var(--fo-hi)); }
+.key-sw { display: inline-block; width: 18px; height: 12px; margin-right: 5px; vertical-align: -2px; border: 1px solid var(--rule); }
+.key-sw.path { border: 0; border-top: 2px dashed var(--ink-2); height: 0; }
+.key-x { color: var(--ink); margin-right: 5px; }
+.key-group { display: inline-flex; align-items: center; gap: 6px; }
+.st { white-space: nowrap; font: 0.82rem var(--mono); }
+.st-open { color: var(--accent); font-weight: 600; }
+.st-marg { color: var(--warn); }
+.st-closed, .st-abs { color: var(--ink-3); }
+.spark { width: 120px; height: 30px; display: block; }
+.spark-dot { fill: var(--accent); }
+.place-custom { margin-top: -4px; }
+.place-custom[hidden] { display: none; }
+.place-hint { margin: -2px 0 10px; font-family: var(--mono); }
+.gloss-intro p { margin: 0 0 10px; color: var(--ink-2); max-width: 80ch; }
+.gloss-intro b { color: var(--ink); }
 
 footer.bottom { border-top: 1px solid var(--rule); padding: 20px 0 32px; font-size: 0.82rem; color: var(--ink-3); }
 footer.bottom .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
@@ -320,8 +491,7 @@ footer.bottom .wrap { display: flex; flex-wrap: wrap; justify-content: space-bet
 
 <footer class="bottom">
   <div class="wrap">
-    <span><span class="logo" style="font-size:0.9rem"><span class="l-f">f</span><span class="l-random">random</span><span class="l-noise">noise</span></span> · a software defined radio notebook</span>
-    <span class="mono">static · no trackers · everything runs in your browser</span>
+    <span><span class="logo" style="font-size:0.9rem"><span class="l-f">f</span><span class="l-random">random</span><span class="l-noise">noise</span></span></span>
   </div>
 </footer>
 
@@ -346,14 +516,14 @@ function store(key, value) {
 }
 
 function fmt(x, digits = 2) {
-  if (!Number.isFinite(x)) return '—';
+  if (!Number.isFinite(x)) return '-';
   const a = Math.abs(x);
   if (a !== 0 && (a >= 1e6 || a < 1e-3)) return x.toExponential(digits);
   return x.toFixed(digits);
 }
 
 function fmtSI(x, unit, digits = 3) {
-  if (!Number.isFinite(x)) return '—';
+  if (!Number.isFinite(x)) return '-';
   const p = [['T', 1e12], ['G', 1e9], ['M', 1e6], ['k', 1e3], ['', 1], ['m', 1e-3], ['µ', 1e-6], ['n', 1e-9], ['p', 1e-12], ['f', 1e-15]];
   const a = Math.abs(x);
   for (const [s, v] of p) if (a >= v) return `${(x / v).toPrecision(digits)} ${s}${unit}`;
@@ -396,7 +566,10 @@ let cleanup = null;
 function route(name, render) { routes[name] = render; }
 
 async function navigate() {
-  const hash = decodeURIComponent(location.hash.slice(1)) || 'blog';
+  // #route?key=value: the query part is passed to the page as URLSearchParams.
+  const raw = location.hash.slice(1), qi = raw.indexOf('?');
+  const hash = decodeURIComponent(qi < 0 ? raw : raw.slice(0, qi)) || 'blog';
+  const params = new URLSearchParams(qi < 0 ? '' : raw.slice(qi + 1));
   let name = hash, param = null;
   if (hash.startsWith('post-')) { name = 'post'; param = hash.slice(5); }
   const render = routes[name] || routes.notfound;
@@ -409,7 +582,7 @@ async function navigate() {
   const old = $('#view');
   const view = old.cloneNode(false);
   old.replaceWith(view);
-  cleanup = (await render(view, param)) || null;
+  cleanup = (await render(view, param, params)) || null;
   window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', navigate);
@@ -417,7 +590,7 @@ window.addEventListener('hashchange', navigate);
 route('notfound', view => {
   view.innerHTML = `<div class="page-head"><span class="label">404</span><h1>No carrier</h1>
     <p>Nothing on this frequency. Back to the <a href="#blog">blog</a>.</p></div>`;
-  document.title = 'Not found · frandomnoise';
+  document.title = 'Not found - frandomnoise';
 });
 
 /* ============================================================
@@ -430,7 +603,7 @@ async function getPosts() {
 }
 
 route('blog', async view => {
-  document.title = 'frandomnoise · SDR notebook';
+  document.title = 'frandomnoise - SDR notebook';
   view.innerHTML = `<div class="page-head"><span class="label">Log book</span><h1>Blog</h1>
     <p>Notes on software defined radio, signal processing and the RF spectrum.</p></div>
     <div class="tags" id="tagbar" style="margin-bottom:16px"></div>
@@ -469,7 +642,7 @@ route('post', async (view, slug) => {
   try { posts = await getPosts(); } catch (e) { posts = []; }
   const p = posts.find(x => x.slug === slug);
   if (!p) return routes.notfound(view);
-  document.title = `${p.title} · frandomnoise`;
+  document.title = `${p.title} - frandomnoise`;
   view.innerHTML = `<article class="post">
     <a href="#blog" class="small mono">← blog</a>
     <h1>${h(p.title)}</h1>
@@ -499,7 +672,7 @@ const calculators = [
         { k: 'λ', v: fmtSI(lambda, 'm') },
       ];
     },
-    model: '<b>ITU-R P.525-4</b>: L<sub>bf</sub> = 32.45 + 20·log f<sub>MHz</sub> + 20·log d<sub>km</sub> (isotropic antennas). Valid only in the far field and for an unobstructed path; no atmospheric, multipath or diffraction losses.',
+    model: '<b>ITU-R P.525-4</b>: L<sub>bf</sub> = 32.45 + 20·log f<sub>MHz</sub> + 20·log d<sub>km</sub> (isotropic antennas). Valid only in the far field and for an unobstructed path. No atmospheric, multipath or diffraction losses.',
   },
   {
     id: 'noise',
@@ -521,7 +694,7 @@ const calculators = [
         { k: 'T_e of receiver', v: `${fmt(Te, 1)} K` },
       ];
     },
-    model: '<b>Johnson–Nyquist</b>: N = 10·log(kT<sub>0</sub>B) + NF, with T<sub>0</sub> = 290 K (IEEE standard reference). Assumes the antenna noise temperature equals T<sub>0</sub>; at HF the external (galactic/man-made) noise usually dominates, see <b>ITU-R P.372</b>. B is the equivalent noise bandwidth, not the −3 dB bandwidth.',
+    model: '<b>Johnson-Nyquist</b>: N = 10·log(kT<sub>0</sub>B) + NF, with T<sub>0</sub> = 290 K (IEEE standard reference). Assumes the antenna noise temperature equals T<sub>0</sub>. At HF the external (galactic/man-made) noise usually dominates, see <b>ITU-R P.372</b>. B is the equivalent noise bandwidth, not the -3 dB bandwidth.',
   },
   {
     id: 'friis-nf',
@@ -543,7 +716,7 @@ const calculators = [
         { k: 'T_e total', v: `${fmt(290 * (F - 1), 1)} K` },
       ];
     },
-    model: '<b>Friis (1944)</b>: F = F<sub>1</sub> + (F<sub>2</sub>−1)/G<sub>1</sub> + (F<sub>3</sub>−1)/(G<sub>1</sub>G<sub>2</sub>). Available power gains, matched interfaces. For a passive lossy stage at 290 K, NF = loss.',
+    model: '<b>Friis (1944)</b>: F = F<sub>1</sub> + (F<sub>2</sub>-1)/G<sub>1</sub> + (F<sub>3</sub>-1)/(G<sub>1</sub>G<sub>2</sub>). Available power gains, matched interfaces. For a passive lossy stage at 290 K, NF = loss.',
   },
   {
     id: 'power',
@@ -563,7 +736,7 @@ const calculators = [
         { k: 'V_pp (sine)', v: fmtSI(V * 2 * Math.SQRT2, 'V') },
       ];
     },
-    model: 'P = V<sub>rms</sub>²/R. dBµV = dBm + 10·log(R·10<sup>9</sup>) → +107 dB at 50 Ω. (−73 dBm ≈ S9 on HF per IARU Region 1 Technical Recommendation R.1.)',
+    model: 'P = V<sub>rms</sub>²/R. dBµV = dBm + 10·log(R·10<sup>9</sup>) → +107 dB at 50 Ω. (-73 dBm ≈ S9 on HF per IARU Region 1 Technical Recommendation R.1.)',
   },
   {
     id: 'vswr',
@@ -579,7 +752,7 @@ const calculators = [
         { k: 'Reflected power', v: `${fmt(100 * g * g)} %` },
       ];
     },
-    model: '|Γ| = (S−1)/(S+1); RL = −20·log|Γ|; ML = −10·log(1−|Γ|²). Lossless line; line loss improves the VSWR seen at the transmitter.',
+    model: '|Γ| = (S-1)/(S+1), RL = -20·log|Γ|, ML = -10·log(1-|Γ|²). Lossless line. Line loss improves the VSWR seen at the transmitter.',
   },
   {
     id: 'wave',
@@ -596,11 +769,11 @@ const calculators = [
         { k: 'λ/4 × k', v: fmtSI(l / 4 * vf, 'm') },
       ];
     },
-    model: 'λ = c/f. The end-effect shortening factor k ≈ 0.95–0.98 for wire dipoles depends on the length/diameter ratio; trim on the antenna. For coax stubs use the cable velocity factor instead.',
+    model: 'λ = c/f. The end-effect shortening factor k ≈ 0.95-0.98 for wire dipoles depends on the length/diameter ratio, trim on the antenna. For coax stubs use the cable velocity factor instead.',
   },
   {
     id: 'hata',
-    title: 'Okumura–Hata / COST-231 Hata',
+    title: 'Okumura-Hata / COST-231 Hata',
     inputs: [
       { id: 'model', label: 'Model / environment', type: 'select', value: 'hata-urban-small', options: [
         ['hata-urban-small', 'Hata, urban (small/medium city)'],
@@ -632,10 +805,10 @@ const calculators = [
       }
       const warns = [];
       const [fmin, fmax] = isCost ? [1500, 2000] : [150, 1500];
-      if (f < fmin || f > fmax) warns.push(`f outside ${fmin}–${fmax} MHz`);
-      if (hb < 30 || hb > 200) warns.push('h_b outside 30–200 m');
-      if (hm < 1 || hm > 10) warns.push('h_m outside 1–10 m');
-      if (d < 1 || d > 20) warns.push('d outside 1–20 km');
+      if (f < fmin || f > fmax) warns.push(`f outside ${fmin}-${fmax} MHz`);
+      if (hb < 30 || hb > 200) warns.push('h_b outside 30-200 m');
+      if (hm < 1 || hm > 10) warns.push('h_m outside 1-10 m');
+      if (d < 1 || d > 20) warns.push('d outside 1-20 km');
       const fs = 32.45 + 20 * lf + 20 * ld;
       return [
         { k: 'Median path loss', v: `${fmt(L)} dB` },
@@ -643,7 +816,7 @@ const calculators = [
         ...warns.map(w => ({ k: 'Out of range', v: w, warn: true })),
       ];
     },
-    model: '<b>Hata (1980)</b>, empirical fit to Okumura: 150–1500 MHz, h<sub>b</sub> 30–200 m, h<sub>m</sub> 1–10 m, d 1–20 km. Large-city a(h<sub>m</sub>) uses the f ≤ 200 MHz form below 300 MHz here. <b>COST-231 Hata</b> (COST Action 231 final report, 1999): 1500–2000 MHz, same h/d ranges, C<sub>m</sub> = 0/3 dB. Median loss only, base antenna above surrounding rooftops; no terrain, no location variability.',
+    model: '<b>Hata (1980)</b>, empirical fit to Okumura: 150-1500 MHz, h<sub>b</sub> 30-200 m, h<sub>m</sub> 1-10 m, d 1-20 km. Large-city a(h<sub>m</sub>) uses the f ≤ 200 MHz form below 300 MHz here. <b>COST-231 Hata</b> (COST Action 231 final report, 1999): 1500-2000 MHz, same h/d ranges, C<sub>m</sub> = 0/3 dB. Median loss only, base antenna above surrounding rooftops. No terrain, no location variability.',
   },
   {
     id: 'link',
@@ -677,7 +850,7 @@ const calculators = [
     title: 'Doppler shift',
     inputs: [
       { id: 'f', label: 'Carrier', unit: 'MHz', value: 437.8 },
-      { id: 'v', label: 'Range rate (− approaching)', unit: 'km/s', value: -7 },
+      { id: 'v', label: 'Range rate (- approaching)', unit: 'km/s', value: -7 },
     ],
     compute: ({ f, v }) => {
       const df = -f * 1e6 * (v * 1e3) / C0;
@@ -686,12 +859,12 @@ const calculators = [
         { k: 'Received', v: `${fmt(f + df / 1e6, 6)} MHz` },
       ];
     },
-    model: 'First-order (non-relativistic) Doppler: Δf = −f·ṙ/c. Error is O((v/c)²), negligible for LEO (≈5×10<sup>−10</sup>).',
+    model: 'First-order (non-relativistic) Doppler: Δf = -f·ṙ/c. Error is O((v/c)²), negligible for LEO (≈5×10<sup>-10</sup>).',
   },
 ];
 
 route('calculators', view => {
-  document.title = 'RF Calculators · frandomnoise';
+  document.title = 'RF Calculators - frandomnoise';
   view.innerHTML = `<div class="page-head"><span class="label">Bench</span><h1>RF Calculators</h1>
     <p>Each calculator states the model it implements and where it stops being valid.</p></div>
     <div class="grid grid-2" id="calcs"></div>`;
@@ -726,206 +899,1366 @@ route('calculators', view => {
 });
 
 /* ============================================================
-   Frequency DB — ITU Region 1 / Spain (CNAF)
-   Frequencies in MHz. Every entry must be checked against the
-   current ITU Radio Regulations Article 5 and the CNAF edition
-   before relying on it; `src` records what it was checked against.
+   Frequency DB - ITU Region 1 / Spain (CNAF)
+   Data: data/freqdb.json, compiled and validated at build time by
+   scripts/freqdb.mjs from freqdb/*.json. Two layers:
+     alloc  service allocations (RR Art. 5 Region 1, CNAF), no overlaps
+     use    concrete signals and uses (AIS, ADS-B, APRS, satellites...)
+   All frequencies are integer Hz. segs = [[lo, hi], ...], ch = spot channels.
    ============================================================ */
-const FREQ_DB = [
-  { lo: 26.965, hi: 27.405, name: 'CB 27 MHz', service: 'Land mobile (licence-exempt)', notes: '40 channels, 10 kHz spacing (CEPT ECC/DEC/(11)03).', tags: ['voice', 'licence-exempt'] },
-  { lo: 7.0, hi: 7.2, name: '40 m amateur band', service: 'Amateur, Amateur-satellite', notes: 'Region 1 allocation 7000–7200 kHz.', tags: ['amateur', 'hf'] },
-  { lo: 14.0, hi: 14.35, name: '20 m amateur band', service: 'Amateur (14000–14250 kHz also Amateur-satellite)', notes: 'Worldwide allocation.', tags: ['amateur', 'hf'] },
-  { lo: 28.0, hi: 29.7, name: '10 m amateur band', service: 'Amateur, Amateur-satellite', notes: 'Worldwide allocation.', tags: ['amateur', 'hf'] },
-  { lo: 87.5, hi: 108.0, name: 'FM broadcast (Band II)', service: 'Broadcasting', notes: 'WFM, 75 kHz deviation, 50 µs de-emphasis in Europe. RDS on 57 kHz subcarrier.', tags: ['broadcast', 'vhf'] },
-  { lo: 108.0, hi: 117.975, name: 'ILS localizer / VOR', service: 'Aeronautical radionavigation', notes: 'ILS LOC 108.1–111.95 MHz (odd tenths), VOR elsewhere.', tags: ['aviation', 'vhf'] },
-  { lo: 117.975, hi: 137.0, name: 'VHF airband (voice)', service: 'Aeronautical mobile (R)', notes: 'AM-DSB voice, 8.33 kHz channel spacing in European airspace.', tags: ['aviation', 'vhf', 'voice'] },
-  { lo: 137.0, hi: 138.0, name: 'Weather satellite downlinks', service: 'Meteorological-satellite, Space operation', notes: 'Historical NOAA APT and Meteor-M LRPT channels; check which spacecraft are still active.', tags: ['satellite', 'weather', 'vhf'] },
-  { lo: 144.0, hi: 146.0, name: '2 m amateur band', service: 'Amateur, Amateur-satellite', notes: 'Region 1: 2 MHz wide. APRS 144.800 MHz; satellite sub-band 145.800–146.000 MHz.', tags: ['amateur', 'vhf'] },
-  { lo: 145.8, hi: 145.8, name: 'ISS voice / SSTV downlink', service: 'Amateur-satellite', notes: 'ARISS FM downlink 145.800 MHz.', tags: ['amateur', 'satellite', 'vhf'] },
-  { lo: 156.0, hi: 162.05, name: 'Maritime VHF', service: 'Maritime mobile', notes: 'Ch 16 (156.800 MHz) distress/calling; Ch 70 (156.525 MHz) DSC.', tags: ['maritime', 'vhf'] },
-  { lo: 161.975, hi: 161.975, name: 'AIS 1', service: 'Maritime mobile', notes: 'GMSK 9600 bit/s, SOTDMA (ITU-R M.1371).', tags: ['maritime', 'data', 'vhf'] },
-  { lo: 162.025, hi: 162.025, name: 'AIS 2', service: 'Maritime mobile', notes: 'GMSK 9600 bit/s, SOTDMA (ITU-R M.1371).', tags: ['maritime', 'data', 'vhf'] },
-  { lo: 174.0, hi: 240.0, name: 'DAB / DAB+ (Band III)', service: 'Broadcasting', notes: 'Blocks 5A–13F, 1.536 MHz COFDM ensembles.', tags: ['broadcast', 'vhf', 'digital'] },
-  { lo: 406.0, hi: 406.1, name: 'COSPAS-SARSAT beacons', service: 'Mobile-satellite (Earth-to-space)', notes: 'Distress beacons (EPIRB/ELT/PLB). Receive only, never transmit.', tags: ['satellite', 'distress', 'uhf'] },
-  { lo: 430.0, hi: 440.0, name: '70 cm amateur band', service: 'Amateur, Radiolocation (shared)', notes: 'Region 1. Amateur-satellite 435–438 MHz.', tags: ['amateur', 'uhf'] },
-  { lo: 433.05, hi: 434.79, name: 'ISM / SRD 433 MHz', service: 'ISM (RR 5.138), Short range devices', notes: 'Remote controls, sensors, rtl_433 territory. Overlaps 70 cm amateur.', tags: ['ism', 'srd', 'uhf'] },
-  { lo: 446.0, hi: 446.2, name: 'PMR446', service: 'Land mobile (licence-exempt)', notes: 'Analogue FM 12.5 kHz and digital dPMR/DMR channels.', tags: ['voice', 'licence-exempt', 'uhf'] },
-  { lo: 470.0, hi: 694.0, name: 'DVB-T / DVB-T2 (UHF TV)', service: 'Broadcasting', notes: 'Channels 21–48 after the second digital dividend (700 MHz band cleared).', tags: ['broadcast', 'uhf', 'digital'] },
-  { lo: 863.0, hi: 870.0, name: 'SRD 868 MHz', service: 'Short range devices', notes: 'LoRaWAN EU868, Sigfox, alarms. Duty-cycle limits per sub-band (ERC/REC 70-03).', tags: ['srd', 'iot', 'uhf'] },
-  { lo: 1030.0, hi: 1030.0, name: 'SSR / Mode S interrogation', service: 'Aeronautical radionavigation', notes: 'Ground-to-air interrogations.', tags: ['aviation', 'uhf'] },
-  { lo: 1090.0, hi: 1090.0, name: 'Mode S / ADS-B (1090ES)', service: 'Aeronautical radionavigation', notes: 'PPM 1 Mbit/s replies and extended squitter.', tags: ['aviation', 'data', 'uhf'] },
-  { lo: 1240.0, hi: 1300.0, name: '23 cm amateur band', service: 'Amateur (secondary)', notes: 'Shares with radionavigation-satellite (Galileo E6, GLONASS L2): avoid harmful interference.', tags: ['amateur', 'uhf'] },
-  { lo: 1400.0, hi: 1427.0, name: 'Radio astronomy (HI line)', service: 'Radio astronomy, EESS (passive), Space research (passive)', notes: 'RR 5.340: all emissions prohibited. Neutral hydrogen at 1420.405752 MHz.', tags: ['radio-astronomy', 'passive', 'uhf'] },
-  { lo: 1575.42, hi: 1575.42, name: 'GPS L1 / Galileo E1', service: 'Radionavigation-satellite', notes: 'GPS C/A 1.023 Mchip/s BPSK; Galileo E1 CBOC.', tags: ['gnss', 'satellite'] },
-  { lo: 2400.0, hi: 2483.5, name: 'ISM 2.4 GHz', service: 'ISM (RR 5.150), Amateur (secondary)', notes: 'Wi-Fi, Bluetooth, 802.15.4. QO-100 NB uplink 2400.050–2400.300 MHz.', tags: ['ism', 'shf'] },
-  { lo: 10489.5, hi: 10490.0, name: 'QO-100 narrowband downlink', service: 'Amateur-satellite', notes: 'Es\'hail-2 geostationary transponder at 25.9° E; visible from all of Spain.', tags: ['amateur', 'satellite', 'shf'] },
-].map(e => ({ ...e, src: 'pending review vs. RR Art. 5 / CNAF' }));
+const FDB_CATS = [['amateur', 'Amateur'], ['broadcast', 'Broadcasting'], ['aviation', 'Aviation'], ['maritime', 'Maritime'],
+  ['space', 'Satellite / GNSS'], ['science', 'Radio astronomy / time'], ['srd', 'ISM / SRD / Wi-Fi'], ['mobile', 'Mobile, fixed, other']];
+const FDB_LICENCE = { exempt: ['exempt', 'Licence-exempt'], amateur: ['amateur', 'Amateur radio licence'], licensed: ['licensed', 'Licensed users only'], 'receive-only': ['RX only', 'Receive only'] };
+const FDB_PRESETS = [['LF/MF', 3e4, 3e6], ['HF', 3e6, 3e7], ['VHF', 3e7, 3e8], ['UHF', 3e8, 3e9], ['SHF', 3e9, 3e10], ['All', 3e4, 3e10]];
+const FDB_LIMITS = [4, 11];            // view limits, log10 Hz (10 kHz - 100 GHz)
+const FDB_MIN_SPAN = Math.log10(1.0004); // narrowest view, about ±30 kHz at 145 MHz
+const ITU_BANDS = [[3e3, 3e4, 'VLF'], [3e4, 3e5, 'LF'], [3e5, 3e6, 'MF'], [3e6, 3e7, 'HF'], [3e7, 3e8, 'VHF'], [3e8, 3e9, 'UHF'], [3e9, 3e10, 'SHF'], [3e10, 3e11, 'EHF']];
+const GQRX_MOD = { NFM: 'Narrow FM', WFM: 'WFM (stereo)', AM: 'AM', USB: 'USB', LSB: 'LSB', CW: 'CW-U', RAW: 'Raw I/Q' };
+const SDRPP_MODE = { NFM: 0, WFM: 1, AM: 2, USB: 4, CW: 5, LSB: 6, RAW: 7 };
+let freqdbCache = null;
 
-function fmtMHz(x) {
-  if (x < 1) return `${(x * 1e3).toFixed(3).replace(/\.?0+$/, '')} kHz`;
-  if (x >= 1000) return `${(x / 1e3).toFixed(6).replace(/\.?0+$/, '')} GHz`;
-  return `${x.toFixed(4).replace(/\.?0+$/, '')} MHz`;
+const trimNum = v => String(+v.toFixed(9));
+const unitFor = x => x < 3e7 ? 'kHz' : x < 1e10 ? 'MHz' : 'GHz';
+const UNIT_DIV = { Hz: 1, kHz: 1e3, MHz: 1e6, GHz: 1e9 };
+const fmtHz = (x, u = unitFor(x)) => `${trimNum(x / UNIT_DIV[u])} ${u}`;
+const fmtBW = x => fmtHz(x, x < 1e3 ? 'Hz' : x < 1e6 ? 'kHz' : 'MHz');
+const fmtTick = x => fmtHz(x, x < 1e6 ? 'kHz' : x < 1e9 ? 'MHz' : 'GHz');
+function fmtRange(lo, hi) {
+  if (lo === hi) return fmtHz(lo);
+  const u = unitFor(lo);
+  if (u !== unitFor(hi)) return `${fmtHz(lo)} - ${fmtHz(hi)}`;
+  return `${trimNum(lo / UNIT_DIV[u])} - ${fmtHz(hi, u)}`;
+}
+function niceStep(x) {
+  const p = 10 ** Math.floor(Math.log10(x)), r = x / p;
+  return (r <= 1 ? 1 : r <= 2 ? 2 : r <= 5 ? 5 : 10) * p;
 }
 
-route('freqdb', view => {
-  document.title = 'Frequency DB · frandomnoise';
-  const tags = [...new Set(FREQ_DB.flatMap(e => e.tags))].sort();
+// "433.92" (MHz by default), "7074 kHz", "7074k", "10.489 GHz", "433,92" -> Hz, or null.
+function parseFreqInput(s) {
+  const m = /^\s*(\d+(?:[.,]\d*)?|[.,]\d+)\s*(hz|k|khz|m|mhz|g|ghz)?\s*$/i.exec(s || '');
+  if (!m) return null;
+  const v = parseFloat(m[1].replace(',', '.'));
+  const u = (m[2] || 'm').toLowerCase()[0];
+  const hz = Math.round(v * (u === 'h' ? 1 : u === 'k' ? 1e3 : u === 'g' ? 1e9 : 1e6));
+  return hz > 0 ? hz : null;
+}
+
+function prepFreqDB(d) {
+  for (const e of d.entries) {
+    const pts = [...e.segs.flat(), ...e.ch.map(c => c.f)];
+    e.lo = Math.min(...pts); e.hi = Math.max(...pts);
+    e.search = [e.name, e.mode, e.notes, e.es, ...(e.services || []).map(s => s.name), ...e.tags, ...e.bands,
+      ...(e.rr || []), e.decoder?.name, ...e.ch.map(c => c.label)].filter(Boolean).join(' ').toLowerCase();
+  }
+  return d;
+}
+
+// Lookup tolerance around spot frequencies: half the occupied bandwidth, else a default.
+const fdbTol = (e, f) => e.bw ? Math.max(e.bw / 2, 500) : (f < 3e7 ? 1500 : 12500);
+function fdbCovers(e, f) {
+  for (const [lo, hi] of e.segs) {
+    const t = lo === hi ? fdbTol(e, f) : 0;
+    if (f >= lo - t && f <= hi + t) return true;
+  }
+  return e.ch.some(c => Math.abs(f - c.f) <= fdbTol(e, f));
+}
+// Does allocation a overlap any part of entry e?
+const fdbOverlaps = (a, e) => a.segs.some(([lo, hi]) =>
+  e.segs.some(([l, u]) => l <= hi && u >= lo) || e.ch.some(c => c.f >= lo && c.f <= hi));
+
+function fdbFreqText(e) {
+  if (e.segs.length === 1) return fmtRange(...e.segs[0]);
+  if (e.segs.length > 1) return `${e.segs.length} bands, ${fmtRange(e.lo, e.hi)}`;
+  if (e.ch.length <= 3) return e.ch.map(c => fmtHz(c.f)).join(', ');
+  return `${e.ch.length} channels, ${fmtRange(e.lo, e.hi)}`;
+}
+
+function fdbTicks(lo, hi, W) {
+  const dec = Math.log10(hi / lo), out = [];
+  if (dec > 1) {
+    const perDec = W / dec;
+    const mults = perDec > 220 ? [1, 2, 5] : perDec > 70 ? [1, 3] : [1];
+    const skipOdd = perDec < 45;
+    for (let d = Math.floor(Math.log10(lo)); d <= Math.ceil(Math.log10(hi)); d++) {
+      for (const m of mults) {
+        const f = m * 10 ** d;
+        if (f < lo || f > hi || (skipOdd && d % 2)) continue;
+        out.push({ f, major: m === 1, label: m === 1 || perDec / mults.length > 70 });
+      }
+    }
+  } else {
+    const step = niceStep((hi - lo) / Math.max(2, Math.floor(W / 100)));
+    for (let k = Math.ceil(lo / step); k * step <= hi; k++) out.push({ f: k * step, major: false, label: true });
+  }
+  return out;
+}
+
+function fdbDownload(name, text, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = name;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+route('freqdb', async (view, _, params) => {
+  document.title = 'Frequency DB - frandomnoise';
+  view.innerHTML = `<div class="page-head"><span class="label">Spectrum</span><h1>Frequency DB</h1><p class="muted">Loading…</p></div>`;
+  let db;
+  try { db = freqdbCache || (freqdbCache = prepFreqDB(await fetchJSON('data/freqdb.json'))); }
+  catch (e) {
+    view.innerHTML = `<div class="page-head"><span class="label">Spectrum</span><h1>Frequency DB</h1></div>
+      <div class="notice">No <code>data/freqdb.json</code> available. It is compiled from <code>freqdb/*.json</code> by <code>node scripts/build.mjs</code>.</div>`;
+    return;
+  }
+  const E = db.entries, byId = new Map(E.map(e => [e.id, e]));
+  const tags = [...new Set(E.flatMap(e => e.tags))].sort();
+  const p = params || new URLSearchParams();
+  const st = {
+    q: p.get('q') || '',
+    tag: tags.includes(p.get('tag')) ? p.get('tag') : '',
+    layer: ['alloc', 'use'].includes(p.get('layer')) ? p.get('layer') : '',
+    f: parseFreqInput(p.get('f')),
+    sel: byId.has(p.get('sel')) ? p.get('sel') : null,
+  };
+  let vw = { a: Math.log10(3e4), b: Math.log10(3e10) };
+  let muf = null, current = [], raf = 0, alive = true;
+
   view.innerHTML = `<div class="page-head"><span class="label">Spectrum</span><h1>Frequency DB</h1>
-    <p>Allocations and notable signals for ITU Region 1, with notes for Spain (CNAF).</p></div>
-    <div class="notice" style="margin-bottom:16px">Reference only. Always check the current <a href="https://www.itu.int/pub/R-REG-RR" target="_blank" rel="noopener">ITU Radio Regulations</a> and the <a href="https://avancedigital.mineco.gob.es/espectro/Paginas/cnaf.aspx" target="_blank" rel="noopener">CNAF</a> before you transmit.</div>
-    <div class="panel">
-      <div class="db-tools">
-        <input type="search" id="q" placeholder="Search: name, service, notes…" aria-label="Search">
-        <input type="number" step="any" id="fq" placeholder="Lookup MHz, e.g. 433.92" aria-label="Frequency lookup in MHz">
-        <select id="tg" aria-label="Filter by tag"><option value="">All tags</option>${tags.map(t => `<option>${h(t)}</option>`).join('')}</select>
+    <p>Who may transmit where (ITU Region 1 allocations, with notes for Spain) and what you will actually hear there.</p></div>
+    <div class="notice" style="margin-bottom:16px">Reference only, compiled by hand and still being checked entry by entry. Before you transmit, check the <a href="https://www.itu.int/pub/R-REG-RR" target="_blank" rel="noopener">ITU Radio Regulations</a> and the <a href="https://digital.gob.es/telecomunicaciones-infraestructuras-digitales/areas-interes/espectro-radioelectrico/cuadro-nacional-atribucion-frecuencias" target="_blank" rel="noopener">CNAF</a> (currently <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2026-15661" target="_blank" rel="noopener">Orden TDF/732/2026</a>).</div>
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-head"><h2>Band plan</h2><span class="label" id="bp-range"></span></div>
+      <div class="bp-tools" id="bp-tools">
+        ${FDB_PRESETS.map(([n], i) => `<button class="btn ghost" type="button" data-preset="${i}">${n}</button>`).join('')}
+        <span class="spacer"></span>
+        <button class="btn ghost" type="button" data-zoom="out" aria-label="Zoom out">-</button>
+        <button class="btn ghost" type="button" data-zoom="in" aria-label="Zoom in">+</button>
       </div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Range</th><th>Name</th><th>Service</th><th>Notes</th></tr></thead>
+      <div id="bp-host"><svg class="bandplan" id="bp" tabindex="0" role="img" aria-label="Band plan: allocations in the top row, uses and signals below. Arrow keys pan, plus and minus zoom."></svg></div>
+      <div class="legend">${FDB_CATS.map(([c, n]) => `<span><i class="cat-${c}"></i>${h(n)}</span>`).join('')}</div>
+      <p class="small muted" style="margin:6px 0 0">Top row: allocations. Below: uses and signals. Scroll or pinch to zoom, drag to pan. Click a block for its details, click empty space to look up that frequency.</p>
+      <p class="small muted" id="bp-muf" style="margin:4px 0 0"></p>
+    </div>
+    <div class="panel" id="detail" hidden style="margin-bottom:16px"></div>
+    <div class="panel">
+      <div class="db-tools" id="fdb-tools">
+        <input type="search" id="q" value="${h(st.q)}" placeholder="Search: name, service, mode, decoder…" aria-label="Search">
+        <input type="text" inputmode="decimal" id="fq" value="${h(st.f ? fmtHz(st.f) : '')}" placeholder="Lookup: 433.92, 7074 kHz, 10.489 GHz" aria-label="Frequency lookup, in MHz unless a unit is given">
+        <select id="tg" aria-label="Filter by tag"><option value="">All tags</option>${tags.map(t => `<option${t === st.tag ? ' selected' : ''}>${h(t)}</option>`).join('')}</select>
+        <select id="ly" aria-label="Filter by layer"><option value="">All layers</option><option value="alloc"${st.layer === 'alloc' ? ' selected' : ''}>Allocations</option><option value="use"${st.layer === 'use' ? ' selected' : ''}>Uses and signals</option></select>
+      </div>
+      <p class="small" id="crumb" hidden></p>
+      <div class="table-wrap"><table class="fdb">
+        <thead><tr><th>Frequency</th><th>Name</th><th>Layer</th><th>Service / mode</th><th>Spain</th></tr></thead>
         <tbody id="rows"></tbody>
       </table></div>
       <p class="small muted" id="count"></p>
+      <div class="bp-tools" id="export">
+        <span class="label">Export the list</span>
+        <button class="btn ghost" type="button" data-exp="csv">CSV</button>
+        <button class="btn ghost" type="button" data-exp="gqrx">GQRX bookmarks</button>
+        <button class="btn ghost" type="button" data-exp="sdrpp">SDR++ bookmarks</button>
+        <span class="small muted" id="exp-msg"></span>
+      </div>
+      <p class="model">Exports follow the current filters. Bookmarks contain single frequencies and channels only (not ranges), with the suggested demodulator and bandwidth. GQRX: replace or merge <code>~/.config/gqrx/bookmarks.csv</code>. SDR++: Frequency Manager, Import.</p>
     </div>`;
-  const draw = () => {
-    const q = $('#q').value.trim().toLowerCase();
-    const f = parseFloat($('#fq').value);
-    const tg = $('#tg').value;
-    const tol = 0.0125; // treat spot frequencies as ±12.5 kHz wide for lookup
-    let list = FREQ_DB.filter(e =>
-      (!q || `${e.name} ${e.service} ${e.notes} ${e.tags.join(' ')}`.toLowerCase().includes(q)) &&
-      (!tg || e.tags.includes(tg)));
-    const hit = e => Number.isFinite(f) && f >= e.lo - (e.lo === e.hi ? tol : 0) && f <= e.hi + (e.lo === e.hi ? tol : 0);
-    if (Number.isFinite(f)) list = list.filter(hit);
-    list.sort((a, b) => a.lo - b.lo || a.hi - b.hi);
-    $('#rows').innerHTML = list.map(e => `<tr class="${hit(e) ? 'hit' : ''}">
-      <td class="freq">${e.lo === e.hi ? fmtMHz(e.lo) : `${fmtMHz(e.lo)} – ${fmtMHz(e.hi)}`}</td>
-      <td>${h(e.name)}</td><td>${h(e.service)}</td><td class="small">${h(e.notes)}</td></tr>`).join('')
-      || '<tr><td colspan="4" class="muted">No match.</td></tr>';
-    $('#count').textContent = `${list.length} of ${FREQ_DB.length} entries`;
+
+  const host = $('#bp-host'), svg = $('#bp');
+  const matches = e => (!st.layer || e.layer === st.layer) && (!st.tag || e.tags.includes(st.tag)) && (!st.q || e.search.includes(st.q.toLowerCase()));
+
+  // ---------- URL state ----------
+  function syncURL() {
+    const q = new URLSearchParams();
+    if (st.f) q.set('f', trimNum(st.f / 1e6));
+    if (st.q) q.set('q', st.q);
+    if (st.tag) q.set('tag', st.tag);
+    if (st.layer) q.set('layer', st.layer);
+    if (st.sel) q.set('sel', st.sel);
+    const s = q.toString();
+    history.replaceState(null, '', `#freqdb${s ? `?${s}` : ''}`);
+  }
+
+  // ---------- view (log10 Hz) ----------
+  function setView(a, b) {
+    const span = Math.min(Math.max(b - a, FDB_MIN_SPAN), FDB_LIMITS[1] - FDB_LIMITS[0]);
+    if (span !== b - a) { const c = (a + b) / 2; a = c - span / 2; }
+    a = Math.min(Math.max(a, FDB_LIMITS[0]), FDB_LIMITS[1] - span);
+    vw = { a, b: a + span };
+    schedule();
+  }
+  function zoomAt(fx, k) {
+    const span = vw.b - vw.a, c = vw.a + fx * span, ns = span * k;
+    setView(c - fx * ns, c - fx * ns + ns);
+  }
+  function zoomTo(e) {
+    const la = Math.log10(e.lo), lb = Math.log10(e.hi);
+    const pad = Math.max((lb - la) * 0.25, 0.004);
+    setView(la - pad, lb + pad);
+  }
+  function centerOn(f) {
+    const lf = Math.log10(f), span = vw.b - vw.a;
+    if (lf < vw.a || lf > vw.b) setView(lf - span / 2, lf + span / 2);
+  }
+  const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (alive) drawPlan(); }); };
+
+  // ---------- band plan ----------
+  function drawPlan() {
+    const W = Math.max(280, Math.round(host.clientWidth));
+    const { a, b } = vw, span = b - a, fLo = 10 ** a, fHi = 10 ** b;
+    const X = f => (Math.log10(f) - a) / span * W;
+    const cx = x => Math.max(-4, Math.min(W + 4, x));
+    const AX = 34, LANE = 18, GAP = 4, MAXL = 9, CW = 6.6, TOP = AX + 4, UT = TOP + LANE + 10;
+    const vis = E.filter(e => matches(e) && e.hi >= fLo && e.lo <= fHi);
+    const cls = e => {
+      const hit = st.f && fdbCovers(e, st.f);
+      return `item cat-${e.cat}${e.id === st.sel ? ' sel' : ''}${hit ? ' hit' : st.f ? ' dim' : ''}`;
+    };
+    const tip = e => `<title>${h(e.name)}: ${h(fdbFreqText(e))}</title>`;
+
+    // Uses: one item per entry, greedy lane packing in pixel space.
+    const items = vis.filter(e => e.layer === 'use').map(e => {
+      const segs = e.segs.filter(([lo, hi]) => hi >= fLo && lo <= fHi).map(([lo, hi]) => [cx(X(lo)), cx(X(hi))]);
+      const spots = e.ch.filter(c => c.f >= fLo && c.f <= fHi).map(c => cx(X(c.f)));
+      const xs = [...segs.flat(), ...spots];
+      const label = e.name.length > 30 ? `${e.name.slice(0, 29)}…` : e.name;
+      return { e, segs, spots, x1: Math.min(...xs), x2: Math.max(...xs), label, lw: label.length * CW + 8 };
+    }).filter(it => it.segs.length || it.spots.length).sort((p, q) => p.x1 - q.x1 || q.x2 - p.x2);
+    const pack = beside => {
+      const ends = [];
+      for (const it of items) {
+        it.lab = it.x2 - it.x1 >= it.lw ? 'in' : beside ? 'out' : null;
+        const right = it.lab === 'out' ? it.x2 + it.lw : Math.max(it.x2, it.x1 + 3);
+        let k = ends.findIndex(r => r + 2 <= it.x1);
+        if (k < 0) { k = ends.length; ends.push(0); }
+        ends[k] = right; it.lane = k;
+      }
+      return ends.length;
+    };
+    let lanes = pack(true);
+    if (lanes > MAXL) lanes = pack(false);
+    const hidden = items.filter(it => it.lane >= MAXL).length;
+    lanes = Math.max(1, Math.min(lanes, MAXL));
+    const H = UT + lanes * (LANE + GAP) + 6;
+
+    const out = [];
+    ITU_BANDS.forEach(([lo, hi, n], i) => {
+      if (hi < fLo || lo > fHi) return;
+      const x1 = cx(X(lo)), x2 = cx(X(hi));
+      out.push(`<rect class="ituband${i % 2 ? ' odd' : ''}" x="${x1}" y="0" width="${x2 - x1}" height="${H}"/>`);
+      if (x2 - x1 > 34) out.push(`<text class="itu" x="${(Math.max(x1, 0) + Math.min(x2, W)) / 2}" y="12" text-anchor="middle">${n}</text>`);
+    });
+    for (const t of fdbTicks(fLo, fHi, W)) {
+      const x = X(t.f);
+      out.push(`<line class="grid${t.major ? ' major' : ''}" x1="${x}" x2="${x}" y1="${AX - 6}" y2="${H}"/>`);
+      if (t.label) out.push(`<text class="tick" x="${x + 3}" y="${AX - 8}">${h(fmtTick(t.f))}</text>`);
+    }
+    for (const e of vis.filter(e => e.layer === 'alloc')) {
+      const [lo, hi] = e.segs[0];
+      const x1 = cx(X(lo)), w = Math.max(cx(X(hi)) - x1, 1.5);
+      const room = Math.floor((w - 8) / CW);
+      const lab = e.name.length <= room ? e.name : room >= 6 ? `${e.name.slice(0, room - 1)}…` : '';
+      out.push(`<g class="${cls(e)}" data-id="${e.id}">${tip(e)}<rect x="${x1}" y="${TOP}" width="${w}" height="${LANE}" rx="2"/>${lab ? `<text x="${x1 + 4}" y="${TOP + 13}">${h(lab)}</text>` : ''}</g>`);
+    }
+    for (const it of items) {
+      if (it.lane >= MAXL) continue;
+      const y = UT + it.lane * (LANE + GAP), g = [];
+      g.push(`<rect class="hitbox" x="${it.x1 - 3}" y="${y}" width="${it.x2 - it.x1 + 6 + (it.lab === 'out' ? it.lw : 0)}" height="${LANE}"/>`);
+      for (const [x1, x2] of it.segs) g.push(x2 - x1 < 2
+        ? `<line class="spot" x1="${x1}" x2="${x1}" y1="${y}" y2="${y + LANE}"/>`
+        : `<rect x="${x1}" y="${y}" width="${x2 - x1}" height="${LANE}" rx="2"/>`);
+      for (const x of it.spots) g.push(`<line class="spot" x1="${x}" x2="${x}" y1="${y}" y2="${y + LANE}"/>`);
+      if (it.lab) g.push(`<text x="${it.lab === 'in' ? it.x1 + 4 : it.x2 + 4}" y="${y + 13}">${h(it.label)}</text>`);
+      out.push(`<g class="${cls(it.e)}" data-id="${it.e.id}">${tip(it.e)}${g.join('')}</g>`);
+    }
+    if (muf && muf.v >= fLo && muf.v <= fHi) {
+      const x = X(muf.v);
+      out.push(`<line class="muf" x1="${x}" x2="${x}" y1="${AX - 6}" y2="${H}"/><text class="muf-t" x="${x + 3}" y="${H - 5}">MUF ${fmt(muf.v / 1e6, 1)} MHz</text>`);
+    }
+    if (st.f && st.f >= fLo && st.f <= fHi) {
+      const x = X(st.f);
+      out.push(`<line class="marker" x1="${x}" x2="${x}" y1="${AX - 6}" y2="${H}"/>`);
+    }
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('height', H);
+    svg.innerHTML = out.join('');
+    // View edges to the precision the zoom level can resolve.
+    const digits = Math.min(9, Math.max(3, Math.ceil(-Math.log10(1 - 10 ** -span)) + 2));
+    const edge = x => { const u = x < 1e6 ? 'kHz' : x < 1e9 ? 'MHz' : 'GHz'; return `${+(x / UNIT_DIV[u]).toPrecision(digits)} ${u}`; };
+    $('#bp-range').textContent = `${edge(fLo)} - ${edge(fHi)}${hidden ? `, ${hidden} more: zoom in` : ''}`;
+  }
+
+  // ---------- table ----------
+  function drawTable() {
+    let list = E.filter(matches);
+    if (st.f) list = list.filter(e => fdbCovers(e, st.f));
+    // With a lookup: allocations first, then from the widest use to the most specific.
+    list.sort((p, q) => st.f
+      ? (p.layer !== q.layer ? (p.layer === 'alloc' ? -1 : 1) : (q.hi - q.lo) - (p.hi - p.lo))
+      : p.lo - q.lo || p.hi - q.hi || (p.layer === 'alloc' ? -1 : 1));
+    current = list;
+    $('#rows').innerHTML = list.map(e => `<tr data-id="${e.id}"${e.id === st.sel ? ' class="sel"' : ''}>
+      <td class="freq">${h(fdbFreqText(e))}</td>
+      <td><i class="sw cat-${e.cat}"></i>${h(e.name)}</td>
+      <td class="small muted">${e.layer === 'alloc' ? 'allocation' : 'use'}</td>
+      <td class="small">${h(e.layer === 'alloc' ? e.services.map(s => s.name).join(', ') : e.mode || '')}</td>
+      <td class="small">${e.licence ? h(FDB_LICENCE[e.licence][0]) : ''}</td></tr>`).join('')
+      || '<tr><td colspan="5" class="muted">No match.</td></tr>';
+    const unv = E.filter(e => !e.verified).length;
+    $('#count').textContent = `${list.length} of ${E.length} entries.${unv ? ` ${unv} not yet verified against their sources.` : ''}`;
+    const crumb = $('#crumb');
+    crumb.hidden = !st.f;
+    if (st.f) {
+      const link = e => `<button type="button" class="linkish" data-sel="${e.id}">${h(e.name)}</button>`;
+      const al = E.filter(e => e.layer === 'alloc' && fdbCovers(e, st.f));
+      const us = E.filter(e => e.layer === 'use' && fdbCovers(e, st.f)).sort((p, q) => (q.hi - q.lo) - (p.hi - p.lo));
+      crumb.innerHTML = `<b class="mono">${h(fmtHz(st.f))}</b> → ${al.length ? al.map(link).join(', ') : '<span class="muted">no allocation recorded</span>'}${us.length ? ` → ${us.map(link).join(', ')}` : ''}`;
+    }
+  }
+
+  // ---------- details ----------
+  function hfNow(e) {
+    if (!muf || e.lo < 1.8e6 || e.hi > 3e7) return null;
+    const open = e.lo <= muf.v;
+    return `Median MUF(3000)F2 of ${muf.n} European ionosonde${muf.n > 1 ? 's' : ''} is ${fmt(muf.v / 1e6, 1)} MHz (${muf.t} UTC): <b>${open ? 'likely open' : 'likely closed'}</b> for single hops of about 3000 km. Shorter paths need lower frequencies.`;
+  }
+  function renderDetail() {
+    const d = $('#detail'), e = byId.get(st.sel);
+    if (!e) { d.hidden = true; d.innerHTML = ''; return; }
+    const kv = [];
+    const add = (k, v) => { if (v) kv.push(`<dt>${k}</dt><dd>${v}</dd>`); };
+    const link = x => `<button type="button" class="linkish" data-sel="${x.id}">${h(x.name)}</button> <span class="muted">${h(fdbFreqText(x))}</span>`;
+    const ext = (href, text) => `<a href="${h(href)}" target="_blank" rel="noopener">${h(text)}</a>`;
+    add('Frequency', e.segs.map(s => h(fmtRange(...s))).join('<br>'));
+    if (e.ch.length) add('Channels', e.ch.map(c => `${h(fmtHz(c.f))}${c.label ? ` <span class="muted">${h(c.label)}</span>` : ''}`).join('<br>'));
+    if (e.layer === 'alloc') {
+      add('Services', e.services.map(s => `${h(s.name)} <span class="muted">${s.primary ? 'primary' : 'secondary'}</span>`).join('<br>'));
+      add('Uses here', E.filter(u => u.layer === 'use' && fdbOverlaps(e, u)).map(link).join('<br>'));
+    } else {
+      add('Within', E.filter(a => a.layer === 'alloc' && fdbOverlaps(a, e)).map(link).join('<br>') || '<span class="muted">no allocation recorded</span>');
+    }
+    add('Mode', e.mode && h(e.mode));
+    add('Bandwidth', e.bw && h(fmtBW(e.bw)));
+    add('Channel raster', e.raster && h(fmtBW(e.raster)));
+    add('Polarization', e.pol && h(e.pol));
+    add('Licence (Spain)', e.licence && h(FDB_LICENCE[e.licence][1]));
+    add('Spain', e.es && h(e.es));
+    add('Notes', e.notes && h(e.notes));
+    if (e.layer === 'alloc') {
+      add('RR footnotes', e.rr.length ? h(e.rr.join(', ')) : '<span class="muted">none recorded</span>');
+      add('CNAF UN notes', e.un.length ? h(e.un.join(', ')) : '<span class="muted">not recorded yet</span>');
+    }
+    add('HF now', hfNow(e));
+    add('Decoder', e.decoder && ext(e.decoder.url, e.decoder.name));
+    add('How to receive', e.howto && (/^https?:/.test(e.howto.href) ? ext(e.howto.href, e.howto.label) : `<a href="${h(e.howto.href)}">${h(e.howto.label)}</a>`));
+    if (e.sat) {
+      const dl = e.ch[0]?.f ?? e.segs[e.segs.length - 1]?.[0];
+      const q = new URLSearchParams({ norad: e.sat.norad, ...(e.sat.group ? { group: e.sat.group } : {}), ...(dl ? { dl: trimNum(dl / 1e6) } : {}) });
+      add('Satellite', `<a href="#satellites?${q}">Track NORAD ${e.sat.norad}${dl ? `, Doppler on ${h(fmtHz(dl, 'MHz'))}` : ''}</a>`);
+    }
+    add('Sources', e.src.map(s => `${s.url ? ext(s.url, s.title) : h(s.title)}${s.detail ? `, ${h(s.detail)}` : ''}`).join('<br>'));
+    add('Status', e.verified ? 'verified against the sources' : '<span class="draft-badge">not yet verified against the sources</span>');
+    d.hidden = false;
+    d.innerHTML = `<div class="panel-head"><h2>${h(e.name)}</h2><span class="label">${e.layer === 'alloc' ? 'allocation' : 'use / signal'}</span></div>
+      <dl class="kv fdb-kv">${kv.join('')}</dl>
+      <div class="bp-tools" style="margin-top:12px">
+        <button class="btn ghost" type="button" data-act="zoom">Show in band plan</button>
+        <button class="btn ghost" type="button" data-act="copy">Copy link</button>
+        <button class="btn ghost" type="button" data-act="close">Close</button>
+        <span class="small muted" id="copy-msg"></span>
+      </div>`;
+  }
+
+  // ---------- actions ----------
+  function refresh() { drawTable(); schedule(); syncURL(); }
+  function select(id, { scroll = false } = {}) {
+    st.sel = byId.has(id) ? id : null;
+    renderDetail();
+    refresh();
+    if (scroll && st.sel) $('#detail').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function setF(f) {
+    st.f = f;
+    $('#fq').value = f ? fmtHz(f) : '';
+    if (f) centerOn(f);
+    refresh();
+  }
+
+  $('#fdb-tools').addEventListener('input', e => {
+    if (e.target.id === 'q') st.q = e.target.value.trim();
+    if (e.target.id === 'tg') st.tag = e.target.value;
+    if (e.target.id === 'ly') st.layer = e.target.value;
+    if (e.target.id === 'fq') { st.f = parseFreqInput(e.target.value); if (st.f) centerOn(st.f); }
+    refresh();
+  });
+  $('#rows').addEventListener('click', e => {
+    const tr = e.target.closest('tr[data-id]');
+    if (tr) select(tr.dataset.id, { scroll: true });
+  });
+  view.addEventListener('click', e => {
+    const s = e.target.closest('[data-sel]');
+    if (s) { select(s.dataset.sel, { scroll: true }); return; }
+    const pr = e.target.closest('[data-preset]');
+    if (pr) { const [, lo, hi] = FDB_PRESETS[+pr.dataset.preset]; setView(Math.log10(lo), Math.log10(hi)); return; }
+    const z = e.target.closest('[data-zoom]');
+    if (z) { zoomAt(0.5, z.dataset.zoom === 'in' ? 0.5 : 2); return; }
+    const act = e.target.closest('[data-act]')?.dataset.act;
+    if (act === 'zoom' && byId.get(st.sel)) { zoomTo(byId.get(st.sel)); host.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    if (act === 'close') select(null);
+    if (act === 'copy') {
+      navigator.clipboard?.writeText(location.href).then(() => { $('#copy-msg').textContent = 'Copied.'; }, () => { $('#copy-msg').textContent = location.href; });
+    }
+    const exp = e.target.closest('[data-exp]')?.dataset.exp;
+    if (exp) doExport(exp);
+  });
+
+  // Pointer: drag to pan, pinch to zoom, click to select or look up.
+  const ptrs = new Map();
+  let gesture = null;
+  svg.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    svg.setPointerCapture(e.pointerId);
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (ptrs.size === 1) gesture = { x0: e.clientX, y0: e.clientY, moved: false, multi: false };
+    else if (gesture) gesture.multi = true;
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!ptrs.has(e.pointerId) || !gesture) return;
+    const r = svg.getBoundingClientRect(), prev = ptrs.get(e.pointerId);
+    if (ptrs.size === 1) {
+      if (Math.abs(e.clientX - gesture.x0) > 4 || Math.abs(e.clientY - gesture.y0) > 4) gesture.moved = true;
+      if (gesture.moved) { const s = (vw.b - vw.a) * (e.clientX - prev.x) / r.width; setView(vw.a - s, vw.b - s); }
+      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    } else if (ptrs.size === 2) {
+      const [p1, p2] = [...ptrs.values()], d0 = Math.abs(p1.x - p2.x);
+      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      const [q1, q2] = [...ptrs.values()], d1 = Math.abs(q1.x - q2.x);
+      if (d0 > 10 && d1 > 10) zoomAt(((q1.x + q2.x) / 2 - r.left) / r.width, d0 / d1);
+      gesture.moved = true;
+    }
+  });
+  const pointerEnd = e => {
+    if (!ptrs.has(e.pointerId)) return;
+    ptrs.delete(e.pointerId);
+    if (e.type === 'pointerup' && !ptrs.size && gesture && !gesture.moved && !gesture.multi) planClick(e);
+    if (!ptrs.size) gesture = null;
   };
-  view.addEventListener('input', draw);
-  draw();
+  svg.addEventListener('pointerup', pointerEnd);
+  svg.addEventListener('pointercancel', pointerEnd);
+  function planClick(e) {
+    const el = document.elementFromPoint(e.clientX, e.clientY)?.closest('[data-id]');
+    if (el && svg.contains(el)) { select(el.dataset.id); return; }
+    const r = svg.getBoundingClientRect(), span = vw.b - vw.a;
+    const f = 10 ** (vw.a + (e.clientX - r.left) / r.width * span);
+    const step = niceStep(f * (10 ** (2 * span / r.width) - 1)); // about 2 px of resolution
+    setF(Math.round(f / step) * step);
+  }
+  svg.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = svg.getBoundingClientRect(), k = e.deltaMode === 1 ? 16 : 1;
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { const s = (vw.b - vw.a) * e.deltaX * k / r.width; setView(vw.a + s, vw.b + s); }
+    else zoomAt((e.clientX - r.left) / r.width, Math.exp(e.deltaY * k * 0.0015));
+  }, { passive: false });
+  svg.addEventListener('keydown', e => {
+    const s = (vw.b - vw.a) * 0.1;
+    if (e.key === 'ArrowLeft') setView(vw.a - s, vw.b - s);
+    else if (e.key === 'ArrowRight') setView(vw.a + s, vw.b + s);
+    else if (e.key === '+' || e.key === '=') zoomAt(0.5, 0.7);
+    else if (e.key === '-') zoomAt(0.5, 1 / 0.7);
+    else if (e.key === 'Escape') select(null);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- export ----------
+  const csvCell = v => { v = String(v ?? ''); return /[",\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
+  const spotsOf = list => list.filter(e => e.demod).flatMap(e => [
+    ...e.segs.filter(([lo, hi]) => lo === hi).map(([f]) => ({ f, name: e.name })),
+    ...e.ch.map(c => ({ f: c.f, name: `${e.name} (${c.label || fmtHz(c.f)})` })),
+  ].map(s => ({ ...s, demod: e.demod, bw: e.bw || 10000 })));
+  function doExport(kind) {
+    const msg = $('#exp-msg');
+    if (kind === 'csv') {
+      const head = ['id', 'layer', 'name', 'segments_hz', 'channels_hz', 'services', 'mode', 'bandwidth_hz', 'raster_hz', 'polarization',
+        'demod', 'licence_es', 'spain', 'notes', 'rr_footnotes', 'cnaf_un', 'tags', 'sources', 'verified'];
+      const rows = current.map(e => [e.id, e.layer, e.name, e.segs.map(s => s.join('-')).join(' '),
+        e.ch.map(c => `${c.f}${c.label ? ` ${c.label}` : ''}`).join(' | '), (e.services || []).map(s => s.name).join(' | '),
+        e.mode, e.bw, e.raster, e.pol, e.demod, e.licence, e.es, e.notes, (e.rr || []).join(' '), (e.un || []).join(' '),
+        e.tags.join(' '), e.src.map(s => s.title + (s.detail ? ` ${s.detail}` : '')).join(' | '), e.verified]);
+      fdbDownload('freqdb.csv', [head, ...rows].map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n', 'text/csv');
+      msg.textContent = `${rows.length} entries exported.`;
+      return;
+    }
+    const pts = spotsOf(current);
+    if (!pts.length) { msg.textContent = 'No single frequencies in the current list.'; return; }
+    if (kind === 'gqrx') {
+      const lines = ['# Tag name          ;  color', 'Untagged            ; #c0c0c0', 'frandomnoise        ; #34d06a', '',
+        '# Frequency ; Name                     ; Modulation          ;  Bandwidth; Tags'];
+      for (const s of pts) lines.push(`${String(s.f).padStart(12)} ; ${s.name.replace(/;/g, ',').padEnd(25)} ; ${GQRX_MOD[s.demod].padEnd(20)}; ${String(s.bw).padStart(10)}; frandomnoise`);
+      fdbDownload('bookmarks.csv', lines.join('\n') + '\n', 'text/csv');
+    } else {
+      const bookmarks = {};
+      for (const s of pts) {
+        let n = s.name, k = 2;
+        while (bookmarks[n]) n = `${s.name} ${k++}`;
+        bookmarks[n] = { bandwidth: s.bw, frequency: s.f, mode: SDRPP_MODE[s.demod] };
+      }
+      fdbDownload('frandomnoise-sdrpp.json', JSON.stringify({ bookmarks }, null, 2) + '\n', 'application/json');
+    }
+    msg.textContent = `${pts.length} bookmarks exported.`;
+  }
+
+  // ---------- HF propagation (optional) ----------
+  fetchJSON('data/propagation.json').then(d => {
+    const v = (d.ionosondes || []).map(s => s.mufd).filter(Number.isFinite).sort((x, y) => x - y);
+    const ageH = (Date.now() - Date.parse(d.updated)) / 3600e3;
+    if (!alive || !v.length || !(ageH < 12)) return;
+    const n = v.length, med = n % 2 ? v[(n - 1) / 2] : (v[n / 2 - 1] + v[n / 2]) / 2;
+    muf = { v: Math.round(med * 1e5) * 10, n, t: new Date(d.updated).toISOString().slice(11, 16) };
+    $('#bp-muf').innerHTML = `Dashed line: median MUF(3000)F2 of ${fmt(med, 1)} MHz from ${n} European ionosonde${n > 1 ? 's' : ''} (${muf.t} UTC, see <a href="#propagation">Propagation</a>). HF bands below it are likely open for single hops of about 3000 km.`;
+    schedule();
+    renderDetail();
+  }).catch(() => {});
+
+  // ---------- initial state ----------
+  if (st.sel) zoomTo(byId.get(st.sel));
+  else if (st.f) { const lf = Math.log10(st.f); setView(lf - 0.15, lf + 0.15); }
+  renderDetail();
+  drawTable();
+  drawPlan();
+  const ro = new ResizeObserver(schedule);
+  ro.observe(host);
+  return () => { alive = false; ro.disconnect(); cancelAnimationFrame(raf); };
 });
 
 /* ============================================================
-   Satellites — simplified propagator (two-body Kepler + J2 secular)
-   TODO(pending #2): replace with SGP4. Errors of this model grow to
-   tens of km per day for LEO (no drag, no short-period terms, and the
-   TLE mean elements are SGP4-specific "Kozai" means).
-   TLE text files are served statically from data/tle/<group>.txt by a
-   scheduled GitHub Action (pending #1); the browser never calls CelesTrak.
+   SGP4 / SDP4
+   Port of the reference implementation by Vallado, Crawford, Hujsak
+   and Kelso, "Revisiting Spacetrack Report #3" (AIAA 2006-6753),
+   2020 C++ release, "improved" operation mode, WGS-72 constants
+   (the constants the TLEs are fitted with). Output: TEME frame, km
+   and km/s. Deep-space (period >= 225 min) lunar-solar terms and
+   12 h / 24 h resonances included.
    ============================================================ */
-const EARTH = { mu: 398600.4418, Re: 6378.137, J2: 1.08262668e-3 }; // km, km^3/s^2 (WGS-84 / EGM96)
-const TLE_GROUPS = [['stations', 'Space stations'], ['amateur', 'Amateur'], ['weather', 'Weather']];
+const SGP4 = (() => {
+  const pi = Math.PI, twopi = 2 * pi, x2o3 = 2 / 3;
+  const { sin, cos, sqrt, atan2, abs } = Math;
+  // WGS-72
+  const mu = 398600.8, radiusearthkm = 6378.135;
+  const xke = 60 / sqrt(radiusearthkm ** 3 / mu), tumin = 1 / xke;
+  const j2 = 0.001082616, j3 = -0.00000253881, j4 = -0.00000165597, j3oj2 = j3 / j2;
+
+  function gstime(jdut1) {
+    const tut1 = (jdut1 - 2451545.0) / 36525.0;
+    let temp = -6.2e-6 * tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 +
+      (876600.0 * 3600 + 8640184.812866) * tut1 + 67310.54841;
+    temp = (temp * (pi / 180) / 240.0) % twopi;
+    return temp < 0 ? temp + twopi : temp;
+  }
+
+  function dpper(s, init, ep, inclp, nodep, argpp, mp) {
+    const zns = 1.19459e-5, zes = 0.01675, znl = 1.5835218e-4, zel = 0.05490;
+    let zm = init ? s.zmos : s.zmos + zns * s.t;
+    let zf = zm + 2 * zes * sin(zm), sinzf = sin(zf);
+    let f2 = 0.5 * sinzf * sinzf - 0.25, f3 = -0.5 * sinzf * cos(zf);
+    const ses = s.se2 * f2 + s.se3 * f3, sis = s.si2 * f2 + s.si3 * f3;
+    const sls = s.sl2 * f2 + s.sl3 * f3 + s.sl4 * sinzf;
+    const sghs = s.sgh2 * f2 + s.sgh3 * f3 + s.sgh4 * sinzf, shs = s.sh2 * f2 + s.sh3 * f3;
+    zm = init ? s.zmol : s.zmol + znl * s.t;
+    zf = zm + 2 * zel * sin(zm); sinzf = sin(zf);
+    f2 = 0.5 * sinzf * sinzf - 0.25; f3 = -0.5 * sinzf * cos(zf);
+    const sel = s.ee2 * f2 + s.e3 * f3, sil = s.xi2 * f2 + s.xi3 * f3;
+    const sll = s.xl2 * f2 + s.xl3 * f3 + s.xl4 * sinzf;
+    const sghl = s.xgh2 * f2 + s.xgh3 * f3 + s.xgh4 * sinzf, shll = s.xh2 * f2 + s.xh3 * f3;
+    let pe = ses + sel, pinc = sis + sil, pl = sls + sll, pgh = sghs + sghl, ph = shs + shll;
+    if (!init) {
+      pe -= s.peo; pinc -= s.pinco; pl -= s.plo; pgh -= s.pgho; ph -= s.pho;
+      inclp += pinc; ep += pe;
+      const sinip = sin(inclp), cosip = cos(inclp);
+      if (inclp >= 0.2) {
+        ph /= sinip; pgh -= cosip * ph;
+        argpp += pgh; nodep += ph; mp += pl;
+      } else {
+        const sinop = sin(nodep), cosop = cos(nodep);
+        let alfdp = sinip * sinop, betdp = sinip * cosop;
+        alfdp += ph * cosop + pinc * cosip * sinop;
+        betdp += -ph * sinop + pinc * cosip * cosop;
+        nodep %= twopi;
+        const xls = mp + argpp + pl + pgh + (cosip - pinc * sinip) * nodep;
+        const xnoh = nodep;
+        nodep = atan2(alfdp, betdp);
+        if (abs(xnoh - nodep) > pi) nodep += nodep < xnoh ? twopi : -twopi;
+        mp += pl;
+        argpp = xls - mp - cosip * nodep;
+      }
+    }
+    return [ep, inclp, nodep, argpp, mp];
+  }
+
+  function dscom(epoch, ep, argpp, tc, inclp, nodep, np, s) {
+    const zes = 0.01675, zel = 0.05490, c1ss = 2.9864797e-6, c1l = 4.7968065e-7;
+    const zsinis = 0.39785416, zcosis = 0.91744867, zcosgs = 0.1945905, zsings = -0.98088458;
+    const o = {};
+    o.nm = np; o.em = ep;
+    o.snodm = sin(nodep); o.cnodm = cos(nodep);
+    o.sinomm = sin(argpp); o.cosomm = cos(argpp);
+    o.sinim = sin(inclp); o.cosim = cos(inclp);
+    o.emsq = o.em * o.em;
+    const betasq = 1 - o.emsq;
+    o.rtemsq = sqrt(betasq);
+    s.peo = 0; s.pinco = 0; s.plo = 0; s.pgho = 0; s.pho = 0;
+    o.day = epoch + 18261.5 + tc / 1440;
+    const xnodce = (4.5236020 - 9.2422029e-4 * o.day) % twopi;
+    const stem = sin(xnodce), ctem = cos(xnodce);
+    const zcosil = 0.91375164 - 0.03568096 * ctem;
+    const zsinil = sqrt(1 - zcosil * zcosil);
+    const zsinhl = 0.089683511 * stem / zsinil;
+    const zcoshl = sqrt(1 - zsinhl * zsinhl);
+    o.gam = 5.8351514 + 0.0019443680 * o.day;
+    let zx = 0.39785416 * stem / zsinil;
+    const zy = zcoshl * ctem + 0.91744867 * zsinhl * stem;
+    zx = atan2(zx, zy);
+    zx = o.gam + zx - xnodce;
+    const zcosgl = cos(zx), zsingl = sin(zx);
+    let zcosg = zcosgs, zsing = zsings, zcosi = zcosis, zsini = zsinis;
+    let zcosh = o.cnodm, zsinh = o.snodm, cc = c1ss;
+    const xnoi = 1 / o.nm;
+    const { cosim, sinim, cosomm, sinomm, emsq } = o;
+    for (let lsflg = 1; lsflg <= 2; lsflg++) {
+      const a1 = zcosg * zcosh + zsing * zcosi * zsinh;
+      const a3 = -zsing * zcosh + zcosg * zcosi * zsinh;
+      const a7 = -zcosg * zsinh + zsing * zcosi * zcosh;
+      const a8 = zsing * zsini;
+      const a9 = zsing * zsinh + zcosg * zcosi * zcosh;
+      const a10 = zcosg * zsini;
+      const a2 = cosim * a7 + sinim * a8;
+      const a4 = cosim * a9 + sinim * a10;
+      const a5 = -sinim * a7 + cosim * a8;
+      const a6 = -sinim * a9 + cosim * a10;
+      const x1 = a1 * cosomm + a2 * sinomm;
+      const x2 = a3 * cosomm + a4 * sinomm;
+      const x3 = -a1 * sinomm + a2 * cosomm;
+      const x4 = -a3 * sinomm + a4 * cosomm;
+      const x5 = a5 * sinomm, x6 = a6 * sinomm, x7 = a5 * cosomm, x8 = a6 * cosomm;
+      o.z31 = 12 * x1 * x1 - 3 * x3 * x3;
+      o.z32 = 24 * x1 * x2 - 6 * x3 * x4;
+      o.z33 = 12 * x2 * x2 - 3 * x4 * x4;
+      o.z1 = 3 * (a1 * a1 + a2 * a2) + o.z31 * emsq;
+      o.z2 = 6 * (a1 * a3 + a2 * a4) + o.z32 * emsq;
+      o.z3 = 3 * (a3 * a3 + a4 * a4) + o.z33 * emsq;
+      o.z11 = -6 * a1 * a5 + emsq * (-24 * x1 * x7 - 6 * x3 * x5);
+      o.z12 = -6 * (a1 * a6 + a3 * a5) + emsq * (-24 * (x2 * x7 + x1 * x8) - 6 * (x3 * x6 + x4 * x5));
+      o.z13 = -6 * a3 * a6 + emsq * (-24 * x2 * x8 - 6 * x4 * x6);
+      o.z21 = 6 * a2 * a5 + emsq * (24 * x1 * x5 - 6 * x3 * x7);
+      o.z22 = 6 * (a4 * a5 + a2 * a6) + emsq * (24 * (x2 * x5 + x1 * x6) - 6 * (x4 * x7 + x3 * x8));
+      o.z23 = 6 * a4 * a6 + emsq * (24 * x2 * x6 - 6 * x4 * x8);
+      o.z1 = o.z1 + o.z1 + betasq * o.z31;
+      o.z2 = o.z2 + o.z2 + betasq * o.z32;
+      o.z3 = o.z3 + o.z3 + betasq * o.z33;
+      o.s3 = cc * xnoi;
+      o.s2 = -0.5 * o.s3 / o.rtemsq;
+      o.s4 = o.s3 * o.rtemsq;
+      o.s1 = -15 * o.em * o.s4;
+      o.s5 = x1 * x3 + x2 * x4;
+      o.s6 = x2 * x3 + x1 * x4;
+      o.s7 = x2 * x4 - x1 * x3;
+      if (lsflg === 1) {
+        o.ss1 = o.s1; o.ss2 = o.s2; o.ss3 = o.s3; o.ss4 = o.s4; o.ss5 = o.s5; o.ss6 = o.s6; o.ss7 = o.s7;
+        o.sz1 = o.z1; o.sz2 = o.z2; o.sz3 = o.z3;
+        o.sz11 = o.z11; o.sz12 = o.z12; o.sz13 = o.z13;
+        o.sz21 = o.z21; o.sz22 = o.z22; o.sz23 = o.z23;
+        o.sz31 = o.z31; o.sz32 = o.z32; o.sz33 = o.z33;
+        zcosg = zcosgl; zsing = zsingl; zcosi = zcosil; zsini = zsinil;
+        zcosh = zcoshl * o.cnodm + zsinhl * o.snodm;
+        zsinh = o.snodm * zcoshl - o.cnodm * zsinhl;
+        cc = c1l;
+      }
+    }
+    s.zmol = (4.7199672 + 0.22997150 * o.day - o.gam) % twopi;
+    s.zmos = (6.2565837 + 0.017201977 * o.day) % twopi;
+    s.se2 = 2 * o.ss1 * o.ss6;
+    s.se3 = 2 * o.ss1 * o.ss7;
+    s.si2 = 2 * o.ss2 * o.sz12;
+    s.si3 = 2 * o.ss2 * (o.sz13 - o.sz11);
+    s.sl2 = -2 * o.ss3 * o.sz2;
+    s.sl3 = -2 * o.ss3 * (o.sz3 - o.sz1);
+    s.sl4 = -2 * o.ss3 * (-21 - 9 * emsq) * zes;
+    s.sgh2 = 2 * o.ss4 * o.sz32;
+    s.sgh3 = 2 * o.ss4 * (o.sz33 - o.sz31);
+    s.sgh4 = -18 * o.ss4 * zes;
+    s.sh2 = -2 * o.ss2 * o.sz22;
+    s.sh3 = -2 * o.ss2 * (o.sz23 - o.sz21);
+    s.ee2 = 2 * o.s1 * o.s6;
+    s.e3 = 2 * o.s1 * o.s7;
+    s.xi2 = 2 * o.s2 * o.z12;
+    s.xi3 = 2 * o.s2 * (o.z13 - o.z11);
+    s.xl2 = -2 * o.s3 * o.z2;
+    s.xl3 = -2 * o.s3 * (o.z3 - o.z1);
+    s.xl4 = -2 * o.s3 * (-21 - 9 * emsq) * zel;
+    s.xgh2 = 2 * o.s4 * o.z32;
+    s.xgh3 = 2 * o.s4 * (o.z33 - o.z31);
+    s.xgh4 = -18 * o.s4 * zel;
+    s.xh2 = -2 * o.s2 * o.z22;
+    s.xh3 = -2 * o.s2 * (o.z23 - o.z21);
+    return o;
+  }
+
+  // Deep-space secular rates and resonance setup. `m` holds the mean
+  // elements em, argpm, inclm, mm, nm, nodem and is updated in place.
+  function dsinit(s, d, m, t, tc, xpidot, eccsq) {
+    const q22 = 1.7891679e-6, q31 = 2.1460748e-6, q33 = 2.2123015e-7;
+    const root22 = 1.7891679e-6, root44 = 7.3636953e-9, root54 = 2.1765803e-9;
+    const rptim = 4.37526908801129966e-3, root32 = 3.7393792e-7, root52 = 1.1428639e-7;
+    const znl = 1.5835218e-4, zns = 1.19459e-5;
+    const { cosim, sinim } = d;
+    let emsq = d.emsq;
+    s.irez = 0;
+    if (m.nm > 0.0034906585 && m.nm < 0.0052359877) s.irez = 1;
+    if (m.nm >= 8.26e-3 && m.nm <= 9.24e-3 && m.em >= 0.5) s.irez = 2;
+    const ses = d.ss1 * zns * d.ss5;
+    const sis = d.ss2 * zns * (d.sz11 + d.sz13);
+    const sls = -zns * d.ss3 * (d.sz1 + d.sz3 - 14 - 6 * emsq);
+    const sghs = d.ss4 * zns * (d.sz31 + d.sz33 - 6);
+    let shs = -zns * d.ss2 * (d.sz21 + d.sz23);
+    if (m.inclm < 5.2359877e-2 || m.inclm > pi - 5.2359877e-2) shs = 0;
+    if (sinim !== 0) shs /= sinim;
+    const sgs = sghs - cosim * shs;
+    s.dedt = ses + d.s1 * znl * d.s5;
+    s.didt = sis + d.s2 * znl * (d.z11 + d.z13);
+    s.dmdt = sls - znl * d.s3 * (d.z1 + d.z3 - 14 - 6 * emsq);
+    const sghl = d.s4 * znl * (d.z31 + d.z33 - 6);
+    let shll = -znl * d.s2 * (d.z21 + d.z23);
+    if (m.inclm < 5.2359877e-2 || m.inclm > pi - 5.2359877e-2) shll = 0;
+    s.domdt = sgs + sghl;
+    s.dnodt = shs;
+    if (sinim !== 0) {
+      s.domdt -= cosim / sinim * shll;
+      s.dnodt += shll / sinim;
+    }
+    const dndt = 0;
+    const theta = (s.gsto + tc * rptim) % twopi;
+    m.em += s.dedt * t;
+    m.inclm += s.didt * t;
+    m.argpm += s.domdt * t;
+    m.nodem += s.dnodt * t;
+    m.mm += s.dmdt * t;
+    if (s.irez !== 0) {
+      const aonv = (m.nm / xke) ** x2o3;
+      if (s.irez === 2) {
+        const cosisq = cosim * cosim;
+        const emo = m.em;
+        const em = s.ecco;
+        const emsqo = emsq;
+        emsq = eccsq;
+        const eoc = em * emsq;
+        const g201 = -0.306 - (em - 0.64) * 0.440;
+        let g211, g310, g322, g410, g422, g520, g533, g521, g532;
+        if (em <= 0.65) {
+          g211 = 3.616 - 13.2470 * em + 16.2900 * emsq;
+          g310 = -19.302 + 117.3900 * em - 228.4190 * emsq + 156.5910 * eoc;
+          g322 = -18.9068 + 109.7927 * em - 214.6334 * emsq + 146.5816 * eoc;
+          g410 = -41.122 + 242.6940 * em - 471.0940 * emsq + 313.9530 * eoc;
+          g422 = -146.407 + 841.8800 * em - 1629.014 * emsq + 1083.4350 * eoc;
+          g520 = -532.114 + 3017.977 * em - 5740.032 * emsq + 3708.2760 * eoc;
+        } else {
+          g211 = -72.099 + 331.819 * em - 508.738 * emsq + 266.724 * eoc;
+          g310 = -346.844 + 1582.851 * em - 2415.925 * emsq + 1246.113 * eoc;
+          g322 = -342.585 + 1554.908 * em - 2366.899 * emsq + 1215.972 * eoc;
+          g410 = -1052.797 + 4758.686 * em - 7193.992 * emsq + 3651.957 * eoc;
+          g422 = -3581.690 + 16178.110 * em - 24462.770 * emsq + 12422.520 * eoc;
+          g520 = em > 0.715
+            ? -5149.66 + 29936.92 * em - 54087.36 * emsq + 31324.56 * eoc
+            : 1464.74 - 4664.75 * em + 3763.64 * emsq;
+        }
+        if (em < 0.7) {
+          g533 = -919.22770 + 4988.6100 * em - 9064.7700 * emsq + 5542.21 * eoc;
+          g521 = -822.71072 + 4568.6173 * em - 8491.4146 * emsq + 5337.524 * eoc;
+          g532 = -853.66600 + 4690.2500 * em - 8624.7700 * emsq + 5341.4 * eoc;
+        } else {
+          g533 = -37995.780 + 161616.52 * em - 229838.20 * emsq + 109377.94 * eoc;
+          g521 = -51752.104 + 218913.95 * em - 309468.16 * emsq + 146349.42 * eoc;
+          g532 = -40023.880 + 170470.89 * em - 242699.48 * emsq + 115605.82 * eoc;
+        }
+        const sini2 = sinim * sinim;
+        const f220 = 0.75 * (1 + 2 * cosim + cosisq);
+        const f221 = 1.5 * sini2;
+        const f321 = 1.875 * sinim * (1 - 2 * cosim - 3 * cosisq);
+        const f322 = -1.875 * sinim * (1 + 2 * cosim - 3 * cosisq);
+        const f441 = 35 * sini2 * f220;
+        const f442 = 39.3750 * sini2 * sini2;
+        const f522 = 9.84375 * sinim * (sini2 * (1 - 2 * cosim - 5 * cosisq) +
+          0.33333333 * (-2 + 4 * cosim + 6 * cosisq));
+        const f523 = sinim * (4.92187512 * sini2 * (-2 - 4 * cosim + 10 * cosisq) +
+          6.56250012 * (1 + 2 * cosim - 3 * cosisq));
+        const f542 = 29.53125 * sinim * (2 - 8 * cosim + cosisq * (-12 + 8 * cosim + 10 * cosisq));
+        const f543 = 29.53125 * sinim * (-2 - 8 * cosim + cosisq * (12 + 8 * cosim - 10 * cosisq));
+        const xno2 = m.nm * m.nm, ainv2 = aonv * aonv;
+        let temp1 = 3 * xno2 * ainv2, temp = temp1 * root22;
+        s.d2201 = temp * f220 * g201;
+        s.d2211 = temp * f221 * g211;
+        temp1 *= aonv; temp = temp1 * root32;
+        s.d3210 = temp * f321 * g310;
+        s.d3222 = temp * f322 * g322;
+        temp1 *= aonv; temp = 2 * temp1 * root44;
+        s.d4410 = temp * f441 * g410;
+        s.d4422 = temp * f442 * g422;
+        temp1 *= aonv; temp = temp1 * root52;
+        s.d5220 = temp * f522 * g520;
+        s.d5232 = temp * f523 * g532;
+        temp = 2 * temp1 * root54;
+        s.d5421 = temp * f542 * g521;
+        s.d5433 = temp * f543 * g533;
+        s.xlamo = (s.mo + s.nodeo + s.nodeo - theta - theta) % twopi;
+        s.xfact = s.mdot + s.dmdt + 2 * (s.nodedot + s.dnodt - rptim) - s.no_unkozai;
+        m.em = emo;
+        emsq = emsqo;
+      }
+      if (s.irez === 1) {
+        const g200 = 1 + emsq * (-2.5 + 0.8125 * emsq);
+        const g310 = 1 + 2 * emsq;
+        const g300 = 1 + emsq * (-6 + 6.60937 * emsq);
+        const f220 = 0.75 * (1 + cosim) * (1 + cosim);
+        const f311 = 0.9375 * sinim * sinim * (1 + 3 * cosim) - 0.75 * (1 + cosim);
+        let f330 = 1 + cosim;
+        f330 = 1.875 * f330 * f330 * f330;
+        s.del1 = 3 * m.nm * m.nm * aonv * aonv;
+        s.del2 = 2 * s.del1 * f220 * g200 * q22;
+        s.del3 = 3 * s.del1 * f330 * g300 * q33 * aonv;
+        s.del1 = s.del1 * f311 * g310 * q31 * aonv;
+        s.xlamo = (s.mo + s.nodeo + s.argpo - theta) % twopi;
+        s.xfact = s.mdot + xpidot - rptim + s.dmdt + s.domdt + s.dnodt - s.no_unkozai;
+      }
+      s.xli = s.xlamo;
+      s.xni = s.no_unkozai;
+      s.atime = 0;
+      m.nm = s.no_unkozai + dndt;
+    }
+  }
+
+  function dspace(s, t, tc, m) {
+    const fasx2 = 0.13130908, fasx4 = 2.8843198, fasx6 = 0.37448087;
+    const g22 = 5.7686396, g32 = 0.95240898, g44 = 1.8014998, g52 = 1.0508330, g54 = 4.4108898;
+    const rptim = 4.37526908801129966e-3, stepp = 720, stepn = -720, step2 = 259200;
+    const theta = (s.gsto + tc * rptim) % twopi;
+    m.em += s.dedt * t;
+    m.inclm += s.didt * t;
+    m.argpm += s.domdt * t;
+    m.nodem += s.dnodt * t;
+    m.mm += s.dmdt * t;
+    let ft = 0;
+    if (s.irez !== 0) {
+      if (s.atime === 0 || t * s.atime <= 0 || abs(t) < abs(s.atime)) {
+        s.atime = 0; s.xni = s.no_unkozai; s.xli = s.xlamo;
+      }
+      const delt = t > 0 ? stepp : stepn;
+      let xndt, xldot, xnddt;
+      for (;;) {
+        if (s.irez !== 2) {
+          xndt = s.del1 * sin(s.xli - fasx2) + s.del2 * sin(2 * (s.xli - fasx4)) + s.del3 * sin(3 * (s.xli - fasx6));
+          xldot = s.xni + s.xfact;
+          xnddt = s.del1 * cos(s.xli - fasx2) + 2 * s.del2 * cos(2 * (s.xli - fasx4)) + 3 * s.del3 * cos(3 * (s.xli - fasx6));
+          xnddt *= xldot;
+        } else {
+          const xomi = s.argpo + s.argpdot * s.atime, x2omi = xomi + xomi, x2li = s.xli + s.xli;
+          xndt = s.d2201 * sin(x2omi + s.xli - g22) + s.d2211 * sin(s.xli - g22) +
+            s.d3210 * sin(xomi + s.xli - g32) + s.d3222 * sin(-xomi + s.xli - g32) +
+            s.d4410 * sin(x2omi + x2li - g44) + s.d4422 * sin(x2li - g44) +
+            s.d5220 * sin(xomi + s.xli - g52) + s.d5232 * sin(-xomi + s.xli - g52) +
+            s.d5421 * sin(xomi + x2li - g54) + s.d5433 * sin(-xomi + x2li - g54);
+          xldot = s.xni + s.xfact;
+          xnddt = s.d2201 * cos(x2omi + s.xli - g22) + s.d2211 * cos(s.xli - g22) +
+            s.d3210 * cos(xomi + s.xli - g32) + s.d3222 * cos(-xomi + s.xli - g32) +
+            s.d5220 * cos(xomi + s.xli - g52) + s.d5232 * cos(-xomi + s.xli - g52) +
+            2 * (s.d4410 * cos(x2omi + x2li - g44) + s.d4422 * cos(x2li - g44) +
+              s.d5421 * cos(xomi + x2li - g54) + s.d5433 * cos(-xomi + x2li - g54));
+          xnddt *= xldot;
+        }
+        if (abs(t - s.atime) < stepp) { ft = t - s.atime; break; }
+        s.xli += xldot * delt + xndt * step2;
+        s.xni += xndt * delt + xnddt * step2;
+        s.atime += delt;
+      }
+      m.nm = s.xni + xndt * ft + xnddt * ft * ft * 0.5;
+      const xl = s.xli + xldot * ft + xndt * ft * ft * 0.5;
+      m.mm = s.irez !== 1 ? xl - 2 * m.nodem + 2 * theta : xl - m.nodem - m.argpm + theta;
+    }
+  }
+
+  // epoch: days since 1949-12-31 00:00 UTC. Angles in rad, no_kozai in rad/min.
+  function init(s, epoch) {
+    const temp4 = 1.5e-12;
+    Object.assign(s, {
+      isimp: 0, method: 'n', aycof: 0, con41: 0, cc1: 0, cc4: 0, cc5: 0, d2: 0, d3: 0, d4: 0,
+      delmo: 0, eta: 0, argpdot: 0, omgcof: 0, sinmao: 0, t: 0, t2cof: 0, t3cof: 0, t4cof: 0,
+      t5cof: 0, x1mth2: 0, x7thm1: 0, mdot: 0, nodedot: 0, xlcof: 0, xmcof: 0, nodecf: 0,
+      irez: 0, d2201: 0, d2211: 0, d3210: 0, d3222: 0, d4410: 0, d4422: 0, d5220: 0, d5232: 0,
+      d5421: 0, d5433: 0, dedt: 0, del1: 0, del2: 0, del3: 0, didt: 0, dmdt: 0, dnodt: 0,
+      domdt: 0, e3: 0, ee2: 0, peo: 0, pgho: 0, pho: 0, pinco: 0, plo: 0, se2: 0, se3: 0,
+      sgh2: 0, sgh3: 0, sgh4: 0, sh2: 0, sh3: 0, si2: 0, si3: 0, sl2: 0, sl3: 0, sl4: 0,
+      gsto: 0, xfact: 0, xgh2: 0, xgh3: 0, xgh4: 0, xh2: 0, xh3: 0, xi2: 0, xi3: 0, xl2: 0,
+      xl3: 0, xl4: 0, xlamo: 0, zmol: 0, zmos: 0, atime: 0, xli: 0, xni: 0, error: 0,
+    });
+    const ss = 78 / radiusearthkm + 1;
+    const qzms2t = ((120 - 78) / radiusearthkm) ** 4;
+    // ---- initl ----
+    const eccsq = s.ecco * s.ecco, omeosq = 1 - eccsq, rteosq = sqrt(omeosq);
+    const cosio = cos(s.inclo), cosio2 = cosio * cosio;
+    const ak = (xke / s.no_kozai) ** x2o3;
+    const d1 = 0.75 * j2 * (3 * cosio2 - 1) / (rteosq * omeosq);
+    let del = d1 / (ak * ak);
+    const adel = ak * (1 - del * del - del * (1 / 3 + 134 * del * del / 81));
+    del = d1 / (adel * adel);
+    s.no_unkozai = s.no_kozai / (1 + del);
+    const ao = (xke / s.no_unkozai) ** x2o3;
+    const sinio = sin(s.inclo), po = ao * omeosq, con42 = 1 - 5 * cosio2;
+    s.con41 = -con42 - cosio2 - cosio2;
+    const posq = po * po, rp = ao * (1 - s.ecco);
+    s.gsto = gstime(epoch + 2433281.5);
+    // ----
+    s.a = (s.no_unkozai * tumin) ** (-2 / 3);
+    if (omeosq >= 0 || s.no_unkozai >= 0) {
+      s.isimp = rp < 220 / radiusearthkm + 1 ? 1 : 0;
+      let sfour = ss, qzms24 = qzms2t;
+      const perige = (rp - 1) * radiusearthkm;
+      if (perige < 156) {
+        sfour = perige < 98 ? 20 : perige - 78;
+        qzms24 = ((120 - sfour) / radiusearthkm) ** 4;
+        sfour = sfour / radiusearthkm + 1;
+      }
+      const pinvsq = 1 / posq, tsi = 1 / (ao - sfour);
+      s.eta = ao * s.ecco * tsi;
+      const etasq = s.eta * s.eta, eeta = s.ecco * s.eta, psisq = abs(1 - etasq);
+      const coef = qzms24 * tsi ** 4, coef1 = coef / psisq ** 3.5;
+      const cc2 = coef1 * s.no_unkozai * (ao * (1 + 1.5 * etasq + eeta * (4 + etasq)) +
+        0.375 * j2 * tsi / psisq * s.con41 * (8 + 3 * etasq * (8 + etasq)));
+      s.cc1 = s.bstar * cc2;
+      const cc3 = s.ecco > 1e-4 ? -2 * coef * tsi * j3oj2 * s.no_unkozai * sinio / s.ecco : 0;
+      s.x1mth2 = 1 - cosio2;
+      s.cc4 = 2 * s.no_unkozai * coef1 * ao * omeosq * (s.eta * (2 + 0.5 * etasq) +
+        s.ecco * (0.5 + 2 * etasq) - j2 * tsi / (ao * psisq) *
+        (-3 * s.con41 * (1 - 2 * eeta + etasq * (1.5 - 0.5 * eeta)) +
+          0.75 * s.x1mth2 * (2 * etasq - eeta * (1 + etasq)) * cos(2 * s.argpo)));
+      s.cc5 = 2 * coef1 * ao * omeosq * (1 + 2.75 * (etasq + eeta) + eeta * etasq);
+      const cosio4 = cosio2 * cosio2;
+      const temp1 = 1.5 * j2 * pinvsq * s.no_unkozai;
+      const temp2 = 0.5 * temp1 * j2 * pinvsq;
+      const temp3 = -0.46875 * j4 * pinvsq * pinvsq * s.no_unkozai;
+      s.mdot = s.no_unkozai + 0.5 * temp1 * rteosq * s.con41 +
+        0.0625 * temp2 * rteosq * (13 - 78 * cosio2 + 137 * cosio4);
+      s.argpdot = -0.5 * temp1 * con42 + 0.0625 * temp2 * (7 - 114 * cosio2 + 395 * cosio4) +
+        temp3 * (3 - 36 * cosio2 + 49 * cosio4);
+      const xhdot1 = -temp1 * cosio;
+      s.nodedot = xhdot1 + (0.5 * temp2 * (4 - 19 * cosio2) + 2 * temp3 * (3 - 7 * cosio2)) * cosio;
+      const xpidot = s.argpdot + s.nodedot;
+      s.omgcof = s.bstar * cc3 * cos(s.argpo);
+      s.xmcof = s.ecco > 1e-4 ? -x2o3 * coef * s.bstar / eeta : 0;
+      s.nodecf = 3.5 * omeosq * xhdot1 * s.cc1;
+      s.t2cof = 1.5 * s.cc1;
+      s.xlcof = -0.25 * j3oj2 * sinio * (3 + 5 * cosio) / (abs(cosio + 1) > 1.5e-12 ? 1 + cosio : temp4);
+      s.aycof = -0.5 * j3oj2 * sinio;
+      s.delmo = (1 + s.eta * cos(s.mo)) ** 3;
+      s.sinmao = sin(s.mo);
+      s.x7thm1 = 7 * cosio2 - 1;
+      if (twopi / s.no_unkozai >= 225) {
+        s.method = 'd';
+        s.isimp = 1;
+        const tc = 0;
+        const inclm = s.inclo;
+        const d = dscom(epoch, s.ecco, s.argpo, tc, s.inclo, s.nodeo, s.no_unkozai, s);
+        [s.ecco, s.inclo, s.nodeo, s.argpo, s.mo] = dpper(s, true, s.ecco, s.inclo, s.nodeo, s.argpo, s.mo);
+        const m = { em: d.em, argpm: 0, inclm, mm: 0, nm: d.nm, nodem: 0 };
+        dsinit(s, d, m, s.t, tc, xpidot, eccsq);
+      }
+      if (s.isimp !== 1) {
+        const cc1sq = s.cc1 * s.cc1;
+        s.d2 = 4 * ao * tsi * cc1sq;
+        const temp = s.d2 * tsi * s.cc1 / 3;
+        s.d3 = (17 * ao + sfour) * temp;
+        s.d4 = 0.5 * temp * ao * tsi * (221 * ao + 31 * sfour) * s.cc1;
+        s.t3cof = s.d2 + 2 * cc1sq;
+        s.t4cof = 0.25 * (3 * s.d3 + s.cc1 * (12 * s.d2 + 10 * cc1sq));
+        s.t5cof = 0.2 * (3 * s.d4 + 12 * s.cc1 * s.d3 + 6 * s.d2 * s.d2 + 15 * cc1sq * (2 * s.d2 + cc1sq));
+      }
+    }
+    propagate(s, 0);
+    return s;
+  }
+
+  // tsince in minutes from epoch. Returns { r: [km], v: [km/s] } in TEME,
+  // or null with s.error set (1..4 element errors, 6 decayed).
+  function propagate(s, tsince) {
+    const temp4 = 1.5e-12, vkmpersec = radiusearthkm * xke / 60;
+    s.t = tsince;
+    s.error = 0;
+    const t = tsince;
+    const xmdf = s.mo + s.mdot * t;
+    const argpdf = s.argpo + s.argpdot * t;
+    const nodedf = s.nodeo + s.nodedot * t;
+    const t2 = t * t;
+    const m = { argpm: argpdf, mm: xmdf, nodem: nodedf + s.nodecf * t2, nm: s.no_unkozai, em: s.ecco, inclm: s.inclo };
+    let tempa = 1 - s.cc1 * t, tempe = s.bstar * s.cc4 * t, templ = s.t2cof * t2;
+    if (s.isimp !== 1) {
+      const delomg = s.omgcof * t;
+      const delm = s.xmcof * ((1 + s.eta * cos(xmdf)) ** 3 - s.delmo);
+      const temp = delomg + delm;
+      m.mm = xmdf + temp;
+      m.argpm = argpdf - temp;
+      const t3 = t2 * t, t4 = t3 * t;
+      tempa -= s.d2 * t2 + s.d3 * t3 + s.d4 * t4;
+      tempe += s.bstar * s.cc5 * (sin(m.mm) - s.sinmao);
+      templ += s.t3cof * t3 + t4 * (s.t4cof + t * s.t5cof);
+    }
+    if (s.method === 'd') dspace(s, t, t, m);
+    let { nm, em, inclm, mm, argpm, nodem } = m;
+    if (nm <= 0) { s.error = 2; return null; }
+    const am = (xke / nm) ** x2o3 * tempa * tempa;
+    nm = xke / am ** 1.5;
+    em -= tempe;
+    if (em >= 1 || em < -0.001) { s.error = 1; return null; }
+    if (em < 1e-6) em = 1e-6;
+    mm += s.no_unkozai * templ;
+    let xlm = mm + argpm + nodem;
+    nodem %= twopi;
+    argpm %= twopi;
+    xlm %= twopi;
+    mm = (xlm - argpm - nodem) % twopi;
+    let ep = em, xincp = inclm, argpp = argpm, nodep = nodem, mp = mm;
+    let sinip = sin(inclm), cosip = cos(inclm);
+    if (s.method === 'd') {
+      [ep, xincp, nodep, argpp, mp] = dpper(s, false, ep, xincp, nodep, argpp, mp);
+      if (xincp < 0) { xincp = -xincp; nodep += pi; argpp -= pi; }
+      if (ep < 0 || ep > 1) { s.error = 3; return null; }
+      sinip = sin(xincp); cosip = cos(xincp);
+      s.aycof = -0.5 * j3oj2 * sinip;
+      s.xlcof = -0.25 * j3oj2 * sinip * (3 + 5 * cosip) / (abs(cosip + 1) > 1.5e-12 ? 1 + cosip : temp4);
+    }
+    const axnl = ep * cos(argpp);
+    let temp = 1 / (am * (1 - ep * ep));
+    const aynl = ep * sin(argpp) + temp * s.aycof;
+    const xl = mp + argpp + nodep + temp * s.xlcof * axnl;
+    const u = (xl - nodep) % twopi;
+    let eo1 = u, tem5 = 9999.9, ktr = 1, sineo1 = 0, coseo1 = 0;
+    while (abs(tem5) >= 1e-12 && ktr <= 10) {
+      sineo1 = sin(eo1); coseo1 = cos(eo1);
+      tem5 = 1 - coseo1 * axnl - sineo1 * aynl;
+      tem5 = (u - aynl * coseo1 + axnl * sineo1 - eo1) / tem5;
+      if (abs(tem5) >= 0.95) tem5 = tem5 > 0 ? 0.95 : -0.95;
+      eo1 += tem5;
+      ktr++;
+    }
+    const ecose = axnl * coseo1 + aynl * sineo1;
+    const esine = axnl * sineo1 - aynl * coseo1;
+    const el2 = axnl * axnl + aynl * aynl;
+    const pl = am * (1 - el2);
+    if (pl < 0) { s.error = 4; return null; }
+    const rl = am * (1 - ecose);
+    const rdotl = sqrt(am) * esine / rl;
+    const rvdotl = sqrt(pl) / rl;
+    const betal = sqrt(1 - el2);
+    temp = esine / (1 + betal);
+    const sinu = am / rl * (sineo1 - aynl - axnl * temp);
+    const cosu = am / rl * (coseo1 - axnl + aynl * temp);
+    let su = atan2(sinu, cosu);
+    const sin2u = (cosu + cosu) * sinu, cos2u = 1 - 2 * sinu * sinu;
+    temp = 1 / pl;
+    const temp1 = 0.5 * j2 * temp, temp2 = temp1 * temp;
+    if (s.method === 'd') {
+      const cosisq = cosip * cosip;
+      s.con41 = 3 * cosisq - 1;
+      s.x1mth2 = 1 - cosisq;
+      s.x7thm1 = 7 * cosisq - 1;
+    }
+    const mrt = rl * (1 - 1.5 * temp2 * betal * s.con41) + 0.5 * temp1 * s.x1mth2 * cos2u;
+    su -= 0.25 * temp2 * s.x7thm1 * sin2u;
+    const xnode = nodep + 1.5 * temp2 * cosip * sin2u;
+    const xinc = xincp + 1.5 * temp2 * cosip * sinip * cos2u;
+    const mvt = rdotl - nm * temp1 * s.x1mth2 * sin2u / xke;
+    const rvdot = rvdotl + nm * temp1 * (s.x1mth2 * cos2u + 1.5 * s.con41) / xke;
+    const sinsu = sin(su), cossu = cos(su), snod = sin(xnode), cnod = cos(xnode);
+    const sini = sin(xinc), cosi = cos(xinc);
+    const xmx = -snod * cosi, xmy = cnod * cosi;
+    const ux = xmx * sinsu + cnod * cossu, uy = xmy * sinsu + snod * cossu, uz = sini * sinsu;
+    const vx = xmx * cossu - cnod * sinsu, vy = xmy * cossu - snod * sinsu, vz = sini * cossu;
+    const mr = mrt * radiusearthkm;
+    const r = [mr * ux, mr * uy, mr * uz];
+    const v = [(mvt * ux + rvdot * vx) * vkmpersec, (mvt * uy + rvdot * vy) * vkmpersec, (mvt * uz + rvdot * vz) * vkmpersec];
+    if (mrt < 1) s.error = 6;
+    return { r, v };
+  }
+
+  // Parse a TLE (line 1, line 2) into an initialised satellite record.
+  function twoline(name, l1, l2) {
+    const num = (str) => { const x = parseFloat(str); if (!Number.isFinite(x)) throw new Error('bad TLE field'); return x; };
+    const expo = (str) => num((str[0] === '-' ? '-' : '') + '0.' + str.slice(1, 6).trim()) * 10 ** parseInt(str.slice(6, 8), 10);
+    if (!l1.startsWith('1 ') || !l2.startsWith('2 ') || l1.length < 64 || l2.length < 63) throw new Error('bad TLE');
+    const xpdotp = 1440 / twopi;
+    const yy = parseInt(l1.slice(18, 20), 10);
+    const year = yy < 57 ? 2000 + yy : 1900 + yy;
+    const epochdays = num(l1.slice(20, 32));
+    const s = {
+      name, norad: l1.slice(2, 7).trim(),
+      ndot: num(l1.slice(33, 43)) / (xpdotp * 1440),
+      nddot: expo(l1.slice(44, 52).padEnd(8)) / (xpdotp * 1440 * 1440),
+      bstar: expo(l1.slice(53, 61)),
+      inclo: num(l2.slice(8, 16)) * pi / 180,
+      nodeo: num(l2.slice(17, 25)) * pi / 180,
+      ecco: num('0.' + l2.slice(26, 33).replace(/ /g, '0')),
+      argpo: num(l2.slice(34, 42)) * pi / 180,
+      mo: num(l2.slice(43, 51)) * pi / 180,
+      no_kozai: num(l2.slice(52, 63)) / xpdotp,
+    };
+    // days since 1949-12-31 00:00 UTC (SGP4 epoch convention)
+    const jan1 = (Date.UTC(year, 0, 1) - Date.UTC(1949, 11, 31)) / 86400e3;
+    s.epochSgp4 = jan1 + (epochdays - 1);
+    s.epochMs = Date.UTC(year, 0, 1) + (epochdays - 1) * 86400e3;
+    init(s, s.epochSgp4);
+    if (s.error && s.error !== 6) throw new Error(`SGP4 init error ${s.error}`);
+    return s;
+  }
+
+  // Initialise from a CCSDS OMM record as served by CelesTrak (FORMAT=json). Needed for
+  // catalog numbers above 99999, which have no TLE representation.
+  function fromOMM(o) {
+    const num = x => { const v = Number(x); if (!Number.isFinite(v)) throw new Error('bad OMM field'); return v; };
+    const xpdotp = 1440 / twopi;
+    const m = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d(?:\.\d+)?)/.exec(o.EPOCH || '');
+    if (!m) throw new Error('bad OMM epoch');
+    const day0 = Date.UTC(+m[1], +m[2] - 1, +m[3]);
+    const frac = (+m[4] * 3600 + +m[5] * 60 + parseFloat(m[6])) / 86400; // keep sub-ms precision
+    const s = {
+      name: String(o.OBJECT_NAME || o.NORAD_CAT_ID).trim(), norad: String(o.NORAD_CAT_ID),
+      ndot: num(o.MEAN_MOTION_DOT ?? 0) / (xpdotp * 1440),
+      nddot: num(o.MEAN_MOTION_DDOT ?? 0) / (xpdotp * 1440 * 1440),
+      bstar: num(o.BSTAR),
+      inclo: num(o.INCLINATION) * pi / 180,
+      nodeo: num(o.RA_OF_ASC_NODE) * pi / 180,
+      ecco: num(o.ECCENTRICITY),
+      argpo: num(o.ARG_OF_PERICENTER) * pi / 180,
+      mo: num(o.MEAN_ANOMALY) * pi / 180,
+      no_kozai: num(o.MEAN_MOTION) / xpdotp,
+    };
+    s.epochSgp4 = (day0 - Date.UTC(1949, 11, 31)) / 86400e3 + frac;
+    s.epochMs = day0 + frac * 86400e3;
+    init(s, s.epochSgp4);
+    if (s.error && s.error !== 6) throw new Error(`SGP4 init error ${s.error}`);
+    return s;
+  }
+
+  return { twoline, fromOMM, propagate, gstime, radiusearthkm };
+})();
+
+
+/* ============================================================
+   Satellites
+   SGP4/SDP4 (see SGP4 above) -> TEME -> ECEF by rotating through
+   GMST (IAU-82, UTC used as UT1, polar motion ignored: < ~0.5 km)
+   -> WGS-84 geodetic coordinates and topocentric look angles.
+   Element sets are served statically as CCSDS OMM (JSON) from
+   data/gp/<group>.json, fetched by scripts/fetch-data.mjs in the
+   deploy workflow. The browser never calls CelesTrak. Pasted TLEs
+   are parsed too.
+   ============================================================ */
+const EARTH = { Re: 6378.137, f: 1 / 298.257223563, omega: 7.292115e-5 }; // WGS-84, km, rad/s
+// Groups are configured in site.config.json (tleGroups), fetch-data.mjs publishes the
+// list as data/gp/groups.json. This default is only used if that file is missing.
+const TLE_GROUPS_DEFAULT = [{ id: 'stations', label: 'Space stations' }, { id: 'amateur', label: 'Amateur' }, { id: 'weather', label: 'Weather' }];
+
+// Land outlines: Natural Earth 1:110m (public domain), lat/lon in 0.1° units,
+// delta-encoded, rings separated by ';'. Loaded on first visit to #satellites.
+let landRings = null;
+async function getLand() {
+  if (landRings) return landRings;
+  try {
+    const r = await fetch('geo/land-110m.txt');
+    if (!r.ok) throw new Error(r.status);
+    landRings = (await r.text()).trim().split(';').map(ring => {
+      const v = ring.split(',').map(Number), pts = [];
+      let la = 0, lo = 0;
+      for (let k = 0; k < v.length; k += 2) { la += v[k]; lo += v[k + 1]; pts.push([la / 10, lo / 10]); }
+      return pts;
+    });
+  } catch (e) { landRings = []; }
+  return landRings;
+}
 
 function parseTLE(text) {
   const lines = text.split(/\r?\n/).map(l => l.trimEnd()).filter(Boolean);
   const sats = [];
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].startsWith('1 ') && lines[i + 1]?.startsWith('2 ')) {
-      const name = (i > 0 && !lines[i - 1].startsWith('2 ')) ? lines[i - 1].trim() : lines[i].slice(2, 7).trim();
-      try { sats.push(tleToElements(name, lines[i], lines[i + 1])); } catch (e) {}
+      const name = (i > 0 && !/^[12] /.test(lines[i - 1])) ? lines[i - 1].replace(/^0 /, '').trim() : lines[i].slice(2, 7).trim();
+      try { sats.push(SGP4.twoline(name, lines[i], lines[i + 1])); } catch (e) {}
       i++;
     }
   }
   return sats;
 }
 
-function tleToElements(name, l1, l2) {
-  const yy = parseInt(l1.slice(18, 20), 10);
-  const year = yy < 57 ? 2000 + yy : 1900 + yy;
-  const day = parseFloat(l1.slice(20, 32));
-  const epoch = Date.UTC(year, 0, 1) + (day - 1) * 86400e3;
-  const n = parseFloat(l2.slice(52, 63)) * 2 * Math.PI / 86400; // rad/s
-  const el = {
-    name, norad: l1.slice(2, 7).trim(), epoch,
-    i: parseFloat(l2.slice(8, 16)) * DEG,
-    raan: parseFloat(l2.slice(17, 25)) * DEG,
-    e: parseFloat('0.' + l2.slice(26, 33).trim()),
-    argp: parseFloat(l2.slice(34, 42)) * DEG,
-    M0: parseFloat(l2.slice(43, 51)) * DEG,
-    n,
-  };
-  if (![el.i, el.raan, el.e, el.argp, el.M0, el.n].every(Number.isFinite)) throw new Error('bad TLE');
-  el.a = Math.cbrt(EARTH.mu / (n * n));
-  const p = el.a * (1 - el.e ** 2);
-  const k = 1.5 * EARTH.J2 * (EARTH.Re / p) ** 2 * n;
-  const ci = Math.cos(el.i);
-  el.raanDot = -k * ci;
-  el.argpDot = 0.5 * k * (5 * ci * ci - 1);
-  el.MDot = n + 0.5 * k * Math.sqrt(1 - el.e ** 2) * (3 * ci * ci - 1);
-  return el;
+function geodetic([x, y, z]) {
+  const a = EARTH.Re, e2 = EARTH.f * (2 - EARTH.f);
+  const p = Math.hypot(x, y);
+  let lat = Math.atan2(z, p * (1 - e2)), N = a, alt = 0;
+  for (let k = 0; k < 6; k++) {
+    const s = Math.sin(lat);
+    N = a / Math.sqrt(1 - e2 * s * s);
+    alt = p / Math.cos(lat) - N;
+    lat = Math.atan2(z, p * (1 - e2 * N / (N + alt)));
+  }
+  return { lat: lat / DEG, lon: Math.atan2(y, x) / DEG, alt };
 }
 
-function gmst(ms) {
-  const jd = ms / 86400e3 + 2440587.5;
-  const d = jd - 2451545.0;
-  return ((280.46061837 + 360.98564736629 * d) % 360 + 360) % 360 * DEG;
+function observerEcef(obs) {
+  const a = EARTH.Re, e2 = EARTH.f * (2 - EARTH.f);
+  const φ = obs.lat * DEG, λ = obs.lon * DEG, h = (obs.alt || 0) / 1e3;
+  const N = a / Math.sqrt(1 - e2 * Math.sin(φ) ** 2);
+  return [(N + h) * Math.cos(φ) * Math.cos(λ), (N + h) * Math.cos(φ) * Math.sin(λ), (N * (1 - e2) + h) * Math.sin(φ)];
 }
 
-function propagate(el, ms) {
-  const t = (ms - el.epoch) / 1e3;
-  const M = el.M0 + el.MDot * t;
-  const raan = el.raan + el.raanDot * t;
-  const argp = el.argp + el.argpDot * t;
-  let E = M;
-  for (let k = 0; k < 12; k++) E -= (E - el.e * Math.sin(E) - M) / (1 - el.e * Math.cos(E));
-  const nu = 2 * Math.atan2(Math.sqrt(1 + el.e) * Math.sin(E / 2), Math.sqrt(1 - el.e) * Math.cos(E / 2));
-  const r = el.a * (1 - el.e * Math.cos(E));
-  const u = argp + nu;
-  const cO = Math.cos(raan), sO = Math.sin(raan), ci = Math.cos(el.i), si = Math.sin(el.i);
-  const cu = Math.cos(u), su = Math.sin(u);
-  const x = r * (cO * cu - sO * su * ci);
-  const y = r * (sO * cu + cO * su * ci);
-  const z = r * (su * si);
-  const g = gmst(ms);
-  const xe = Math.cos(g) * x + Math.sin(g) * y;
-  const ye = -Math.sin(g) * x + Math.cos(g) * y;
-  return {
-    ecef: [xe, ye, z],
-    lat: Math.atan2(z, Math.hypot(xe, ye)) / DEG,     // geocentric
-    lon: ((Math.atan2(ye, xe) / DEG + 540) % 360) - 180,
-    alt: r - EARTH.Re,                                  // above equatorial radius (spherical approx.)
-  };
+// Satellite state at Unix time ms: ECEF position (km) and velocity (km/s), geodetic sub-point.
+function satState(sat, ms) {
+  const p = SGP4.propagate(sat, (ms - sat.epochMs) / 60e3);
+  if (!p || sat.error === 6) return null;
+  const g = SGP4.gstime(ms / 86400e3 + 2440587.5), c = Math.cos(g), s = Math.sin(g);
+  const r = [c * p.r[0] + s * p.r[1], -s * p.r[0] + c * p.r[1], p.r[2]];
+  const v = [c * p.v[0] + s * p.v[1] + EARTH.omega * r[1], -s * p.v[0] + c * p.v[1] - EARTH.omega * r[0], p.v[2]];
+  return { r, v, ...geodetic(r) };
 }
 
-function lookAngles(obs, satEcef) {
+function lookAngles(obs, st) {
   const φ = obs.lat * DEG, λ = obs.lon * DEG;
-  const R = EARTH.Re + obs.alt / 1e3;
-  const o = [R * Math.cos(φ) * Math.cos(λ), R * Math.cos(φ) * Math.sin(λ), R * Math.sin(φ)];
-  const d = satEcef.map((v, k) => v - o[k]);
-  const e = -Math.sin(λ) * d[0] + Math.cos(λ) * d[1];
-  const n = -Math.sin(φ) * Math.cos(λ) * d[0] - Math.sin(φ) * Math.sin(λ) * d[1] + Math.cos(φ) * d[2];
-  const u = Math.cos(φ) * Math.cos(λ) * d[0] + Math.cos(φ) * Math.sin(λ) * d[1] + Math.sin(φ) * d[2];
+  const o = observerEcef(obs);
+  const d = st.r.map((v, k) => v - o[k]);
+  const sφ = Math.sin(φ), cφ = Math.cos(φ), sλ = Math.sin(λ), cλ = Math.cos(λ);
+  const e = -sλ * d[0] + cλ * d[1];
+  const n = -sφ * cλ * d[0] - sφ * sλ * d[1] + cφ * d[2];
+  const u = cφ * cλ * d[0] + cφ * sλ * d[1] + sφ * d[2];
   const range = Math.hypot(e, n, u);
-  return { az: (Math.atan2(e, n) / DEG + 360) % 360, el: Math.asin(u / range) / DEG, range };
+  const rate = (d[0] * st.v[0] + d[1] * st.v[1] + d[2] * st.v[2]) / range; // km/s, observer fixed in ECEF
+  return { az: (Math.atan2(e, n) / DEG + 360) % 360, el: Math.asin(u / range) / DEG, range, rate };
 }
 
-route('satellites', async view => {
-  document.title = 'Satellites · frandomnoise';
+// Passes above minEl (deg) in [t0, t0 + hours]. Coarse 30 s scan, then bisection
+// for AOS/LOS and golden-section search for the time of closest approach.
+function predictPasses(sat, obs, t0, hours = 24, minEl = 0, max = 8) {
+  const elAt = t => { const s = satState(sat, t); return s ? lookAngles(obs, s).el - minEl : NaN; };
+  const step = 30e3, end = t0 + hours * 3600e3, passes = [];
+  const edge = (a, b) => { // a below, b above (or vice versa): refine to 1 s
+    const fa = elAt(a) > 0;
+    while (b - a > 1e3) { const m = (a + b) / 2; (elAt(m) > 0) === fa ? a = m : b = m; }
+    return (a + b) / 2;
+  };
+  let prev = elAt(t0), aos = prev > 0 ? t0 : null;
+  if (!Number.isFinite(prev)) return { passes, error: true };
+  for (let t = t0 + step; t <= end && passes.length < max; t += step) {
+    const cur = elAt(t);
+    if (!Number.isFinite(cur)) return { passes, error: true };
+    if (prev <= 0 && cur > 0) aos = edge(t - step, t);
+    if (prev > 0 && cur <= 0 && aos !== null) {
+      const los = edge(t - step, t);
+      let a = aos, b = los;
+      const gr = (Math.sqrt(5) - 1) / 2;
+      while (b - a > 1e3) {
+        const m1 = b - gr * (b - a), m2 = a + gr * (b - a);
+        elAt(m1) > elAt(m2) ? b = m2 : a = m1;
+      }
+      const tca = (a + b) / 2, st = satState(sat, tca), la = lookAngles(obs, st);
+      const azAt = t => lookAngles(obs, satState(sat, t)).az;
+      passes.push({ aos, los, tca, maxEl: la.el, aosAz: azAt(aos), losAz: azAt(los), partial: aos === t0 });
+      aos = null;
+    }
+    prev = cur;
+  }
+  // Still above minEl at the end of the window (or for all of it: GEO, HEO near apogee).
+  if (aos !== null && passes.length < max) {
+    passes.push({ aos, los: null, tca: null, maxEl: null, aosAz: lookAngles(obs, satState(sat, aos)).az, partial: aos === t0, always: aos === t0 && passes.length === 0 });
+  }
+  return { passes };
+}
+
+const utc = (ms, withDate = true) => {
+  const s = new Date(ms).toISOString();
+  return withDate ? `${s.slice(5, 10)} ${s.slice(11, 19)}` : s.slice(11, 19);
+};
+
+route('satellites', async (view, _, params) => {
+  document.title = 'Satellites - frandomnoise';
+  // Deep link from the Frequency DB: #satellites?norad=25544&group=stations&dl=145.8
+  if (params?.get('group')) store('fn-sat-group', params.get('group'));
+  if (params?.get('norad')) store('fn-sat-norad', params.get('norad'));
   const obs = store('fn-observer') || { lat: 40.4168, lon: -3.7038, alt: 650 };
+  const prefs = { minEl: 10, dl: 145.8, ...(store('fn-sat-prefs') || {}) };
+  if (Number.isFinite(parseFloat(params?.get('dl')))) prefs.dl = parseFloat(params.get('dl'));
   view.innerHTML = `<div class="page-head"><span class="label">Orbit</span><h1>Satellites</h1>
-    <p>Ground tracks and look angles from TLE sets. Interim propagator: two-body Kepler with J2 secular rates (SGP4 coming).</p></div>
+    <p>Ground tracks, look angles, Doppler and pass predictions from orbital element sets (CelesTrak GP data), propagated with SGP4/SDP4 in your browser.</p></div>
     <div class="sat-layout">
-      <div class="panel">
-        <div class="panel-head"><h2>Ground track</h2><span class="label mono" id="clock"></span></div>
-        <canvas class="map screen" id="map" width="1440" height="720" aria-label="World map with satellite ground tracks"></canvas>
-        <p class="small muted" style="margin:8px 0 0">Equirectangular, geocentric latitude. Track: ±1 orbital period.</p>
+      <div class="grid" style="align-content:start">
+        <div class="panel">
+          <div class="panel-head"><h2>Ground track</h2><span class="label mono" id="clock"></span></div>
+          <canvas class="map screen" id="map" width="1440" height="720" aria-label="World map with satellite ground track and footprint"></canvas>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Next passes</h2><span class="label" id="passhead">24 h</span></div>
+          <div class="field" style="max-width:220px"><label for="minel">Minimum elevation</label><input type="number" step="any" id="minel" value="${prefs.minEl}"><span class="unit">°</span></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>AOS (UTC)</th><th>Max el</th><th>TCA</th><th>LOS</th><th>Dur.</th><th>Az AOS→LOS</th></tr></thead>
+            <tbody id="passes"></tbody>
+          </table></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Reading the data</h2><span class="label">glossary</span></div>
+          <h3 class="gloss-h">Next passes</h3>
+          <p class="small muted" style="margin:0 0 8px">Each row is one pass: an interval during which the satellite is above the minimum elevation, seen from the observer position.</p>
+          <div class="table-wrap"><table class="gloss">
+            <thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>AOS (UTC)</td><td><b>Acquisition of signal</b>: the satellite rises above the minimum elevation and the pass begins. “In progress” means the pass had already started when the table was computed.</td></tr>
+              <tr><td>Max el</td><td>Highest elevation reached during the pass. The higher it is, the shorter the range and the stronger the signal: 70° passes almost overhead, 12° grazes the horizon.</td></tr>
+              <tr><td>TCA</td><td><b>Time of closest approach</b>: moment of maximum elevation and minimum range. The middle of the pass, where the Doppler shift crosses zero.</td></tr>
+              <tr><td>LOS</td><td><b>Loss of signal</b>: the satellite drops below the minimum elevation and the pass ends.</td></tr>
+              <tr><td>Dur.</td><td>Pass duration from AOS to LOS, in minutes:seconds.</td></tr>
+              <tr><td>Az AOS→LOS</td><td>Azimuth where the satellite appears and where it disappears, in degrees clockwise from true north (0° N, 90° E, 180° S, 270° W). Use it to point the antenna.</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="gloss-h">Now</h3>
+          <p class="small muted" style="margin:0 0 8px">Live values, recomputed every second.</p>
+          <div class="table-wrap"><table class="gloss">
+            <thead><tr><th>Parameter</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>Lat / Lon</td><td>Sub-satellite point: the place on Earth directly below the satellite, as WGS-84 geodetic coordinates.</td></tr>
+              <tr><td>Alt</td><td>Height above the WGS-84 ellipsoid (roughly, above sea level).</td></tr>
+              <tr><td>Az</td><td>Azimuth: horizontal direction from the observer to the satellite, in degrees clockwise from true north.</td></tr>
+              <tr><td>El</td><td>Elevation above the observer’s horizon. Negative means below the horizon and not receivable. A ▲ marks the satellite as visible.</td></tr>
+              <tr><td>Range</td><td>Straight-line distance from the observer to the satellite. Typically 500-2500 km during a LEO pass. It drives the free-space path loss.</td></tr>
+              <tr><td>Range rate</td><td>Rate of change of the range. Negative: approaching, received frequency higher. Positive: receding, frequency lower. A LEO pass goes from about -7 km/s at AOS through 0 at TCA to +7 km/s at LOS.</td></tr>
+              <tr><td>Elements age</td><td>Time since the epoch of the orbital elements in use. SGP4 error grows with it: about 1 km at epoch for LEO, a few km more per day. Flagged as stale after 7 days.</td></tr>
+              <tr><td>Downlink</td><td>Nominal downlink frequency you want to receive, used for the Doppler figures below it.</td></tr>
+              <tr><td>Doppler</td><td>Frequency offset caused by the range rate: Δf = -f·ṙ/c.</td></tr>
+              <tr><td>Receive on</td><td>Downlink frequency corrected for Doppler: where to tune the receiver right now.</td></tr>
+            </tbody>
+          </table></div>
+        </div>
       </div>
       <div class="grid" style="align-content:start">
         <div class="panel">
-          <div class="field"><label for="grp">TLE group</label><select id="grp">${TLE_GROUPS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>
+          <div class="field"><label for="grp">Group</label><select id="grp"></select></div>
           <div class="field"><label for="sat">Satellite</label><select id="sat"></select></div>
-          <p class="small muted" id="tleinfo"></p>
+          <p class="small muted info-line" id="tleinfo"></p>
         </div>
         <div class="panel">
           <div class="panel-head"><h3>Now</h3><span class="label">live</span></div>
           <dl class="kv" id="now"></dl>
+          <div class="field" style="margin-top:12px"><label for="dl">Downlink</label><input type="number" step="any" id="dl" value="${prefs.dl}"><span class="unit">MHz</span></div>
+          <dl class="kv" id="dop"></dl>
         </div>
         <div class="panel">
-          <div class="panel-head"><h3>Observer</h3><span class="label">WGS-84 approx.</span></div>
+          <div class="panel-head"><h3>Observer</h3><span class="label">WGS-84</span></div>
           <div class="field"><label for="olat">Latitude</label><input type="number" step="any" id="olat" value="${obs.lat}"><span class="unit">°N</span></div>
           <div class="field"><label for="olon">Longitude</label><input type="number" step="any" id="olon" value="${obs.lon}"><span class="unit">°E</span></div>
           <div class="field"><label for="oalt">Altitude</label><input type="number" step="any" id="oalt" value="${obs.alt}"><span class="unit">m</span></div>
+          ${'geolocation' in navigator ? '<button class="btn ghost" id="geo" type="button">Use my location</button>' : ''}
         </div>
         <details class="panel">
           <summary class="small">Paste TLE manually</summary>
@@ -935,153 +2268,783 @@ route('satellites', async view => {
       </div>
     </div>`;
 
-  let sats = [], cur = null, timer = null;
+  let sats = [], cur = null, timer = null, track = null, passTimer = null, groups = TLE_GROUPS_DEFAULT;
+  try { const g = await fetchJSON('data/gp/groups.json'); if (Array.isArray(g) && g.length) groups = g; } catch (e) {}
+  const lastGroup = store('fn-sat-group');
+  $('#grp').innerHTML = groups.map(g => `<option value="${h(g.id)}"${g.id === lastGroup ? ' selected' : ''}>${h(g.label)}${g.count ? ` (${g.count})` : ''}</option>`).join('');
   const canvas = $('#map'), ctx = canvas.getContext('2d');
   const cs = () => getComputedStyle(document.documentElement);
+  const savePrefs = () => store('fn-sat-prefs', prefs);
 
   const fillSats = () => {
-    $('#sat').innerHTML = sats.map((s, k) => `<option value="${k}">${h(s.name)} (${s.norad})</option>`).join('');
-    cur = sats[0] || null;
+    // Last chosen satellite, else the ISS, else the first in the list.
+    const want = String(store('fn-sat-norad') ?? '');
+    let k0 = sats.findIndex(s => s.norad === want);
+    if (k0 < 0) k0 = Math.max(0, sats.findIndex(s => s.norad === '25544'));
+    $('#sat').innerHTML = sats.map((s, k) => `<option value="${k}"${k === k0 ? ' selected' : ''}>${h(s.name)} (${s.norad})</option>`).join('');
+    cur = sats[k0] || null;
+    track = null;
   };
 
   async function loadGroup(g) {
     $('#tleinfo').textContent = 'Loading…';
     try {
-      const r = await fetch(`data/tle/${g}.txt`, { cache: 'no-cache' });
-      if (!r.ok) throw new Error(r.status);
-      sats = parseTLE(await r.text());
-      const newest = Math.max(...sats.map(s => s.epoch));
-      $('#tleinfo').textContent = `${sats.length} objects · newest epoch ${new Date(newest).toISOString().slice(0, 16).replace('T', ' ')} UTC`;
+      const list = await fetchJSON(`data/gp/${g}.json`);
+      sats = [];
+      for (const o of list) { try { sats.push(SGP4.fromOMM(o)); } catch (e) {} }
+      sats.sort((a, b) => a.name.localeCompare(b.name));
+      if (!sats.length) throw new Error('empty');
+      const meta = groups.find(x => x.id === g);
+      $('#tleinfo').textContent = meta?.stale ? 'CelesTrak was unreachable at the last refresh, these are the previous element sets.' : '';
     } catch (e) {
       sats = [];
-      $('#tleinfo').textContent = `No data/tle/${g}.txt yet (the scheduled TLE Action is pending). Paste a TLE below.`;
+      $('#tleinfo').textContent = `No data/gp/${g}.json available. Run node scripts/fetch-data.mjs locally, or paste a TLE below.`;
     }
     fillSats();
   }
 
-  function drawMap(now) {
+  function buildTrack(now) {
+    const T = 2 * Math.PI / cur.no_kozai * 60e3; // ms per revolution
+    const pts = [];
+    for (let t = -T; t <= T; t += T / 240) {
+      const s = satState(cur, now + t);
+      pts.push(s ? [t, s.lat, s.lon] : null);
+    }
+    track = { t0: now, pts };
+  }
+
+  function drawMap(now, st) {
     const W = canvas.width, H = canvas.height, s = cs();
     const ink = s.getPropertyValue('--screen-ink').trim(), grid = s.getPropertyValue('--screen-grid').trim();
     ctx.fillStyle = s.getPropertyValue('--screen').trim();
     ctx.fillRect(0, 0, W, H);
+    const P = (lat, lon) => [(lon + 180) / 360 * W, (90 - lat) / 180 * H];
+    const line = (pts, close) => { // polyline in lon/lat with antimeridian breaks
+      ctx.beginPath();
+      let prev = null;
+      for (const p of pts) {
+        if (!p) { prev = null; continue; }
+        const [x, y] = P(p[0], p[1]);
+        if (prev === null || Math.abs(p[1] - prev) > 180) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        prev = p[1];
+      }
+      if (close) ctx.closePath();
+      ctx.stroke();
+    };
+    // land outlines
+    ctx.strokeStyle = s.getPropertyValue('--screen-land').trim(); ctx.lineWidth = 1.5;
+    for (const ring of landRings || []) line(ring);
+    // graticule
     ctx.strokeStyle = grid; ctx.lineWidth = 1;
-    ctx.font = '18px ui-monospace, monospace'; ctx.fillStyle = grid;
     for (let lon = -180; lon <= 180; lon += 30) { const x = (lon + 180) / 360 * W; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
     for (let lat = -90; lat <= 90; lat += 30) { const y = (90 - lat) / 180 * H; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-    const P = (lat, lon) => [(lon + 180) / 360 * W, (90 - lat) / 180 * H];
     // observer
     const [ox, oy] = P(obs.lat, obs.lon);
     ctx.strokeStyle = '#f5c46b'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(ox - 10, oy); ctx.lineTo(ox + 10, oy); ctx.moveTo(ox, oy - 10); ctx.lineTo(ox, oy + 10); ctx.stroke();
-    if (!cur) return;
-    const T = 2 * Math.PI / cur.n * 1e3;
+    if (!cur || !st) return;
+    if (!track || Math.abs(now - track.t0) > 30e3) buildTrack(now);
     ctx.strokeStyle = ink; ctx.lineWidth = 2;
-    for (const [a, b, alpha] of [[-T, 0, 0.35], [0, T, 1]]) {
-      ctx.globalAlpha = alpha; ctx.beginPath();
-      let prev = null;
-      for (let t = a; t <= b; t += T / 240) {
-        const p = propagate(cur, now + t), [x, y] = P(p.lat, p.lon);
-        if (prev !== null && Math.abs(p.lon - prev) > 180) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        prev = p.lon;
-      }
-      ctx.stroke();
+    const shift = now - track.t0;
+    for (const [past, alpha] of [[true, 0.35], [false, 1]]) {
+      ctx.globalAlpha = alpha;
+      line(track.pts.map(p => p && ((p[0] - shift < 0) === past) ? [p[1], p[2]] : null));
     }
     ctx.globalAlpha = 1;
-    const p = propagate(cur, now), [x, y] = P(p.lat, p.lon);
+    // footprint: small circle of angular radius acos(Re / (Re + h)) around the sub-point
+    const lam = Math.acos(EARTH.Re / (EARTH.Re + Math.max(st.alt, 0)));
+    const φ0 = st.lat * DEG, λ0 = st.lon * DEG, fp = [];
+    for (let k = 0; k <= 180; k++) {
+      const b = k / 180 * 2 * Math.PI;
+      const φ = Math.asin(Math.sin(φ0) * Math.cos(lam) + Math.cos(φ0) * Math.sin(lam) * Math.cos(b));
+      const λ = λ0 + Math.atan2(Math.sin(b) * Math.sin(lam) * Math.cos(φ0), Math.cos(lam) - Math.sin(φ0) * Math.sin(φ));
+      fp.push([φ / DEG, ((λ / DEG + 540) % 360) - 180]);
+    }
+    ctx.setLineDash([6, 6]); ctx.lineWidth = 1.5; line(fp); ctx.setLineDash([]);
+    const [x, y] = P(st.lat, st.lon);
     ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(x, y, 8, 0, 2 * Math.PI); ctx.fill();
-    ctx.fillText(cur.name, Math.min(x + 14, W - 200), y - 12);
+    ctx.font = '22px ui-monospace, monospace';
+    ctx.fillText(cur.name, Math.min(x + 14, W - 260), Math.max(y - 12, 24));
+  }
+
+  function drawPasses() {
+    const tb = $('#passes');
+    if (!cur) { tb.innerHTML = '<tr><td colspan="6" class="muted">No satellite.</td></tr>'; return; }
+    const minEl = Number.isFinite(prefs.minEl) ? prefs.minEl : 0;
+    const { passes, error } = predictPasses(cur, obs, Date.now(), 24, minEl);
+    if (error && !passes.length) { tb.innerHTML = '<tr><td colspan="6" class="muted">Propagation failed (decayed object or bad TLE).</td></tr>'; return; }
+    if (!passes.length) { tb.innerHTML = `<tr><td colspan="6" class="muted">No passes above ${fmt(minEl, 0)}° in the next 24 h.</td></tr>`; return; }
+    tb.innerHTML = passes.map(p => p.always
+      ? `<tr><td colspan="6">Above ${fmt(minEl, 0)}° for the whole 24 h window (geostationary or near).</td></tr>`
+      : `<tr>
+        <td class="freq">${p.partial ? 'in progress' : utc(p.aos)}</td>
+        <td class="freq">${p.maxEl === null ? '-' : fmt(p.maxEl, 1) + '°'}</td>
+        <td class="freq">${p.tca ? utc(p.tca, false) : '-'}</td>
+        <td class="freq">${p.los ? utc(p.los, false) : '-'}</td>
+        <td class="freq">${p.los ? `${Math.floor((p.los - p.aos) / 60e3)}:${String(Math.round((p.los - p.aos) / 1e3) % 60).padStart(2, '0')}` : '-'}</td>
+        <td class="freq">${fmt(p.aosAz, 0)}° → ${p.los ? fmt(p.losAz, 0) + '°' : '-'}</td></tr>`).join('');
   }
 
   function tick() {
     const now = Date.now();
-    $('#clock').textContent = new Date(now).toISOString().slice(11, 19) + ' UTC';
-    drawMap(now);
-    if (!cur) { $('#now').innerHTML = '<dt>—</dt><dd>no satellite</dd>'; return; }
-    const p = propagate(cur, now), la = lookAngles(obs, p.ecef);
-    const p2 = propagate(cur, now + 1000), la2 = lookAngles(obs, p2.ecef);
-    const age = (now - cur.epoch) / 86400e3;
+    $('#clock').textContent = utc(now, false) + ' UTC';
+    const st = cur ? satState(cur, now) : null;
+    drawMap(now, st);
+    if (!cur) { $('#now').innerHTML = '<dt>-</dt><dd>no satellite</dd>'; $('#dop').innerHTML = ''; return; }
+    if (!st) { $('#now').innerHTML = `<dt>⚠</dt><dd class="draft-badge">SGP4 error ${cur.error} (decayed?)</dd>`; $('#dop').innerHTML = ''; return; }
+    const la = lookAngles(obs, st);
+    const age = (now - cur.epochMs) / 86400e3;
     $('#now').innerHTML = [
-      ['Lat', `${fmt(p.lat, 2)}°`], ['Lon', `${fmt(p.lon, 2)}°`], ['Alt', `${fmt(p.alt, 0)} km`],
-      ['Az', `${fmt(la.az, 1)}°`], ['El', `${fmt(la.el, 1)}°`], ['Range', `${fmt(la.range, 0)} km`],
-      ['Range rate', `${fmt(la2.range - la.range, 3)} km/s`],
-      ['TLE age', `${fmt(age, 1)} d`],
-    ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('') + (age > 7 ? '<dt class="draft-badge">⚠</dt><dd class="draft-badge">stale TLE</dd>' : '');
+      ['Lat', `${fmt(st.lat, 2)}°`], ['Lon', `${fmt(st.lon, 2)}°`], ['Alt', `${fmt(st.alt, 0)} km`],
+      ['Az', `${fmt(la.az, 1)}°`], ['El', `${fmt(la.el, 1)}°${la.el > 0 ? ' ▲' : ''}`], ['Range', `${fmt(la.range, 0)} km`],
+      ['Range rate', `${fmt(la.rate, 3)} km/s`],
+      ['Elements age', `${fmt(age, 1)} d`],
+    ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('') + (age > 7 ? '<dt class="draft-badge">⚠</dt><dd class="draft-badge">stale elements</dd>' : '');
+    const f = prefs.dl;
+    if (Number.isFinite(f)) {
+      const df = -f * 1e6 * la.rate * 1e3 / C0;
+      $('#dop').innerHTML = `<dt>Doppler</dt><dd>${df >= 0 ? '+' : ''}${fmt(df / 1e3, 3)} kHz</dd><dt>Receive on</dt><dd>${(f + df / 1e6).toFixed(6)} MHz</dd>`;
+    } else $('#dop').innerHTML = '';
   }
 
+  const refresh = () => { track = null; tick(); drawPasses(); };
+
   view.addEventListener('change', e => {
-    if (e.target.id === 'grp') loadGroup(e.target.value).then(tick);
-    if (e.target.id === 'sat') { cur = sats[+e.target.value] || null; tick(); }
+    if (e.target.id === 'grp') { store('fn-sat-group', e.target.value); loadGroup(e.target.value).then(refresh); }
+    if (e.target.id === 'sat') { cur = sats[+e.target.value] || null; if (cur) store('fn-sat-norad', cur.norad); refresh(); }
   });
   view.addEventListener('input', e => {
-    if (!['olat', 'olon', 'oalt'].includes(e.target.id)) return;
-    const v = { lat: parseFloat($('#olat').value), lon: parseFloat($('#olon').value), alt: parseFloat($('#oalt').value) || 0 };
-    if (Number.isFinite(v.lat) && Number.isFinite(v.lon)) { Object.assign(obs, v); store('fn-observer', obs); }
+    const id = e.target.id;
+    if (['olat', 'olon', 'oalt'].includes(id)) {
+      const v = { lat: parseFloat($('#olat').value), lon: parseFloat($('#olon').value), alt: parseFloat($('#oalt').value) || 0 };
+      if (Number.isFinite(v.lat) && Number.isFinite(v.lon) && Math.abs(v.lat) <= 90) {
+        Object.assign(obs, v); store('fn-observer', obs);
+        clearTimeout(passTimer); passTimer = setTimeout(drawPasses, 400);
+      }
+    }
+    if (id === 'minel') { prefs.minEl = parseFloat(e.target.value); savePrefs(); clearTimeout(passTimer); passTimer = setTimeout(drawPasses, 400); }
+    if (id === 'dl') { prefs.dl = parseFloat(e.target.value); savePrefs(); tick(); }
+  });
+  $('#geo')?.addEventListener('click', () => {
+    navigator.geolocation.getCurrentPosition(p => {
+      $('#olat').value = p.coords.latitude.toFixed(4);
+      $('#olon').value = p.coords.longitude.toFixed(4);
+      if (Number.isFinite(p.coords.altitude)) $('#oalt').value = Math.round(p.coords.altitude);
+      $('#olat').dispatchEvent(new Event('input', { bubbles: true }));
+    }, err => { $('#tleinfo').textContent = `Location unavailable: ${err.message}`; }, { timeout: 10e3 });
   });
   $('#tleload').addEventListener('click', () => {
     const extra = parseTLE($('#tlepaste').value);
-    if (extra.length) { sats = extra; fillSats(); $('#tleinfo').textContent = `${extra.length} pasted object(s)`; tick(); }
+    if (extra.length) { sats = extra; fillSats(); $('#tleinfo').textContent = ''; refresh(); }
+    else $('#tleinfo').textContent = 'Could not parse that TLE.';
   });
 
-  await loadGroup(TLE_GROUPS[0][0]);
-  tick();
+  await Promise.all([loadGroup($('#grp').value), getLand()]);
+  refresh();
   timer = setInterval(tick, 1000);
-  return () => clearInterval(timer);
+  const passInterval = setInterval(drawPasses, 60e3);
+  return () => { clearInterval(timer); clearInterval(passInterval); clearTimeout(passTimer); };
 });
 
 /* ============================================================
    Propagation
-   Live indices come from data/propagation.json, written by a
-   scheduled GitHub Action (pending #4). Expected shape:
-   { "updated": ISO-8601, "kp": number, "sfi": number,
-     "ionosondes": [{ "station": str, "foF2": MHz, "hmF2": km, "time": ISO }] }
+   Live data come from data/propagation.json, written by
+   scripts/fetch-data.mjs in the deploy workflow (every 3 h). Shape:
+   { updated, stale?, kp, kpTime, kpSeries: [{ time, kp, kind }],
+     sfi, sfiTime, sfi90,
+     scales: { time, now: { R, S, G }, days: [{ date, rMinor, rMajor, s, g }] },
+     xray: { flux, time, peak, peakTime, series: [[iso, flux]] },
+     wind: { time, bz, bt, speed, density, series: [[iso, bz, bt, speed, density]] },
+     ionosondes: [{ station, code, lat, lon, foF2, hmF2, mufd, cs, time }],
+     ionoHistory: { CODE: [[iso, foF2, mufd]] }, sources }
    ============================================================ */
-route('propagation', async view => {
-  document.title = 'Propagation · frandomnoise';
-  view.innerHTML = `<div class="page-head"><span class="label">Ionosphere</span><h1>Propagation</h1>
-    <p>Solar and geomagnetic indices, ionosonde data and quick HF estimates.</p></div>
-    <div class="grid grid-2">
-      <div class="panel"><div class="panel-head"><h2>Current conditions</h2><span class="label" id="upd"></span></div><div id="live"></div></div>
-      <div class="panel" id="muf"><div class="panel-head"><h2>Single-hop MUF (secant law)</h2><span class="label">estimate</span></div>
-        <div class="field"><label for="m-fo">foF2</label><input type="number" step="any" id="m-fo" value="7"><span class="unit">MHz</span></div>
-        <div class="field"><label for="m-h">Reflection height h′</label><input type="number" step="any" id="m-h" value="300"><span class="unit">km</span></div>
-        <div class="field"><label for="m-d">Ground distance</label><input type="number" step="any" id="m-d" value="1500"><span class="unit">km</span></div>
-        <div class="screen readout" id="m-out"></div>
-        <div class="model">Spherical Earth, mirror reflection at the midpoint at height h′: sin φ = R·sin θ / AP, θ = D/2R; MUF = foF2·sec φ. Ignores Martyn’s correction, layer curvature, ray bending below the layer and the E-layer; optimistic for long paths. For planning use <b>ITU-R P.533</b> (or P.1240 basic MUF with M(3000)F2).</div>
-      </div>
-    </div>`;
-  const runMuf = () => {
-    const fo = parseFloat($('#m-fo').value), hh = parseFloat($('#m-h').value), D = parseFloat($('#m-d').value);
-    const R = EARTH.Re, th = D / (2 * R);
-    const AP = Math.sqrt(R * R + (R + hh) ** 2 - 2 * R * (R + hh) * Math.cos(th));
-    const phi = Math.asin(R * Math.sin(th) / AP);
-    // elevation angle at the ground terminal
-    const elev = Math.atan2((R + hh) * Math.cos(th) - R, (R + hh) * Math.sin(th)) / DEG;
-    const rows = [
-      { k: 'Incidence φ', v: `${fmt(phi / DEG, 1)}°` },
-      { k: 'Take-off elevation', v: `${fmt(elev, 1)}°` },
-      { k: 'MUF', v: `${fmt(fo / Math.cos(phi), 2)} MHz` },
-    ];
-    if (elev < 0) rows.push({ k: 'Geometry', v: 'below horizon: path needs more than one hop', warn: true });
-    $('#m-out').innerHTML = rows.map(r => `<div class="row"><span class="k">${h(r.k)}</span><span class="${r.warn ? 'warn' : 'v'}">${h(r.v)}</span></div>`).join('');
-  };
-  $('#muf').addEventListener('input', runMuf);
-  runMuf();
 
-  try {
-    const d = await fetchJSON('data/propagation.json');
-    $('#upd').textContent = d.updated ? new Date(d.updated).toISOString().slice(0, 16).replace('T', ' ') + ' UTC' : '';
-    $('#live').innerHTML = `<dl class="kv">
-      <dt>Solar flux (F10.7)</dt><dd>${fmt(d.sfi, 0)} sfu</dd>
-      <dt>Planetary Kp</dt><dd>${fmt(d.kp, 2)}</dd>
-      ${(d.ionosondes || []).map(s => `<dt>${h(s.station)} foF2</dt><dd>${fmt(s.foF2, 2)} MHz</dd>`).join('')}
-    </dl>`;
-  } catch (e) {
-    $('#live').innerHTML = `<div class="notice">No live data yet. A scheduled GitHub Action will publish <code>data/propagation.json</code> (foF2, Kp, solar flux).</div>`;
+// NOAA space weather G-scale from planetary Kp (Kp 9- counts as G4).
+const gScale = kp => !Number.isFinite(kp) || kp < 4.5 ? null : kp >= 9 ? 5 : Math.min(4, Math.round(kp) - 4);
+const SCALE_TEXT = ['none', 'minor', 'moderate', 'strong', 'severe', 'extreme'];
+
+// GOES 0.1-0.8 nm flux (W/m²) to flare class, e.g. 3.2e-6 -> "C3.2".
+function xrayClass(f) {
+  if (!Number.isFinite(f) || f <= 0) return '-';
+  const cls = [['X', 1e-4], ['M', 1e-5], ['C', 1e-6], ['B', 1e-7], ['A', 1e-8]];
+  for (const [c, b] of cls) if (f >= b) return `${c}${(f / b).toFixed(1)}`;
+  return `A${(f / 1e-8).toFixed(1)}`;
+}
+
+// Maidenhead locator <-> lat/lon (centre of the square or subsquare).
+function toLocator(lat, lon) {
+  const x = Math.min(Math.max(lon + 180, 0), 359.9999), y = Math.min(Math.max(lat + 90, 0), 179.9999);
+  const A = 'ABCDEFGHIJKLMNOPQR', a = 'abcdefghijklmnopqrstuvwx';
+  return A[Math.floor(x / 20)] + A[Math.floor(y / 10)] + Math.floor((x % 20) / 2) + Math.floor(y % 10) +
+    a[Math.floor((x % 2) * 12)] + a[Math.floor((y % 1) * 24)];
+}
+function parsePlace(text) {
+  const t = String(text || '').trim();
+  let m = /^([A-R]{2})(\d{2})([A-X]{2})?$/i.exec(t);
+  if (m) {
+    const f = m[1].toUpperCase(), s = m[2], sub = m[3] ? m[3].toLowerCase() : null;
+    let lon = (f.charCodeAt(0) - 65) * 20 - 180 + +s[0] * 2;
+    let lat = (f.charCodeAt(1) - 65) * 10 - 90 + +s[1];
+    if (sub) { lon += (sub.charCodeAt(0) - 97) / 12 + 1 / 24; lat += (sub.charCodeAt(1) - 97) / 24 + 1 / 48; }
+    else { lon += 1; lat += 0.5; }
+    return { lat, lon };
   }
+  m = /^(-?\d+(?:\.\d+)?)\s*[,\s]\s*(-?\d+(?:\.\d+)?)$/.exec(t);
+  if (m && Math.abs(+m[1]) <= 90 && Math.abs(+m[2]) <= 180) return { lat: +m[1], lon: +m[2] };
+  return null;
+}
+
+// Great circle helpers (spherical Earth, mean radius).
+const R_MEAN = 6371;
+function gcDistance(a, b) {
+  const φ1 = a.lat * DEG, φ2 = b.lat * DEG, dφ = φ2 - φ1, dλ = (b.lon - a.lon) * DEG;
+  const s = Math.sin(dφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(dλ / 2) ** 2;
+  return 2 * R_MEAN * Math.asin(Math.min(1, Math.sqrt(s)));
+}
+function gcPoint(a, b, f) { // fraction f along the great circle from a to b
+  const φ1 = a.lat * DEG, λ1 = a.lon * DEG, φ2 = b.lat * DEG, λ2 = b.lon * DEG;
+  const d = gcDistance(a, b) / R_MEAN;
+  if (d < 1e-9) return { lat: a.lat, lon: a.lon };
+  const A = Math.sin((1 - f) * d) / Math.sin(d), B = Math.sin(f * d) / Math.sin(d);
+  const x = A * Math.cos(φ1) * Math.cos(λ1) + B * Math.cos(φ2) * Math.cos(λ2);
+  const y = A * Math.cos(φ1) * Math.sin(λ1) + B * Math.cos(φ2) * Math.sin(λ2);
+  const z = A * Math.sin(φ1) + B * Math.sin(φ2);
+  return { lat: Math.atan2(z, Math.hypot(x, y)) / DEG, lon: Math.atan2(y, x) / DEG };
+}
+
+// Mirror-reflection geometry for one hop of ground length D (km) at virtual height h (km).
+function hopGeometry(D, h) {
+  const R = R_MEAN, th = D / (2 * R);
+  const AP = Math.sqrt(R * R + (R + h) ** 2 - 2 * R * (R + h) * Math.cos(th));
+  const phi = Math.asin(R * Math.sin(th) / AP);
+  const elev = Math.atan2((R + h) * Math.cos(th) - R, (R + h) * Math.sin(th)) / DEG;
+  return { sec: 1 / Math.cos(phi), elev };
+}
+
+// MUF for one hop of length D, anchored on the two values an ionosonde measures:
+// foF2 (vertical incidence, D = 0) and MUF(3000)F2. In between and beyond, the
+// secant-law shape for a layer at hmF2 interpolates and extrapolates.
+function hopMuf(st, D) {
+  const h = st.hmF2 || 300;
+  if (!Number.isFinite(st.mufd)) return st.foF2 * hopGeometry(D, h).sec; // plain secant law
+  const s3000 = hopGeometry(3000, h).sec, sD = hopGeometry(D, h).sec;
+  const M = st.mufd / st.foF2;
+  return st.foF2 * (1 + (M - 1) * (sD - 1) / (s3000 - 1));
+}
+
+// Sun: low precision ephemeris (Astronomical Almanac), about 0.01° in position.
+function subsolar(ms) {
+  const n = ms / 86400e3 + 2440587.5 - 2451545.0;
+  const L = (280.460 + 0.9856474 * n) * DEG, g = (357.528 + 0.9856003 * n) * DEG;
+  const lam = L + (1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * DEG;
+  const eps = (23.439 - 0.0000004 * n) * DEG;
+  const dec = Math.asin(Math.sin(eps) * Math.sin(lam));
+  const ra = Math.atan2(Math.cos(eps) * Math.sin(lam), Math.cos(lam));
+  const gmstDeg = 280.46061837 + 360.98564736629 * n;
+  const lon = ((ra / DEG - gmstDeg) % 360 + 540) % 360 - 180;
+  return { lat: dec / DEG, lon };
+}
+const sunElevation = (ss, lat, lon) => Math.asin(Math.sin(lat * DEG) * Math.sin(ss.lat * DEG) +
+  Math.cos(lat * DEG) * Math.cos(ss.lat * DEG) * Math.cos((lon - ss.lon) * DEG)) / DEG;
+
+// Amateur HF bands, ITU Region 1, with a representative frequency for the estimate.
+const HF_BANDS = [
+  ['160 m', 1.84], ['80 m', 3.6], ['60 m', 5.36], ['40 m', 7.1], ['30 m', 10.12],
+  ['20 m', 14.15], ['17 m', 18.1], ['15 m', 21.2], ['12 m', 24.94], ['10 m', 28.5],
+];
+
+/* ---------- small SVG charts with a hover read-out ---------- */
+const tFmt = ms => new Date(ms).toISOString().slice(5, 16).replace('T', ' ');
+
+// series: [{ name, cls, pts: [[ms, value|null]] }]. One y axis (all series share a unit).
+function lineChart(el, { series, yLog = false, yMin, yMax, ticks, tickFmt = String, unit = '', vFmt = v => fmt(v, 1), guides = [], height = 200 }) {
+  const W = 460, H = height, top = 12, bottom = 22, left = 44, right = 12;
+  const all = series.flatMap(s => s.pts).filter(p => p[1] !== null && Number.isFinite(p[1]));
+  if (!all.length) { el.innerHTML = '<p class="muted small">No data.</p>'; return; }
+  const t0 = Math.min(...all.map(p => p[0])), t1 = Math.max(...all.map(p => p[0]));
+  const fy = v => yLog ? Math.log10(v) : v;
+  const lo = fy(yMin ?? Math.min(...all.map(p => p[1]))), hi = fy(yMax ?? Math.max(...all.map(p => p[1])));
+  const X = t => left + (t - t0) / Math.max(1, t1 - t0) * (W - left - right);
+  const Y = v => top + (1 - (fy(v) - lo) / ((hi - lo) || 1)) * (H - top - bottom);
+  const grid = (ticks || []).map(v => `<line x1="${left}" x2="${W - right}" y1="${Y(v)}" y2="${Y(v)}" class="ch-grid"/>
+    <text x="${left - 6}" y="${Y(v) + 3}" text-anchor="end" class="ch-ax">${tickFmt(v)}</text>`).join('');
+  const gl = guides.map(g => `<line x1="${left}" x2="${W - right}" y1="${Y(g.v)}" y2="${Y(g.v)}" class="ch-guide"/>
+    <text x="${W - right - 2}" y="${Y(g.v) - 4}" text-anchor="end" class="ch-ax">${h(g.label)}</text>`).join('');
+  const days = [];
+  for (let d = Math.ceil(t0 / 86400e3) * 86400e3; d <= t1; d += 86400e3) {
+    days.push(`<line x1="${X(d)}" x2="${X(d)}" y1="${top}" y2="${H - bottom}" class="ch-grid"/><text x="${X(d) + 3}" y="${H - 6}" class="ch-ax">${new Date(d).toISOString().slice(5, 10)}</text>`);
+  }
+  const paths = series.map(s => {
+    let d = '', pen = false;
+    for (const [t, v] of s.pts) {
+      if (v === null || !Number.isFinite(v) || (yLog && v <= 0)) { pen = false; continue; }
+      const yv = Math.min(Math.max(Y(v), top), H - bottom);
+      d += `${pen ? 'L' : 'M'}${X(t).toFixed(1)},${yv.toFixed(1)}`;
+      pen = true;
+    }
+    return `<path d="${d}" class="ch-line ${s.cls}"/>`;
+  }).join('');
+  const legend = series.length > 1 ? `<div class="ch-legend">${series.map(s => `<span><i class="${s.cls}"></i>${h(s.name)}</span>`).join('')}</div>` : '';
+  el.innerHTML = `${legend}<div class="ch-wrap"><svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${h(series.map(s => s.name).join(', '))}, last ${Math.round((t1 - t0) / 3600e3)} h">
+    ${grid}${gl}${days.join('')}${paths}
+    <line class="ch-cross" x1="0" x2="0" y1="${top}" y2="${H - bottom}" style="display:none"/>
+    <rect x="${left}" y="${top}" width="${W - left - right}" height="${H - top - bottom}" fill="transparent" class="ch-hit"/>
+  </svg><div class="ch-tip" style="display:none"></div></div>`;
+  const svg = $('svg', el), cross = $('.ch-cross', el), tip = $('.ch-tip', el);
+  svg.addEventListener('mousemove', e => {
+    const r = svg.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width * W;
+    const t = t0 + (x - left) / (W - left - right) * (t1 - t0);
+    const rows = series.map(s => {
+      let best = null;
+      for (const p of s.pts) if (p[1] !== null && (!best || Math.abs(p[0] - t) < Math.abs(best[0] - t))) best = p;
+      return best && `<div><i class="${s.cls}"></i>${h(s.name)} <b>${h(vFmt(best[1]))}</b> ${h(unit)}</div>`;
+    }).filter(Boolean);
+    const near = series[0].pts.reduce((b, p) => (!b || Math.abs(p[0] - t) < Math.abs(b[0] - t) ? p : b), null);
+    cross.setAttribute('x1', X(near[0])); cross.setAttribute('x2', X(near[0])); cross.style.display = '';
+    tip.innerHTML = `<div class="mono">${tFmt(near[0])} UTC</div>${rows.join('')}`;
+    tip.style.display = '';
+    const px = X(near[0]) / W * r.width;
+    tip.style.left = `${Math.min(Math.max(px + 10, 0), r.width - 170)}px`;
+  });
+  svg.addEventListener('mouseleave', () => { cross.style.display = 'none'; tip.style.display = 'none'; });
+}
+
+// Kp: observed bars solid, estimated and predicted bars outlined, a line at "now".
+function kpChart(list) {
+  const W = 460, H = 180, top = 14, bottom = 22, left = 26;
+  const n = list.length, bw = (W - left) / n, y = v => H - bottom - v / 9 * (H - top - bottom);
+  const now = Date.now();
+  let nowX = null;
+  const bars = list.map((r, i) => {
+    const x = left + i * bw + 1, g = gScale(r.kp), y0 = y(Math.max(r.kp, 0.15));
+    const t = Date.parse(r.time);
+    if (now >= t && now < t + 3 * 3600e3) nowX = left + (i + (now - t) / (3 * 3600e3)) * bw;
+    const fut = r.kind !== 'observed';
+    const cls = `${g ? 'kp-storm' : 'kp-quiet'}${fut ? ' kp-fut' : ''}`;
+    return `<g><title>${tFmt(t)} UTC - Kp ${fmt(r.kp, 2)} (${r.kind})${g ? ` - G${g} storm` : ''}</title>
+      <rect x="${x}" y="${top}" width="${bw - 2}" height="${H - top - bottom}" fill="transparent"/>
+      <path d="M${x},${H - bottom} V${y0 + 3} q0,-3 3,-3 h${Math.max(bw - 8, 0)} q3,0 3,3 V${H - bottom} Z" class="${cls}"/>
+      ${g ? `<text x="${x + (bw - 2) / 2}" y="${y0 - 4}" text-anchor="middle" class="kp-lbl">G${g}</text>` : ''}</g>`;
+  }).join('');
+  const grid = [0, 3, 5, 9].map(v => `<line x1="${left}" x2="${W}" y1="${y(v)}" y2="${y(v)}" class="${v === 5 ? 'ch-guide' : 'ch-grid'}"/>
+    <text x="${left - 6}" y="${y(v) + 3}" text-anchor="end" class="ch-ax">${v}</text>`).join('');
+  const days = list.map((r, i) => r.time.slice(11, 13) === '00'
+    ? `<line x1="${left + i * bw}" x2="${left + i * bw}" y1="${top}" y2="${H - bottom}" class="ch-grid"/><text x="${left + i * bw + 3}" y="${H - 6}" class="ch-ax">${r.time.slice(5, 10)}</text>` : '').join('');
+  const nowLine = nowX ? `<line x1="${nowX}" x2="${nowX}" y1="${top - 6}" y2="${H - bottom}" class="ch-now"/><text x="${nowX + 4}" y="${top}" class="ch-ax">now</text>` : '';
+  return `<div class="ch-legend"><span><i class="kp-quiet"></i>observed</span><span><i class="kp-quiet kp-fut"></i>estimated / forecast</span><span><i class="kp-storm"></i>storm (Kp ≥ 5)</span></div>
+    <svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Planetary Kp, last 48 hours and 3-day forecast">${grid}${days}${bars}${nowLine}</svg>`;
+}
+
+function sparkline(pts) {
+  const W = 120, H = 30, p = pts.filter(x => Number.isFinite(x[1]));
+  if (!p.length) return '';
+  const t0 = Date.parse(p[0][0]), t1 = Date.now(), t0w = t1 - 36 * 3600e3;
+  const vs = p.map(x => x[1]), lo = Math.min(...vs) * 0.9, hi = Math.max(...vs) * 1.1 || 1;
+  const X = t => 2 + (Date.parse(t) - t0w) / (t1 - t0w) * (W - 4), Y = v => H - 3 - (v - lo) / ((hi - lo) || 1) * (H - 6);
+  const d = p.map((x, i) => `${i ? 'L' : 'M'}${X(x[0]).toFixed(1)},${Y(x[1]).toFixed(1)}`).join('');
+  const last = p[p.length - 1];
+  return `<svg viewBox="0 0 ${W} ${H}" class="spark" role="img" aria-label="foF2 over the last 36 hours, ${p.length} samples"><title>${p.length} samples since ${tFmt(t0)} UTC</title>
+    <path d="${d}" class="ch-line s1"/><circle cx="${X(last[0])}" cy="${Y(last[1])}" r="2.5" class="spark-dot"/></svg>`;
+}
+
+// Preset locations for the location and destination selectors.
+const PLACES = [
+  ['Galicia', [
+    ['vigo', 'Vigo', 42.2406, -8.7207], ['coruna', 'A Coruña', 43.3623, -8.4115], ['santiago', 'Santiago de Compostela', 42.8782, -8.5448],
+    ['pontevedra', 'Pontevedra', 42.4310, -8.6444], ['ourense', 'Ourense', 42.3358, -7.8639], ['lugo', 'Lugo', 43.0097, -7.5560], ['ferrol', 'Ferrol', 43.4832, -8.2369],
+  ]],
+  ['Spain', [['madrid', 'Madrid', 40.4168, -3.7038]]],
+  ['European capitals', [
+    ['amsterdam', 'Amsterdam', 52.3676, 4.9041], ['athens', 'Athens', 37.9838, 23.7275], ['belgrade', 'Belgrade', 44.7866, 20.4489],
+    ['berlin', 'Berlin', 52.5200, 13.4050], ['bern', 'Bern', 46.9480, 7.4474], ['bratislava', 'Bratislava', 48.1486, 17.1077],
+    ['brussels', 'Brussels', 50.8503, 4.3517], ['bucharest', 'Bucharest', 44.4268, 26.1025], ['budapest', 'Budapest', 47.4979, 19.0402],
+    ['copenhagen', 'Copenhagen', 55.6761, 12.5683], ['dublin', 'Dublin', 53.3498, -6.2603], ['helsinki', 'Helsinki', 60.1699, 24.9384],
+    ['kyiv', 'Kyiv', 50.4501, 30.5234], ['lisbon', 'Lisbon', 38.7223, -9.1393], ['ljubljana', 'Ljubljana', 46.0569, 14.5058],
+    ['london', 'London', 51.5074, -0.1278], ['luxembourg', 'Luxembourg', 49.6116, 6.1319], ['oslo', 'Oslo', 59.9139, 10.7522],
+    ['paris', 'Paris', 48.8566, 2.3522], ['prague', 'Prague', 50.0755, 14.4378], ['reykjavik', 'Reykjavík', 64.1466, -21.9426],
+    ['riga', 'Riga', 56.9496, 24.1052], ['rome', 'Rome', 41.9028, 12.4964], ['sofia', 'Sofia', 42.6977, 23.3219],
+    ['stockholm', 'Stockholm', 59.3293, 18.0686], ['tallinn', 'Tallinn', 59.4370, 24.7536], ['valletta', 'Valletta', 35.8989, 14.5146],
+    ['vienna', 'Vienna', 48.2082, 16.3738], ['vilnius', 'Vilnius', 54.6872, 25.2797], ['warsaw', 'Warsaw', 52.2297, 21.0122],
+    ['zagreb', 'Zagreb', 45.8150, 15.9819],
+  ]],
+];
+const PLACE = Object.fromEntries(PLACES.flatMap(([, list]) => list.map(([k, name, lat, lon]) => [k, { name, lat, lon }])));
+const nearPreset = p => Object.keys(PLACE).find(k => Math.abs(PLACE[k].lat - p.lat) < 0.02 && Math.abs(PLACE[k].lon - p.lon) < 0.02) || null;
+
+// A preset selector with a "custom" option that reveals a free text field.
+const placeField = (id, label, key, custom) => `<div class="field"><label for="${id}-sel">${label}</label>
+  <select id="${id}-sel">${PLACES.map(([g, list]) => `<optgroup label="${h(g)}">${list.map(([k, name]) => `<option value="${k}"${k === key ? ' selected' : ''}>${h(name)}</option>`).join('')}</optgroup>`).join('')}
+    <option value="custom"${key === 'custom' ? ' selected' : ''}>Custom: locator or lat, lon…</option></select><span class="unit"></span></div>
+  <div class="field place-custom"${key === 'custom' ? '' : ' hidden'}><input type="text" id="${id}" value="${h(custom)}" placeholder="IN52pf or 42.24, -8.72" autocomplete="off" aria-label="${h(label)}, custom"><span class="unit"></span></div>
+  <p class="small muted place-hint" id="${id}-hint"></p>`;
+
+/* ---------- the page ---------- */
+route('propagation', async view => {
+  document.title = 'Propagation - frandomnoise';
+  const obs = store('fn-observer') || { lat: 40.4168, lon: -3.7038, alt: 650 };
+  const prefs = { to: 'london', toCustom: 'IO91wm', ...(store('fn-prop-prefs') || {}) };
+  if (prefs.to !== 'custom' && !PLACE[prefs.to]) { prefs.toCustom = prefs.to; prefs.to = 'custom'; } // older free-text value
+  const fromKey = nearPreset(obs) || 'custom';
+  const fromCustom = toLocator(obs.lat, obs.lon);
+  view.innerHTML = `<div class="page-head"><span class="label">Ionosphere</span><h1>Propagation</h1>
+    <p>Space weather, the state of the ionosphere over Europe and what it means for HF right now. Data refreshed every 3 hours. New here? The <a href="#prop-glossary" id="to-gloss">explanations at the end</a> cover every term on this page.</p></div>
+    <div id="alerts"></div>
+    <section class="panel" style="margin-bottom:16px">
+      <div class="panel-head"><h2>Space weather now</h2><span class="label" id="upd"></span></div>
+      <div class="scales" id="scales"></div>
+      <div class="tiles" id="tiles"><p class="muted small">Loading…</p></div>
+    </section>
+    <div class="grid grid-2" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr))">
+      <section class="panel"><div class="panel-head"><h2>Geomagnetic activity (Kp)</h2><span class="label">48 h + 3-day forecast</span></div><div id="kp"></div></section>
+      <section class="panel"><div class="panel-head"><h2>Solar X-rays</h2><span class="label">GOES, 24 h</span></div><div id="xray"></div></section>
+      <section class="panel"><div class="panel-head"><h2>Solar wind magnetic field</h2><span class="label">L1, 24 h</span></div><div id="wind"></div></section>
+      <section class="panel"><div class="panel-head"><h2>Solar wind speed</h2><span class="label">L1, 24 h</span></div><div id="speed"></div></section>
+    </div>
+    <section class="panel" style="margin-top:16px">
+      <div class="panel-head"><h2>Ionosphere over Europe</h2><span class="label mono" id="mapclock"></span></div>
+      <div class="map-wrap"><canvas class="screen" id="pmap" width="1400" height="900" aria-hidden="true"></canvas><svg id="pmap-over" viewBox="0 0 1400 900" role="img" aria-label="Map of Europe with ionosonde foF2 values, day and night, observer and path"></svg></div>
+      <div class="map-key small" id="mapkey"></div>
+    </section>
+    <div class="grid grid-2" style="grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); margin-top:16px">
+      <section class="panel">
+        <div class="panel-head"><h2>HF bands now</h2><span class="label">estimate</span></div>
+        ${placeField('p-obs', 'Your location', fromKey, fromCustom)}
+        <p class="small muted" id="bands-src"></p>
+        <div class="table-wrap"><table class="bands"><thead><tr><th>Band</th><th>MHz</th><th>NVIS <span class="muted">0-400 km</span></th><th>DX <span class="muted">one hop, ~3000 km</span></th></tr></thead><tbody id="bands"></tbody></table></div>
+        <p class="model">Open: below the optimum working frequency (FOT = 0.85 × MUF). Marginal: between FOT and MUF. Closed: above the MUF, the signal goes through the ionosphere. Absorbed: 160 m in daylight, where the D layer swallows the signal. Based on the nearest ionosonde only, it ignores the LUF, noise and antennas.</p>
+      </section>
+      <section class="panel" id="muf">
+        <div class="panel-head"><h2>MUF for a path</h2><span class="label">estimate</span></div>
+        ${placeField('m-to', 'Destination', prefs.to, prefs.toCustom)}
+        <div class="field"><label for="m-st">Ionosonde</label><select id="m-st"></select><span class="unit"></span></div>
+        <div class="screen readout" id="m-out"></div>
+        <p class="model">The path starts at your location. The MUF of each hop is interpolated between the two values the ionosonde measures, foF2 (vertical, 0 km) and MUF(3000)F2, following the secant law for a layer at hmF2, with hops at least 3° above the horizon. Use it as a first guess. For planning, <b>ITU-R P.533</b> based tools (VOACAP and similar) model absorption, noise and antennas too.</p>
+        <details style="margin-top:10px"><summary class="small">Manual secant-law calculator</summary>
+          <div class="field"><label for="s-fo">foF2</label><input type="number" step="any" id="s-fo" value="7"><span class="unit">MHz</span></div>
+          <div class="field"><label for="s-h">Reflection height h′</label><input type="number" step="any" id="s-h" value="300"><span class="unit">km</span></div>
+          <div class="field"><label for="s-d">Ground distance</label><input type="number" step="any" id="s-d" value="1500"><span class="unit">km</span></div>
+          <div class="screen readout" id="s-out"></div>
+        </details>
+      </section>
+    </div>
+    <section class="panel" style="margin-top:16px">
+      <div class="panel-head"><h2>European ionosondes</h2><span class="label">latest + 36 h foF2</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Station</th><th>foF2</th><th>hmF2</th><th>MUF(3000)F2</th><th>Conf.</th><th>Time (UTC)</th><th>foF2, 36 h</th></tr></thead>
+        <tbody id="iono"><tr><td colspan="7" class="muted">Loading…</td></tr></tbody>
+      </table></div>
+      <p class="model">Autoscaled ionograms (ARTIST). Conf. is the autoscaling confidence (0-100, a hyphen when not reported). The 36 h trace builds up from the 3-hourly refreshes of this page. Data: <a href="https://giro.uml.edu/" target="_blank" rel="noopener">GIRO</a> via <a href="https://prop.kc2g.com/" target="_blank" rel="noopener">KC2G</a>, space weather from <a href="https://www.swpc.noaa.gov/" target="_blank" rel="noopener">NOAA SWPC</a>.</p>
+    </section>
+    ${PROP_GLOSSARY}`;
+
+  $('#to-gloss').addEventListener('click', e => { e.preventDefault(); $('#prop-glossary').scrollIntoView({ behavior: 'smooth' }); });
+
+  // Manual secant-law calculator (kept from the first version of this page).
+  const runSecant = () => {
+    const fo = parseFloat($('#s-fo').value), hh = parseFloat($('#s-h').value), D = parseFloat($('#s-d').value);
+    const g = hopGeometry(D, hh);
+    const rows = [{ k: 'Take-off elevation', v: `${fmt(g.elev, 1)}°` }, { k: 'MUF', v: `${fmt(fo * g.sec, 2)} MHz` }];
+    if (g.elev < 0) rows.push({ k: 'Geometry', v: 'below horizon: path needs more than one hop', warn: true });
+    $('#s-out').innerHTML = rows.map(r => `<div class="row"><span class="k">${h(r.k)}</span><span class="${r.warn ? 'warn' : 'v'}">${h(r.v)}</span></div>`).join('');
+  };
+  $('details', $('#muf')).addEventListener('input', runSecant);
+  runSecant();
+
+  let d;
+  try { d = await fetchJSON('data/propagation.json'); }
+  catch (e) {
+    $('#tiles').innerHTML = `<div class="notice">No live data available. The deploy workflow publishes <code>data/propagation.json</code>. Locally, run <code>node scripts/fetch-data.mjs</code> before building.</div>`;
+    $('#iono').innerHTML = '<tr><td colspan="7" class="muted">No data.</td></tr>';
+    return;
+  }
+  await getLand();
+  const t = s => s ? tFmt(Date.parse(s)) : '-';
+  const ageH = d.updated ? (Date.now() - Date.parse(d.updated)) / 3600e3 : Infinity;
+  $('#upd').textContent = d.updated ? `fetched ${t(d.updated)} UTC` : '';
+
+  /* --- alerts --- */
+  const sc = d.scales?.now || {};
+  const alerts = [];
+  if (ageH > 8 || d.stale) alerts.push(`Data is ${fmt(ageH, 0)} h old: the scheduled refresh may have stopped.`);
+  if (sc.R >= 1) alerts.push(`<b>Radio blackout R${sc.R} (${SCALE_TEXT[sc.R]})</b>: a solar flare is degrading HF on the sunlit side of the Earth, lower bands first.`);
+  if (sc.S >= 1) alerts.push(`<b>Solar radiation storm S${sc.S} (${SCALE_TEXT[sc.S]})</b>: HF absorption on polar paths.`);
+  if (sc.G >= 1) alerts.push(`<b>Geomagnetic storm G${sc.G} (${SCALE_TEXT[sc.G]})</b>: MUFs often drop and high-latitude paths fade. Aurora possible.`);
+  $('#alerts').innerHTML = alerts.map(a => `<div class="notice" style="margin-bottom:10px">⚠ ${a}</div>`).join('');
+
+  /* --- scales and tiles --- */
+  const scaleTile = (letter, name, level, fc) => {
+    const lv = Number.isFinite(level) ? level : null;
+    const sev = lv === null ? '' : lv === 0 ? 'ok' : lv <= 2 ? 'warn' : 'bad';
+    const icon = lv === null ? '?' : lv === 0 ? '✓' : '⚠';
+    return `<div class="scale ${sev}"><div class="scale-top"><span class="scale-k">${letter}${lv ?? '-'}</span><span class="scale-ic" aria-hidden="true">${icon}</span></div>
+      <div class="scale-n">${name}</div><div class="scale-t">${lv === null ? 'no data' : SCALE_TEXT[lv]}</div><div class="scale-f">${fc}</div></div>`;
+  };
+  const day0 = d.scales?.days?.[0];
+  const pct = v => v === null || v === undefined ? '-' : `${v}%`;
+  $('#scales').innerHTML = d.scales ? [
+    scaleTile('R', 'Radio blackouts', sc.R, `Today: minor ${pct(day0?.rMinor)}, major ${pct(day0?.rMajor)}`),
+    scaleTile('S', 'Radiation storms', sc.S, `Today: S1+ ${pct(day0?.s)}`),
+    scaleTile('G', 'Geomagnetic storms', sc.G, `Forecast: ${(d.scales.days || []).map(x => `G${x.g ?? '-'}`).join(', ')}`),
+  ].join('') : '';
+  const w = d.wind || {}, x = d.xray || {};
+  const tile = (k, v, sub) => `<div class="tile"><div class="tile-k">${k}</div><div class="tile-v">${v}</div><div class="tile-s">${sub}</div></div>`;
+  const gk = gScale(d.kp);
+  $('#tiles').innerHTML = [
+    tile('Solar flux F10.7', d.sfi == null ? '-' : `${fmt(d.sfi, 0)}<small> sfu</small>`, d.sfi90 == null ? '' : `90-day mean ${fmt(d.sfi90, 0)}`),
+    tile('Planetary Kp', d.kp == null ? '-' : fmt(d.kp, 2), gk ? `<span class="draft-badge">⚠ G${gk} storm</span>` : d.kpTime ? `${t(d.kpTime).slice(6)}-${tFmt(Date.parse(d.kpTime) + 3 * 3600e3).slice(6)} UTC` : ''),
+    tile('X-ray class', xrayClass(x.flux), x.peak ? `24 h peak ${xrayClass(x.peak)} at ${t(x.peakTime).slice(6)}` : ''),
+    tile('IMF Bz', w.bz == null ? '-' : `${w.bz > 0 ? '+' : ''}${fmt(w.bz, 1)}<small> nT</small>`, w.bz == null ? '' : w.bz <= -5 ? '<span class="draft-badge">⚠ southward</span>' : w.bz < 0 ? 'southward' : 'northward'),
+    tile('Solar wind', w.speed == null ? '-' : `${fmt(w.speed, 0)}<small> km/s</small>`, w.density == null ? '' : `${fmt(w.density, 1)} p/cm³`),
+  ].join('');
+
+  /* --- charts --- */
+  $('#kp').innerHTML = (d.kpSeries || []).length ? kpChart(d.kpSeries) : '<p class="muted small">No data.</p>';
+  if (x.series) {
+    lineChart($('#xray'), {
+      series: [{ name: 'X-ray flux 0.1-0.8 nm', cls: 's1', pts: x.series.map(([ts, f]) => [Date.parse(ts + ':00Z'), f]) }],
+      yLog: true, yMin: 1e-8, yMax: 1e-3, ticks: [1e-8, 1e-7, 1e-6, 1e-5, 1e-4], tickFmt: v => ({ 1e-8: 'A', 1e-7: 'B', 1e-6: 'C', 1e-5: 'M', 1e-4: 'X' })[v],
+      guides: [{ v: 1e-5, label: 'M1: R1 radio blackout' }], unit: 'W/m²', vFmt: v => `${xrayClass(v)} (${v.toExponential(1)})`,
+    });
+  } else $('#xray').innerHTML = '<p class="muted small">No data.</p>';
+  if (w.series) {
+    const pts = i => w.series.map(r => [Date.parse(r[0] + ':00Z'), r[i]]);
+    const bmax = Math.max(10, ...w.series.map(r => Math.abs(r[2] ?? 0))) * 1.1;
+    lineChart($('#wind'), {
+      series: [{ name: 'Bz', cls: 's1', pts: pts(1) }, { name: 'Bt', cls: 's2', pts: pts(2) }],
+      yMin: -bmax, yMax: bmax, ticks: [-20, -10, 0, 10, 20].filter(v => Math.abs(v) <= bmax), unit: 'nT',
+      guides: [{ v: 0, label: 'Bz < 0 is southward' }],
+    });
+    lineChart($('#speed'), {
+      series: [{ name: 'Speed', cls: 's1', pts: pts(3) }],
+      yMin: 250, yMax: Math.max(700, ...w.series.map(r => r[3] ?? 0)) + 50, ticks: [300, 400, 500, 600, 700], unit: 'km/s', vFmt: v => fmt(v, 0),
+      guides: [{ v: 500, label: 'fast wind' }],
+    });
+  } else { $('#wind').innerHTML = $('#speed').innerHTML = '<p class="muted small">No data.</p>'; }
+
+  /* --- ionosondes, observer, path --- */
+  const list = (d.ionosondes || []).filter(s => Number.isFinite(s.foF2));
+  const nearest = p => list.map(s => ({ s, km: gcDistance(p, s) })).sort((a, b) => a.km - b.km)[0] || null;
+  $('#m-st').innerHTML = `<option value="">Auto: nearest to the path midpoint</option>` +
+    list.map((s, i) => `<option value="${i}">${h(String(s.station).replace(` ${s.code}`, ''))} (${h(s.code)})</option>`).join('');
+
+  $('#iono').innerHTML = list.length ? list.map(s => `<tr>
+      <td>${h(String(s.station || '').replace(` ${s.code}`, ''))} <span class="small muted mono">${h(s.code || '')}</span></td>
+      <td class="freq">${fmt(s.foF2, 2)} MHz</td>
+      <td class="freq">${s.hmF2 == null ? '-' : `${fmt(s.hmF2, 0)} km`}</td>
+      <td class="freq">${s.mufd == null ? '-' : `${fmt(s.mufd, 1)} MHz`}</td>
+      <td class="freq">${s.cs == null || s.cs < 0 ? '-' : fmt(s.cs, 0)}</td>
+      <td class="freq">${t(s.time)}</td>
+      <td>${sparkline(d.ionoHistory?.[s.code] || [])}</td></tr>`).join('')
+    : '<tr><td colspan="7" class="muted">No European ionosonde reported in the last 6 h.</td></tr>';
+
+  // Map: equirectangular, lon -25..45, lat 27..72.
+  const MAP = { lon0: -25, lon1: 45, lat0: 27, lat1: 72, W: 1400, H: 900 };
+  const MX = lon => (lon - MAP.lon0) / (MAP.lon1 - MAP.lon0) * MAP.W, MY = lat => (MAP.lat1 - lat) / (MAP.lat1 - MAP.lat0) * MAP.H;
+  // foF2 colour scale: one hue (amber, light = high), domain fitted to the current values
+  // so that a quiet night with every station near 3 MHz is still readable. Numbers are
+  // always labelled, colour only helps the eye.
+  const fos = list.map(s => s.foF2);
+  let foMin = Math.floor(Math.min(...fos, 99) * 2) / 2, foMax = Math.ceil(Math.max(...fos, 0) * 2) / 2;
+  if (!(foMax - foMin >= 1)) { const c = (foMin + foMax) / 2 || 5; foMin = c - 0.5; foMax = c + 0.5; }
+  const foColor = f => { const u = Math.min(Math.max((f - foMin) / (foMax - foMin), 0), 1); return `color-mix(in oklab, var(--fo-hi) ${Math.round(u * 100)}%, var(--fo-lo))`; };
+  // Sun shading over the dark map, shared by the canvas and the legend swatches.
+  const SHADE = { day: 'rgba(255, 255, 255, 0.08)', twi: 'rgba(150, 175, 255, 0.30)', dusk: 'rgba(0, 0, 0, 0.22)', night: 'rgba(0, 0, 0, 0.45)' };
+
+  function drawMap(path) {
+    const cv = $('#pmap'), ctx = cv.getContext('2d'), s = getComputedStyle(document.documentElement);
+    const now = Date.now(), ss = subsolar(now);
+    ctx.fillStyle = s.getPropertyValue('--screen').trim();
+    ctx.fillRect(0, 0, MAP.W, MAP.H);
+    // day / twilight / night, per 10 px cell
+    const cell = 10;
+    for (let py = 0; py < MAP.H; py += cell) {
+      const lat = MAP.lat1 - (py + cell / 2) / MAP.H * (MAP.lat1 - MAP.lat0);
+      for (let px = 0; px < MAP.W; px += cell) {
+        const lon = MAP.lon0 + (px + cell / 2) / MAP.W * (MAP.lon1 - MAP.lon0);
+        const el = sunElevation(ss, lat, lon);
+        ctx.fillStyle = el > 0 ? SHADE.day : el > -6 ? SHADE.twi : el > -12 ? SHADE.dusk : SHADE.night;
+        ctx.fillRect(px, py, cell, cell);
+      }
+    }
+    // land
+    ctx.strokeStyle = s.getPropertyValue('--screen-land').trim(); ctx.lineWidth = 1.6;
+    for (const ring of landRings || []) {
+      ctx.beginPath(); let pen = false, prev = null;
+      for (const [la, lo] of ring) {
+        const x = MX(lo), y = MY(la);
+        if (!pen || Math.abs(lo - prev) > 180) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        pen = true; prev = lo;
+      }
+      ctx.stroke();
+    }
+    // graticule
+    ctx.strokeStyle = s.getPropertyValue('--screen-grid').trim(); ctx.lineWidth = 1;
+    for (let lo = -20; lo <= 40; lo += 10) { ctx.beginPath(); ctx.moveTo(MX(lo), 0); ctx.lineTo(MX(lo), MAP.H); ctx.stroke(); }
+    for (let la = 30; la <= 70; la += 10) { ctx.beginPath(); ctx.moveTo(0, MY(la)); ctx.lineTo(MAP.W, MY(la)); ctx.stroke(); }
+
+    // overlay: stations first, then the path and markers on top so nothing hides them
+    let o = '';
+    for (const st of list) {
+      const sel = path && path.st === st;
+      o += `<g class="map-st${sel ? ' sel' : ''}"><title>${h(st.station)}: foF2 ${fmt(st.foF2, 2)} MHz${st.mufd ? `, MUF(3000) ${fmt(st.mufd, 1)} MHz` : ''}, ${t(st.time)} UTC${sel ? ' (used for the path)' : ''}</title>
+        <circle cx="${MX(st.lon)}" cy="${MY(st.lat)}" r="${sel ? 16 : 13}" style="fill:${foColor(st.foF2)}"/>
+        <text x="${MX(st.lon) + 19}" y="${MY(st.lat) + 8}" class="map-lbl">${fmt(st.foF2, 1)}</text></g>`;
+    }
+    if (path) {
+      const pts = [];
+      for (let k = 0; k <= 64; k++) pts.push(gcPoint(path.a, path.b, k / 64));
+      o += `<polyline points="${pts.map(p => `${MX(p.lon).toFixed(1)},${MY(p.lat).toFixed(1)}`).join(' ')}" class="map-path"/>`;
+      for (const r of path.refl) o += `<circle cx="${MX(r.lon)}" cy="${MY(r.lat)}" r="8" class="map-refl"><title>Reflection point</title></circle>`;
+      const dx = MX(path.b.lon), dy = MY(path.b.lat);
+      o += `<g class="map-dest"><title>Destination ${h(toLocator(path.b.lat, path.b.lon))}</title><path d="M${dx},${dy - 13} l13,13 l-13,13 l-13,-13 z"/><text x="${dx - 18}" y="${dy + 8}" text-anchor="end" class="map-tag">dest</text></g>`;
+    }
+    const ox = MX(obs.lon), oy = MY(obs.lat);
+    o += `<g class="map-obs"><title>You: ${h(toLocator(obs.lat, obs.lon))}</title><path d="M${ox - 15},${oy} h30 M${ox},${oy - 15} v30"/><text x="${ox - 20}" y="${oy + 8}" text-anchor="end" class="map-tag">you</text></g>`;
+    $('#pmap-over').innerHTML = o;
+    $('#mapclock').textContent = `${tFmt(now)} UTC`;
+    const sw = c => `background: linear-gradient(${c}, ${c}), var(--screen)`;
+    $('#mapkey').innerHTML = `<span class="key-group">foF2 <span class="mono">${fmt(foMin, 1)}</span><span class="key-ramp"></span><span class="mono">${fmt(foMax, 1)} MHz</span></span>
+      <span><i class="key-sw" style="${sw(SHADE.day)}"></i>day</span><span><i class="key-sw" style="${sw(SHADE.twi)}"></i>grey line (sun 0° to -6°)</span><span><i class="key-sw" style="${sw(SHADE.night)}"></i>night</span>
+      <span><b class="key-x">+</b>you</span>${path ? '<span><b class="key-x">◆</b>destination</span><span><i class="key-sw path"></i>path, ○ reflection points</span>' : ''}`;
+  }
+
+  function bandsAndPath() {
+    const near = nearest(obs);
+    const ss = subsolar(Date.now()), sunEl = sunElevation(ss, obs.lat, obs.lon), day = sunEl > 0;
+    // Bands
+    if (!near) { $('#bands').innerHTML = '<tr><td colspan="4" class="muted">No ionosonde data.</td></tr>'; $('#bands-src').textContent = ''; }
+    else {
+      const st = near.s, mufNv = st.foF2, mufDx = Number.isFinite(st.mufd) ? st.mufd : hopMuf(st, 3000);
+      $('#bands-src').innerHTML = `Nearest ionosonde: <b>${h(String(st.station).replace(` ${st.code}`, ''))}</b>, ${fmt(near.km, 0)} km away, ${t(st.time)} UTC. foF2 ${fmt(st.foF2, 2)} MHz, MUF(3000) ${fmt(mufDx, 1)} MHz. Sun ${day ? 'up' : 'down'} at your location (${fmt(sunEl, 0)}°).${near.km > 800 ? ' <span class="draft-badge">⚠ far away, take it with a pinch of salt</span>' : ''}`;
+      const cellFor = (f, muf, band) => {
+        if (band === '160 m' && day) return '<span class="st st-abs">▼ absorbed</span>';
+        if (f <= 0.85 * muf) return '<span class="st st-open">● open</span>';
+        if (f <= muf) return '<span class="st st-marg">◐ marginal</span>';
+        return '<span class="st st-closed">○ closed</span>';
+      };
+      $('#bands').innerHTML = HF_BANDS.map(([b, f]) => `<tr><td>${b}</td><td class="freq">${f}</td><td>${cellFor(f, mufNv, b)}</td><td>${cellFor(f, mufDx, b)}</td></tr>`).join('');
+    }
+    // Path
+    const dest = resolvePlace('m-to');
+    if (!dest || !list.length) {
+      $('#m-out').innerHTML = `<div class="row"><span class="warn">${!list.length ? 'No ionosonde data.' : 'Enter a locator (e.g. IO91wm) or lat, lon (e.g. 51.5, -0.1).'}</span></div>`;
+      drawMap(null);
+      return;
+    }
+    const D = gcDistance(obs, dest), mid = gcPoint(obs, dest, 0.5);
+    const pick = $('#m-st').value;
+    const stInfo = pick === '' ? nearest(mid) : { s: list[+pick], km: gcDistance(mid, list[+pick]) };
+    const st = stInfo.s, hgt = st.hmF2 || 300;
+    let hops = 1;
+    while (hopGeometry(D / hops, hgt).elev < 3 && hops < 20) hops++;
+    const Dh = D / hops, g = hopGeometry(Dh, hgt);
+    const muf = hopMuf(st, Dh), fot = 0.85 * muf;
+    const best = [...HF_BANDS].reverse().find(([, f]) => f <= fot);
+    const refl = Array.from({ length: hops }, (_, k) => gcPoint(obs, dest, (2 * k + 1) / (2 * hops)));
+    const rows = [
+      { k: 'Distance', v: `${fmt(D, 0)} km` },
+      { k: 'Hops', v: `${hops} × ${fmt(Dh, 0)} km` },
+      { k: 'Take-off elevation', v: `${fmt(g.elev, 1)}°` },
+      { k: 'Ionosonde used', v: `${st.code}, ${fmt(stInfo.km, 0)} km from midpoint` },
+      { k: 'MUF', v: `${fmt(muf, 1)} MHz` },
+      { k: 'FOT (0.85 × MUF)', v: `${fmt(fot, 1)} MHz` },
+      { k: 'Highest open band', v: best ? `${best[0]} (${best[1]} MHz)` : 'none above 160 m' },
+    ];
+    if (D < 50) rows.push({ k: 'Note', v: 'very short path: use the NVIS column', warn: true });
+    if (stInfo.km > 1000) rows.push({ k: 'Note', v: 'no ionosonde near the midpoint, low confidence', warn: true });
+    if (hops > 1) rows.push({ k: 'Note', v: 'multi-hop: each hop sees a different ionosphere, the worst one limits the path', warn: true });
+    $('#m-out').innerHTML = rows.map(r => `<div class="row"><span class="k">${h(r.k)}</span><span class="${r.warn ? 'warn' : 'v'}">${h(r.v)}</span></div>`).join('');
+    drawMap({ a: obs, b: dest, refl, st });
+  }
+
+  // Location and destination: a preset, or the custom text field.
+  function resolvePlace(id) {
+    const key = $(`#${id}-sel`).value;
+    const p = key === 'custom' ? parsePlace($(`#${id}`).value) : PLACE[key];
+    $(`#${id}-hint`).textContent = p ? `${toLocator(p.lat, p.lon)} - ${fmt(p.lat, 2)}°, ${fmt(p.lon, 2)}°` : 'Enter a locator (e.g. IN52pf) or lat, lon (e.g. 42.24, -8.72).';
+    return p || null;
+  }
+  function placeChanged(id) {
+    const key = $(`#${id}-sel`).value;
+    $(`#${id}-sel`).closest('.field').nextElementSibling.hidden = key !== 'custom';
+    const p = resolvePlace(id);
+    if (id === 'p-obs' && p) { obs.lat = p.lat; obs.lon = p.lon; store('fn-observer', obs); }
+    if (id === 'm-to') { prefs.to = key; prefs.toCustom = $('#m-to').value.trim(); store('fn-prop-prefs', prefs); }
+  }
+
+  let deb = null;
+  view.addEventListener('input', e => {
+    if (e.target.id === 'p-obs' || e.target.id === 'm-to') { placeChanged(e.target.id); clearTimeout(deb); deb = setTimeout(bandsAndPath, 250); }
+  });
+  view.addEventListener('change', e => {
+    const id = e.target.id.replace(/-sel$/, '');
+    if (id === 'p-obs' || id === 'm-to') { placeChanged(id); bandsAndPath(); }
+    if (e.target.id === 'm-st') bandsAndPath();
+  });
+  resolvePlace('p-obs');
+  bandsAndPath();
+  const timer = setInterval(bandsAndPath, 5 * 60e3); // terminator and day/night move
+  return () => { clearInterval(timer); clearTimeout(deb); };
 });
 
+/* ---------- glossary (plain-language explanations) ---------- */
+const PROP_GLOSSARY = `
+<section class="panel" id="prop-glossary" style="margin-top:16px">
+  <div class="panel-head"><h2>Understanding this page</h2><span class="label">glossary</span></div>
+  <div class="gloss-intro">
+    <p><b>The short version.</b> Shortwave (HF, 3-30 MHz) signals can travel thousands of kilometres because they bounce off the <b>ionosphere</b>, layers of electrically charged gas between about 60 and 500 km up. The Sun creates those layers with its ultraviolet and X-ray light, so they are stronger by day, in summer and when the Sun is active. A layer only reflects signals below a certain frequency: above it, the signal escapes into space. Everything on this page is about two questions: how strong is the ionosphere right now, and is the Sun or the solar wind disturbing it?</p>
+    <p><b>The rule of thumb.</b> High solar flux and quiet geomagnetic conditions (low Kp, Bz north) are good for HF. Solar flares (high X-rays) and geomagnetic storms (high Kp, Bz strongly south) are bad.</p>
+  </div>
+
+  <h3 class="gloss-h">The ionosphere</h3>
+  <div class="table-wrap"><table class="gloss"><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody>
+    <tr><td>Ionosphere</td><td>The part of the upper atmosphere where sunlight strips electrons off gas molecules. Those free electrons bend radio waves back to Earth.</td></tr>
+    <tr><td>D layer</td><td>The lowest layer, about 60-90 km, only present in daylight. It does not reflect HF, it <b>absorbs</b> it, more so at lower frequencies. That is why 160 m and 80 m are poor for long distance during the day.</td></tr>
+    <tr><td>E layer</td><td>About 90-150 km. Reflects lower HF frequencies by day. Occasionally dense patches called <b>sporadic E</b> reflect up to 50 MHz and beyond, mostly in summer.</td></tr>
+    <tr><td>F2 layer</td><td>The highest and densest layer, about 200-400 km. It does most of the work for long distance HF, day and night.</td></tr>
+    <tr><td>foF2</td><td><b>Critical frequency</b> of the F2 layer: the highest frequency reflected straight back down when you transmit vertically. Measured by ionosondes, in MHz. Higher foF2 means a denser layer and more bands open. Typically 3-5 MHz at night and 6-12 MHz by day.</td></tr>
+    <tr><td>hmF2</td><td>Height of the densest part of the F2 layer, in km. It sets how far one bounce can reach: the higher the layer, the longer the hop.</td></tr>
+    <tr><td>MUF</td><td><b>Maximum usable frequency</b> for a given path. A signal sent at a low angle hits the layer obliquely and is reflected at frequencies well above foF2, roughly foF2 × sec(angle) (the secant law). So the MUF grows with distance, up to about 3 to 4 times foF2 for one long hop.</td></tr>
+    <tr><td>MUF(3000)F2</td><td>The MUF for a standard 3000 km hop, calculated by the ionosonde from its own measurement. A good number for long distance on one bounce.</td></tr>
+    <tr><td>FOT</td><td><b>Frequency of optimum traffic</b>, about 0.85 × MUF. The MUF is a median: half the time it is lower. Working just below the FOT gives a reliable path.</td></tr>
+    <tr><td>LUF</td><td><b>Lowest usable frequency</b>. Below it, D layer absorption and noise make the signal too weak. Not estimated on this page, but it is why low bands are poor by day.</td></tr>
+    <tr><td>NVIS</td><td><b>Near vertical incidence skywave</b>: radiating almost straight up so the signal comes down within 0-400 km, filling the gap that ground wave cannot reach. Works only below foF2, which in practice means 80, 60 and 40 m.</td></tr>
+    <tr><td>Skip zone</td><td>The ring between the end of the ground wave and the first sky wave landing, where a signal cannot be heard. It grows as the frequency gets closer to the MUF.</td></tr>
+    <tr><td>Hop</td><td>One reflection off the ionosphere. A single F2 hop reaches roughly 3000-4000 km. Longer paths need several hops, each one losing some signal.</td></tr>
+    <tr><td>Ionosonde</td><td>A radar that sweeps a signal straight up from about 1 to 20 MHz and times the echoes. The result, an <b>ionogram</b>, gives foF2, hmF2 and MUF(3000)F2. Most are read automatically (autoscaled), so occasional wrong values happen.</td></tr>
+    <tr><td>Conf.</td><td>Confidence score of the automatic reading of the ionogram, 0 to 100. Below about 50, treat the values with caution.</td></tr>
+    <tr><td>Grey line</td><td>The band around the Earth at sunrise and sunset. The D layer has faded on the night side while the F2 layer is still dense, so low band signals travelling along it suffer little absorption. Famous for long distance on 160, 80 and 40 m.</td></tr>
+  </tbody></table></div>
+
+  <h3 class="gloss-h">The Sun and space weather</h3>
+  <div class="table-wrap"><table class="gloss"><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody>
+    <tr><td>Solar flux F10.7</td><td>Radio noise from the Sun at 10.7 cm (2800 MHz), in solar flux units (sfu), measured daily in Penticton, Canada. It follows the Sun's ultraviolet output, which builds the ionosphere. Roughly: below 80 is poor, 80-120 fair, 120-200 good and above 200 excellent for the higher HF bands.</td></tr>
+    <tr><td>90-day mean</td><td>The average F10.7 over three months. It shows where we are in the 11-year solar cycle better than a single day.</td></tr>
+    <tr><td>Solar cycle</td><td>The Sun's activity rises and falls over about 11 years. Near solar maximum the upper bands (15, 12, 10 m) open often, near the minimum they are mostly closed.</td></tr>
+    <tr><td>X-ray flux and flare class</td><td>X-ray brightness of the Sun measured by the GOES satellites, in W/m². Flares are classed A, B, C, M and X, each ten times stronger than the previous: C1 is 10<sup>-6</sup>, M1 is 10<sup>-5</sup> and X1 is 10<sup>-4</sup> W/m². The number is a multiplier, so M5 is five times M1.</td></tr>
+    <tr><td>Radio blackout (R scale)</td><td>Strong flares (M and X) ionise the D layer within minutes and absorb HF on the side of the Earth facing the Sun. The lower bands go first. It lasts from minutes to a couple of hours. R1 (minor) is an M1 flare, R5 (extreme) an X20.</td></tr>
+    <tr><td>Radiation storm (S scale)</td><td>Energetic protons from the Sun reach the polar regions and absorb HF there (polar cap absorption). Paths over the poles fail, others are mostly fine.</td></tr>
+    <tr><td>Solar wind</td><td>A continuous stream of charged particles from the Sun, measured by spacecraft at the L1 point, 1.5 million km sunward, about 30-60 minutes before it reaches us. Typical speed 300-400 km/s. Above 500 km/s it is fast, often from a coronal hole, and tends to stir the magnetic field.</td></tr>
+    <tr><td>Bt and Bz</td><td>The magnetic field carried by the solar wind (the IMF), in nanotesla (nT). <b>Bt</b> is its total strength. <b>Bz</b> is its north-south component. When Bz points south (negative) it connects with the Earth's field and lets energy in: a Bz of -10 nT or lower for hours often triggers a geomagnetic storm.</td></tr>
+    <tr><td>Kp index</td><td>Global measure of how disturbed the Earth's magnetic field is, from 0 (quiet) to 9 (extreme storm), for each 3-hour interval. 0-2 is quiet and best for HF, 3-4 unsettled to active, 5 or more is a storm.</td></tr>
+    <tr><td>Geomagnetic storm (G scale)</td><td>NOAA's scale for storms: G1 is Kp 5, up to G5 at Kp 9. During storms the F2 layer is depleted, MUFs drop for a day or two, high-latitude and polar paths fade and absorption rises. Aurora appears further south, and VHF operators can use it to bounce signals.</td></tr>
+  </tbody></table></div>
+
+  <h3 class="gloss-h">Reading the panels</h3>
+  <div class="table-wrap"><table class="gloss"><thead><tr><th>Panel</th><th>How to read it</th></tr></thead><tbody>
+    <tr><td>Space weather now</td><td>The three NOAA scales (✓ means quiet, ⚠ an event in progress) with today's probabilities, and the key numbers at a glance.</td></tr>
+    <tr><td>Kp chart</td><td>Solid bars are measured, outlined bars are NOAA's estimate and 3-day forecast. The dashed line at 5 marks the storm threshold.</td></tr>
+    <tr><td>X-ray chart</td><td>Logarithmic: each step up is a whole flare class, ten times stronger. Spikes above the dashed M1 line mean HF fade-outs on the daylight side.</td></tr>
+    <tr><td>Solar wind charts</td><td>Watch for Bz staying below zero together with high speed: that is when storms start.</td></tr>
+    <tr><td>Map</td><td>Each dot is an ionosonde with its foF2 in MHz, brighter for higher values. The yellow band is the grey line, darker areas are night. With a destination set, the path and its reflection points are drawn.</td></tr>
+    <tr><td>HF bands now</td><td>A quick estimate from the ionosonde closest to you. NVIS is for nearby contacts (your region), DX for one long hop. It does not know about the LUF, your antenna or local noise, so a band marked open may still be quiet.</td></tr>
+    <tr><td>Locations</td><td>Pick your location and the destination from the list (Galicia, Madrid and the European capitals), or choose Custom and type a <b>Maidenhead locator</b> or a latitude, longitude. A locator is the radio amateur way of giving a position: IN52pf, for example, is Vigo to within a few km. Your location is shared with the Satellites page.</td></tr>
+  </tbody></table></div>
+</section>`;
+
 /* ============================================================
-   WebSDR — RTL2832U over WebUSB (pending #3)
+   WebSDR - RTL2832U over WebUSB (pending #3)
    Plan: WebUSB driver (RTL2832U + R820T2 tuner) -> Web Worker DSP
    (FFT, WFM/NFM/AM/SSB) -> AudioWorklet output.
    ============================================================ */
@@ -1091,7 +3054,7 @@ const RTL_FILTERS = [
 ];
 
 route('websdr', view => {
-  document.title = 'WebSDR · frandomnoise';
+  document.title = 'WebSDR - frandomnoise';
   const hasUSB = 'usb' in navigator;
   view.innerHTML = `<div class="page-head"><span class="label">Receiver</span><h1>WebSDR</h1>
     <p>An RTL-SDR receiver that runs entirely in your browser: WebUSB driver, DSP in a Web Worker, audio through an AudioWorklet.</p></div>
@@ -1099,7 +3062,7 @@ route('websdr', view => {
       <div class="panel">
         <div class="panel-head"><h2>Device</h2><span class="label">${hasUSB ? 'WebUSB available' : 'no WebUSB'}</span></div>
         <p class="small muted">${hasUSB
-          ? 'Requires a Chromium-based browser over HTTPS. On Linux, unload or blacklist <code>dvb_usb_rtl28xxu</code>; on Windows, install the WinUSB driver (e.g. with Zadig).'
+          ? 'Requires a Chromium-based browser over HTTPS. On Linux, unload or blacklist <code>dvb_usb_rtl28xxu</code>. On Windows, install the WinUSB driver (e.g. with Zadig).'
           : 'This browser does not expose WebUSB. Use a recent Chrome, Edge or another Chromium-based browser on desktop or Android.'}</p>
         <button class="btn" id="connect" type="button" ${hasUSB ? '' : 'disabled'}>Connect RTL-SDR</button>
         <dl class="kv" id="dev" style="margin-top:12px"></dl>
@@ -1118,9 +3081,9 @@ route('websdr', view => {
     try {
       const d = await navigator.usb.requestDevice({ filters: RTL_FILTERS });
       $('#dev').innerHTML = [
-        ['Product', d.productName || '—'], ['Manufacturer', d.manufacturerName || '—'],
+        ['Product', d.productName || '-'], ['Manufacturer', d.manufacturerName || '-'],
         ['VID:PID', `${d.vendorId.toString(16).padStart(4, '0')}:${d.productId.toString(16).padStart(4, '0')}`],
-        ['Serial', d.serialNumber || '—'],
+        ['Serial', d.serialNumber || '-'],
       ].map(([k, v]) => `<dt>${k}</dt><dd>${h(v)}</dd>`).join('');
     } catch (e) {
       if (e.name !== 'NotFoundError') $('#dev').innerHTML = `<dt>Error</dt><dd>${h(e.message)}</dd>`;
